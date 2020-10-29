@@ -1,10 +1,10 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-#include "cube.h"
-#include "iengine.h"
-#include "consts.h"
-#include "render/texture.h"
+#include "../libprimis-headers/cube.h"
+#include "../libprimis-headers/iengine.h"
+#include "../libprimis-headers/consts.h"
+#include "../libprimis-headers/texture.h"
 #include <enet/enet.h>
 
 #include "nettools.h"

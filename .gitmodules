@@ -1,0 +1,9 @@
+[submodule "libprimis-headers"]
+	path = libprimis-headers
+	url = git@github.com:project-imprimis/libprimis-headers.git
+[submodule "enet"]
+	path = enet
+	url = https://github.com/project-imprimis/enet
+[submodule "media"]
+	path = media
+	url = https://github.com/project-imprimis/media.git
