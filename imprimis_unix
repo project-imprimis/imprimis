@@ -5,7 +5,7 @@
 IMPRIMIS_DATA=.
 
 # IMPRIMIS_BIN should refer to the directory in which Imprimis executable files are placed.
-IMPRIMIS_BIN=${IMPRIMIS_DATA}/bin_unix
+IMPRIMIS_BIN=.
 
 # IMPRIMIS_OPTIONS contains any command line options you would like to start Imprimis with.
 #IMPRIMIS_OPTIONS=""
@@ -58,8 +58,9 @@ else
   echo "Your platform does not have a pre-compiled Imprimis client."
   echo "Please follow the following steps to build a native client:"
   echo "1) Ensure you have the SDL2, SDL2-image, SDL2-mixer, and OpenGL libraries installed."
-  echo "2) Type \"make -C src\"."
-  echo "3) If the build succeeds, run this script again."
+  echo "2) Ensure you have the engine binary at /usr/lib (or wherever the OS links to."
+  echo "3) Type \"make -C src\"."
+  echo "4) If the build succeeds, run this script again."
   exit 1
 fi
 
