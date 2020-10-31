@@ -37,19 +37,6 @@ void writeinitcfg()
     }
 }
 
-//argument flag lookup helper function, useful for command line parsing
-static bool findarg(int argc, char **argv, const char *str)
-{
-    for(int i = 1; i<argc; i++)
-    {
-        if(strstr(argv[i], str)==argv[i])
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 // normal exit, saves config
 void quit()
 {
@@ -164,66 +151,6 @@ int main(int argc, char **argv)
         }
     }
     execfile("config/init.cfg", false);
-    /* command-line argument parsing */
-    ///////////////////////////////////
-    for(int i = 1; i<argc; i++)
-    {
-        if(argv[i][0]=='-')
-        {
-            switch(argv[i][1])
-            {
-                case 'u': // `U`se home directory
-                {
-                    if(homedir[0])
-                    {
-                        logoutf("Using home directory: %s", homedir);
-                    }
-                    break;
-                }
-                case 'k': // pac`K`age directory
-                {
-                    const char *dir = addpackagedir(&argv[i][2]);
-                    if(dir)
-                    {
-                        logoutf("Adding package directory: %s", dir);
-                    }
-                    break;
-                }
-                case 'w': // screen `W`idth
-                {
-                    scr_w = std::clamp(atoi(&argv[i][2]), static_cast<int>(SCR_MINW), static_cast<int>(SCR_MAXW));
-                    if(!findarg(argc, argv, "-h"))
-                    {
-                        scr_h = -1;
-                    }
-                    break;
-                }
-                case 'h': // screen`H`eight (pixels)
-                {
-                    scr_h = std::clamp(atoi(&argv[i][2]), static_cast<int>(SCR_MINH), static_cast<int>(SCR_MAXH));
-                    if(!findarg(argc, argv, "-w"))
-                    {
-                        scr_w = -1;
-                    }
-                    break;
-                }
-                case 'f': //`F`ullscreen
-                {
-                    fullscreen = atoi(&argv[i][2]);
-                    break;
-                }
-                case 'x': //e`X`ecute script
-                {
-                    initscript = &argv[i][2];
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-        }
-    }
     //init SDL display/input library
     logoutf("init: sdl");
     if(SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO|SDL_INIT_AUDIO)<0)
