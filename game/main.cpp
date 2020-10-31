@@ -3,10 +3,6 @@
 #include <fstream>
 #include "game.h"
 
-
-bool inbetweenframes = false,
-     renderedframe = true;
-
 void writeinitcfg()
 {
     std::ofstream cfgfile;
