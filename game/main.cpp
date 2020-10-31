@@ -41,6 +41,7 @@ void writeinitcfg()
     }
 }
 
+//argument flag lookup helper function, useful for command line parsing
 static bool findarg(int argc, char **argv, const char *str)
 {
     for(int i = 1; i<argc; i++)
@@ -53,7 +54,8 @@ static bool findarg(int argc, char **argv, const char *str)
     return false;
 }
 
-void quit()                       // normal exit
+// normal exit, saves config
+void quit()
 {
     writeinitcfg();
     writeservercfg();
@@ -79,8 +81,9 @@ void quit()                       // normal exit
 }
 COMMAND(quit, "");
 
-//sets engine constants that need information from the game
-
+//updates per-frame global variable constants
+//these are set by the game but may change (e.g. the game requests adding or removing a player)
+//but are engine values defined in the global scope
 void updateenginevalues()
 {
     numdynents = game::players.length();
@@ -95,6 +98,9 @@ void updateenginevalues()
     dynents = dyns;
 }
 
+//sets engine constants that need information from the game
+//as a result, all values set here are global variables defined elsewhere in
+//global scope
 void startupconstants()
 {
     numanims = Anim_NumAnims;
