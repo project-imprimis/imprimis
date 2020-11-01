@@ -1,10 +1,5 @@
 struct ctfclientmode : clientmode
 {
-    static const int maxflags = 20;
-    static const int flagradius = 16;
-    static const int flaglimit = 10;
-    static const int respawnsecs = 5;
-
     struct flag
     {
         int id, version;
@@ -53,68 +48,6 @@ struct ctfclientmode : clientmode
     vector<flag> flags;
     int scores[maxteams];
 
-    void resetflags()
-    {
-        flags.shrink(0);
-        for(int k = 0; k < maxteams; ++k)
-        {
-            scores[k] = 0;
-        }
-    }
-
-    bool addflag(int i, const vec &o, int team)
-    {
-        if(i<0 || i>=maxflags)
-        {
-            return false;
-        }
-        while(flags.length()<=i)
-        {
-            flags.add();
-        }
-        flag &f = flags[i];
-        f.id = i;
-        f.reset();
-        f.team = team;
-        f.spawnloc = o;
-        return true;
-    }
-
-    void ownflag(int i, gameent *owner, int owntime)
-    {
-        flag &f = flags[i];
-        f.owner = owner;
-        f.owntime = owntime;
-        for(int i = 0; i < players.length(); i++)
-        {
-            players[i]->flagpickup &= ~(1<<f.id);
-        }
-    }
-
-    void dropflag(int i, const vec &o, float yaw, int droptime)
-    {
-        flag &f = flags[i];
-        f.droploc = o;
-        f.droptime = droptime;
-        for(int i = 0; i < players.length(); i++)
-        {
-            players[i]->flagpickup &= ~(1<<f.id);
-        }
-        f.owner = NULL;
-        f.dropangle = yaw;
-    }
-
-    void returnflag(int i)
-    {
-        flag &f = flags[i];
-        f.droptime = 0;
-        for(int i = 0; i < players.length(); i++)
-        {
-            players[i]->flagpickup &= ~(1<<f.id);
-        }
-        f.owner = NULL;
-    }
-
     int totalscore(int team)
     {
         return validteam(team) ? scores[team-1] : 0;
@@ -158,9 +91,6 @@ struct ctfclientmode : clientmode
             }
         }
     }
-
-    static constexpr float flagcenter = 3.5f;
-    static constexpr int flagfloat = 7;
 
     void preload()
     {
@@ -288,38 +218,6 @@ struct ctfclientmode : clientmode
                 dropflag(i, f.owner->o, f.owner->yaw, 1);
             }
         }
-    }
-
-    vec interpflagpos(flag &f, float &angle)
-    {
-        vec pos = f.owner ? vec(f.owner->abovehead()).addz(1) : (f.droptime ? f.droploc : f.spawnloc);
-        if(f.owner)
-        {
-            angle = f.owner->yaw;
-        }
-        else
-        {
-            angle = f.droptime ? f.dropangle : f.spawnangle;
-            pos.addz(flagfloat);
-        }
-        if(pos.x < 0)
-        {
-            return pos;
-        }
-        pos.addz(flagcenter);
-        if(f.interptime && f.interploc.x >= 0)
-        {
-            float t = min((lastmillis - f.interptime)/500.0f, 1.0f);
-            pos.lerp(f.interploc, pos, t);
-            angle += (1-t)*(f.interpangle - angle);
-        }
-        return pos;
-    }
-
-    vec interpflagpos(flag &f)
-    {
-        float angle;
-        return interpflagpos(f, angle);
     }
 
     void rendergame()
@@ -464,45 +362,6 @@ struct ctfclientmode : clientmode
         }
         conoutf(ConsoleMsg_GameInfo, "%s dropped %s", teamcolorname(d), teamcolorflag(f));
         teamsound(d, Sound_FlagDrop);
-    }
-
-    void flagexplosion(int i, int team, const vec &loc)
-    {
-        int fcolor;
-        vec color;
-        if(team==1)
-        {
-            fcolor = 0x2020FF;
-            color = vec(0.25f, 0.25f, 1);
-        }
-        else
-        {
-            fcolor = 0x802020;
-            color = vec(1, 0.25f, 0.25f);
-        }
-        particle_fireball(loc, 30, Part_Explosion, -1, fcolor, 4.8f);
-        adddynlight(loc, 35, color, 900, 100);
-        particle_splash(Part_Spark, 150, 300, loc, fcolor, 0.24f);
-    }
-
-    void flageffect(int i, int team, const vec &from, const vec &to)
-    {
-        if(from.x >= 0)
-        {
-            flagexplosion(i, team, from);
-        }
-        if(from==to)
-        {
-            return;
-        }
-        if(to.x >= 0)
-        {
-            flagexplosion(i, team, to);
-        }
-        if(from.x >= 0 && to.x >= 0)
-        {
-            particle_flare(from, to, 600, Part_Streak, team==1 ? 0x2222FF : 0xFF2222, 1.0f);
-        }
     }
 
     void returnflag(gameent *d, int i, int version)
@@ -656,60 +515,9 @@ struct ctfclientmode : clientmode
        }
     }
 
-    void respawned(gameent *d)
-    {
-        vec o = d->feetpos();
-        d->flagpickup = 0;
-        for(int i = 0; i < flags.length(); i++)
-        {
-            flag &f = flags[i];
-            if(!validteam(f.team) || f.owner || (f.droptime && f.droploc.x<0))
-            {
-                continue;
-            }
-            if(o.dist(f.droptime ? f.droploc : f.spawnloc) < flagradius)
-            {
-                d->flagpickup |= 1<<f.id;
-            }
-       }
-    }
-
     int respawnwait(gameent *d)
     {
         return max(0, respawnsecs-(lastmillis-d->lastpain)/1000);
-    }
-
-    bool aihomerun(gameent *d, ai::aistate &b)
-    {
-        vec pos = d->feetpos();
-        for(int k = 0; k < 2; ++k)
-        {
-            int goal = -1;
-            for(int i = 0; i < flags.length(); i++)
-            {
-                flag &g = flags[i];
-                if(g.team == d->team && (k || (!g.owner && !g.droptime)) &&
-                    (!flags.inrange(goal) || g.pos().squaredist(pos) < flags[goal].pos().squaredist(pos)))
-                {
-                    goal = i;
-                }
-            }
-            if(flags.inrange(goal) && ai::makeroute(d, b, flags[goal].pos()))
-            {
-                d->ai->switchstate(b, ai::AIState_Pursue, ai::AITravel_Affinity, goal);
-                return true;
-            }
-        }
-        if(b.type == ai::AIState_Interest && b.targtype == ai::AITravel_Node)
-        {
-            return true; // we already did this..
-        }
-        if(randomnode(d, b, ai::sightmin, 1e16f))
-        {
-            d->ai->switchstate(b, ai::AIState_Interest, ai::AITravel_Node, d->ai->route[0]);
-            return true;
-        }
-        return false;
     }
 
     bool aicheck(gameent *d, ai::aistate &b)
@@ -921,6 +729,180 @@ struct ctfclientmode : clientmode
         }
         return false;
     }
+    private:
+        static constexpr int maxflags = 20;
+        static constexpr int flagradius = 16;
+        static constexpr int flaglimit = 10;
+        static constexpr int respawnsecs = 5;
+
+        static constexpr float flagcenter = 3.5f;
+        static constexpr int flagfloat = 7;
+
+        vec interpflagpos(flag &f, float &angle)
+        {
+            vec pos = f.owner ? vec(f.owner->abovehead()).addz(1) : (f.droptime ? f.droploc : f.spawnloc);
+            if(f.owner)
+            {
+                angle = f.owner->yaw;
+            }
+            else
+            {
+                angle = f.droptime ? f.dropangle : f.spawnangle;
+                pos.addz(flagfloat);
+            }
+            if(pos.x < 0)
+            {
+                return pos;
+            }
+            pos.addz(flagcenter);
+            if(f.interptime && f.interploc.x >= 0)
+            {
+                float t = min((lastmillis - f.interptime)/500.0f, 1.0f);
+                pos.lerp(f.interploc, pos, t);
+                angle += (1-t)*(f.interpangle - angle);
+            }
+            return pos;
+        }
+
+        vec interpflagpos(flag &f)
+        {
+            float angle;
+            return interpflagpos(f, angle);
+        }
+
+        void resetflags()
+        {
+            flags.shrink(0);
+            for(int k = 0; k < maxteams; ++k)
+            {
+                scores[k] = 0;
+            }
+        }
+
+        void flagexplosion(int i, int team, const vec &loc)
+        {
+            int fcolor;
+            vec color;
+            if(team==1)
+            {
+                fcolor = 0x2020FF;
+                color = vec(0.25f, 0.25f, 1);
+            }
+            else
+            {
+                fcolor = 0x802020;
+                color = vec(1, 0.25f, 0.25f);
+            }
+            particle_fireball(loc, 30, Part_Explosion, -1, fcolor, 4.8f);
+            adddynlight(loc, 35, color, 900, 100);
+            particle_splash(Part_Spark, 150, 300, loc, fcolor, 0.24f);
+        }
+
+        void flageffect(int i, int team, const vec &from, const vec &to)
+        {
+            if(from.x >= 0)
+            {
+                flagexplosion(i, team, from);
+            }
+            if(from==to)
+            {
+                return;
+            }
+            if(to.x >= 0)
+            {
+                flagexplosion(i, team, to);
+            }
+            if(from.x >= 0 && to.x >= 0)
+            {
+                particle_flare(from, to, 600, Part_Streak, team==1 ? 0x2222FF : 0xFF2222, 1.0f);
+            }
+        }
+
+        bool addflag(int i, const vec &o, int team)
+        {
+            if(i<0 || i>=maxflags)
+            {
+                return false;
+            }
+            while(flags.length()<=i)
+            {
+                flags.add();
+            }
+            flag &f = flags[i];
+            f.id = i;
+            f.reset();
+            f.team = team;
+            f.spawnloc = o;
+            return true;
+        }
+
+        void ownflag(int i, gameent *owner, int owntime)
+        {
+            flag &f = flags[i];
+            f.owner = owner;
+            f.owntime = owntime;
+            for(int i = 0; i < players.length(); i++)
+            {
+                players[i]->flagpickup &= ~(1<<f.id);
+            }
+        }
+
+        void dropflag(int i, const vec &o, float yaw, int droptime)
+        {
+            flag &f = flags[i];
+            f.droploc = o;
+            f.droptime = droptime;
+            for(int i = 0; i < players.length(); i++)
+            {
+                players[i]->flagpickup &= ~(1<<f.id);
+            }
+            f.owner = NULL;
+            f.dropangle = yaw;
+        }
+
+        void returnflag(int i)
+        {
+            flag &f = flags[i];
+            f.droptime = 0;
+            for(int i = 0; i < players.length(); i++)
+            {
+                players[i]->flagpickup &= ~(1<<f.id);
+            }
+            f.owner = NULL;
+        }
+
+        bool aihomerun(gameent *d, ai::aistate &b)
+        {
+            vec pos = d->feetpos();
+            for(int k = 0; k < 2; ++k)
+            {
+                int goal = -1;
+                for(int i = 0; i < flags.length(); i++)
+                {
+                    flag &g = flags[i];
+                    if(g.team == d->team && (k || (!g.owner && !g.droptime)) &&
+                        (!flags.inrange(goal) || g.pos().squaredist(pos) < flags[goal].pos().squaredist(pos)))
+                    {
+                        goal = i;
+                    }
+                }
+                if(flags.inrange(goal) && ai::makeroute(d, b, flags[goal].pos()))
+                {
+                    d->ai->switchstate(b, ai::AIState_Pursue, ai::AITravel_Affinity, goal);
+                    return true;
+                }
+            }
+            if(b.type == ai::AIState_Interest && b.targtype == ai::AITravel_Node)
+            {
+                return true; // we already did this..
+            }
+            if(randomnode(d, b, ai::sightmin, 1e16f))
+            {
+                d->ai->switchstate(b, ai::AIState_Interest, ai::AITravel_Node, d->ai->route[0]);
+                return true;
+            }
+            return false;
+        }
 };
 
 extern ctfclientmode ctfmode;
