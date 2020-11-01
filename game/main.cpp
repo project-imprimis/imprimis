@@ -126,8 +126,6 @@ int main(int argc, char **argv)
     #endif
     initidents();
     setlogfile(NULL);
-
-    char *initscript = NULL;
     startupconstants();
     initing = Init_Reset;
     // set home dir first
@@ -246,14 +244,6 @@ int main(int argc, char **argv)
     initstains();
     identflags |= Idf_Persist;
     logoutf("init: mainloop");
-    if(execfile("once.cfg", false))
-    {
-        remove(findfile("once.cfg", "rb"));
-    }
-    if(initscript)
-    {
-        execute(initscript);
-    }
     resetfpshistory();
     inputgrab(grabinput = true);
     ignoremousemotion();
