@@ -110,9 +110,6 @@ enum                            // static entity types
     GamecodeEnt_MapSound             = EngineEnt_Sound,        // attr1 = index, attr2 = sound
     GamecodeEnt_Spotlight            = EngineEnt_Spotlight,    // attr1 = angle
     GamecodeEnt_Decal                = EngineEnt_Decal,        // attr1 = index, attr2 = yaw, attr3 = pitch, attr4 = roll, attr5 = scale
-    GamecodeEnt_Teleport,                                      // attr1 = channel, attr2 = model, attr3 = tag
-    GamecodeEnt_Teledest,                                      // attr1 = yaw, attr2 = channel
-    GamecodeEnt_Jumppad,                                       // attr1 = zpush, attr2 = ypush, attr3 = xpush
     GamecodeEnt_Flag,                                          // attr1 = yaw, attr2 = team
     GamecodeEnt_MaxEntTypes,                                   // used for looping through full enum
 };
@@ -762,16 +759,9 @@ namespace entities
 {
     extern vector<extentity *> ents;
 
-    extern const char *entmdlname(int type);
-
-    extern void preloadentities();
-    extern void checkitems(gameent *d);
     extern void resetspawns();
     extern void putitems(packetbuf &p);
     extern void setspawn(int i, bool on);
-    extern void teleport(int n, gameent *d);
-    extern void teleporteffects(gameent *d, int tp, int td, bool local = true);
-    extern void jumppadeffects(gameent *d, int jp, bool local = true);
 }
 extern void mpeditent(int i, const vec &o, int type, int attr1, int attr2, int attr3, int attr4, int attr5, bool local);
 

@@ -949,8 +949,6 @@ namespace ai
             switch(e.type)
             {
                 case GamecodeEnt_Playerstart:
-                case GamecodeEnt_Teleport:
-                case GamecodeEnt_Jumppad:
                 case GamecodeEnt_Flag:
                 {
                     addwaypoint(e.o);

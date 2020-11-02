@@ -387,7 +387,6 @@ namespace game
                 crouchplayer(player1, 10, true);
                 moveplayer(player1, 10, true);
                 swayhudgun(curtime);
-                entities::checkitems(player1);
                 if(cmode)
                 {
                     cmode->checkitems(player1);

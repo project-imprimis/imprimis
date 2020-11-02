@@ -1141,22 +1141,6 @@ namespace ai
                 jump = false;
             }
             d->o = old;
-            if(jump)
-            {
-                float squareradius = 324; //324 = 18^2; float because squaredist is also a float
-                for(int i = 0; i < entities::ents.length(); i++)
-                {
-                    if(entities::ents[i]->type == GamecodeEnt_Jumppad)
-                    {
-                        extentity &e = *entities::ents[i];
-                        if(e.o.squaredist(pos) <= squareradius)
-                        {
-                            jump = false;
-                            break;
-                        }
-                    }
-                }
-            }
         }
         if(jump)
         {
@@ -1683,7 +1667,6 @@ namespace ai
                 {
                     timeouts(d, b);
                 }
-                entities::checkitems(d);
                 if(cmode)
                 {
                     cmode->checkitems(d);

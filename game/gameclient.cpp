@@ -1805,31 +1805,6 @@ namespace game
                     }
                     break;
                 }
-                case NetMsg_Teleport:
-                {
-                    int cn = getint(p),
-                        tp = getint(p),
-                        td = getint(p);
-                    gameent *d = getclient(cn);
-                    if(!d || d->lifesequence < 0 || d->state==ClientState_Dead)
-                    {
-                        continue;
-                    }
-                    entities::teleporteffects(d, tp, td, false);
-                    break;
-                }
-                case NetMsg_Jumppad:
-                {
-                    int cn = getint(p),
-                        jp = getint(p);
-                    gameent *d = getclient(cn);
-                    if(!d || d->lifesequence < 0 || d->state==ClientState_Dead)
-                    {
-                        continue;
-                    }
-                    entities::jumppadeffects(d, jp, false);
-                    break;
-                }
                 default:
                 {
                     neterr("type");

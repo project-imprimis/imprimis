@@ -725,7 +725,6 @@ namespace game
         }
         preloadplayermodel();
         preloadsounds();
-        entities::preloadentities();
         //externs from engine below
         flushpreloadedmodels();
         preloadmapsounds();
