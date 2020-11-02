@@ -84,13 +84,6 @@ void logoutfv(const char *fmt, va_list args)
     }
 }
 
-enum
-{
-    ServerClient_Empty,
-    ServerClient_Local,
-    ServerClient_Remote
-};
-
 struct client                   // server side version of "dynent" type
 {
     int type;
@@ -101,23 +94,6 @@ struct client                   // server side version of "dynent" type
 };
 
 vector<client *> clients;
-
-void sendpacket(int n, int chan, ENetPacket *packet, int exclude)
-{
-    switch(clients[n]->type)
-    {
-        case ServerClient_Remote:
-        {
-            enet_peer_send(clients[n]->peer, chan, packet);
-            break;
-        }
-        case ServerClient_Local:
-        {
-            localservertoclient(chan, packet);
-            break;
-        }
-    }
-}
 
 ENetPacket *sendfile(int cn, int chan, stream *file, const char *format, ...)
 {
@@ -168,7 +144,7 @@ ENetPacket *sendfile(int cn, int chan, stream *file, const char *format, ...)
     ENetPacket *packet = p.finalize();
     if(cn >= 0)
     {
-        sendpacket(cn, chan, packet, -1);
+        enet_peer_send(clients[cn]->peer, chan, packet);
     }
     else
     {
