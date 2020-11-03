@@ -23,4 +23,4 @@ blocks:
             - git submodule update --init --remote libprimis-headers
             - git submodule update --init --remote enet
             - make clean
-            - make install -j3
+            - make -j3
