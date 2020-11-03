@@ -21,13 +21,12 @@ blocks:
       jobs:
         - name: 'Job #1'
           commands:
-            - mkdir engine
-            - cd engine
             - git clone --recurse-submodules https://github.com/project-imprimis/libprimis.git
+            - cd libprimis
             - make -C src clean
             - make -C src -j3
             - cd ..
-            - mv engine/src/libprimis.so libprimis.so
+            - mv libprimis/src/libprimis.so libprimis.so
   - name: 'Game Compile'
     task:
       jobs:
@@ -37,4 +36,3 @@ blocks:
             - git submodule update --init --remote enet
             - make clean
             - make install -j3
-          
