@@ -5,7 +5,7 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: 'Environment Setup'
+  - name: 'Build Test'
     task:
       jobs:
         - name: 'Job #1'
@@ -20,7 +20,7 @@ blocks:
             - make -C src -j3
             - cd ..
             - mv libprimis/src/libprimis.so libprimis.so
-            - git submodule update --init --remote src/libprimis-headers
+            - git submodule update --init --remote libprimis-headers
             - git submodule update --init --remote enet
             - make clean
             - make install -j3
