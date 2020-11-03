@@ -1,0 +1,40 @@
+version: v1.0
+name: Initial Pipeline
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: 'Environment Setup'
+    task:
+      jobs:
+        - name: 'Job #1'
+          commands:
+            - checkout
+            - sem-version cpp 8
+        - name: 'Job #2'
+          commands:
+            - sudo apt-get update
+            - sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
+  - name: 'Engine Compile'
+    task:
+      jobs:
+        - name: 'Job #1'
+          commands:
+            - mkdir engine
+            - cd engine
+            - git clone --recurse-submodules https://github.com/project-imprimis/libprimis.git
+            - make -C src clean
+            - make -C src -j3
+            - cd ..
+            - mv engine/src/libprimis.so libprimis.so
+  - name: 'Game Compile'
+    task:
+      jobs:
+        - name: 'Job #1'
+          commands:
+            - git submodule update --init --remote src/libprimis-headers
+            - git submodule update --init --remote enet
+            - make clean
+            - make install -j3
+          
