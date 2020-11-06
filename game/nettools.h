@@ -68,17 +68,23 @@ struct packetbuf : ucharbuf
     }
 };
 
-struct ipmask
+inline void putint(packetbuf &p, int n)
 {
-    enet_uint32 ip, mask;
+    putint_(p, n);
+}
 
-    void parse(const char *name);
-    int print(char *buf) const;
-    bool check(enet_uint32 host) const { return (host & mask) == ip; }
-};
+inline void putuint(packetbuf &p, int n)
+{
+    putuint_(p, n);
+}
 
-extern void putint(packetbuf &p, int n);
-extern void putuint(packetbuf &p, int n);
-extern void putfloat(packetbuf &p, float f);
-extern void sendstring(const char *t, packetbuf &p);
+inline void putfloat(packetbuf &p, float f)
+{
+    putfloat_(p, f);
+}
+
+inline void sendstring(const char *t, packetbuf &p)
+{
+    sendstring_(t, p);
+}
 

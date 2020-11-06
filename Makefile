@@ -70,7 +70,6 @@ CLIENT_OBJS= \
 	game/game.o \
 	game/gameclient.o \
 	game/main.o \
-	game/nettools.o \
 	game/render.o \
 	game/scoreboard.o \
 	game/server.o \
