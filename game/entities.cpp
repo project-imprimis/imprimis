@@ -589,8 +589,6 @@ extern void boxs(int orient, vec o, const vec &s);
 extern void boxs3D(const vec &o, vec s, int g);
 extern bool editmoveplane(const vec &o, const vec &ray, int d, float off, vec &handle, vec &dest, bool first);
 
-int entmoving = 0;
-
 //drags entities in selection by given displacement vector (snaps to grid if needed)
 void entdrag(const vec &ray)
 {
