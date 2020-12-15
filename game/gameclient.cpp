@@ -13,7 +13,7 @@ namespace game
 {
     void edittoggled(bool);
 
-    bool allowedittoggle()
+    bool allowedittoggle(bool message)
     {
         if(editmode)
         {
@@ -21,7 +21,10 @@ namespace game
         }
         if(multiplayer && !modecheck(gamemode, Mode_Edit))
         {
-            conoutf(Console_Error, "editing requires edit mode");
+            if(message)
+            {
+                conoutf(Console_Error, "editing requires edit mode");
+            }
             return false;
         }
         return true;

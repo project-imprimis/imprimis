@@ -70,7 +70,7 @@ COMMAND(quit, "");
 void updateenginevalues()
 {
     numdynents = game::players.length();
-    allowediting = game::allowedittoggle();
+    allowediting = game::allowedittoggle(false);
     multiplayer = curpeer;
     //pass players list
     vector<dynent *> dyns;
