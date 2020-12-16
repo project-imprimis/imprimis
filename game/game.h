@@ -533,7 +533,7 @@ const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudso
     { Gun_Rail,  Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,  0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 0},
     { Gun_Pulse, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1, Sound_Pulse2,3000, 15,  0, 1,  700, 50, 1024, 1, 2500, 50, 1, 0, 0},
     { Gun_Pulse, Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,  0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 0},
-    { Gun_Eng,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,  Sound_Melee,  200,  0,  0, 1,  500, 20,  160, 1,   10, 20, 2, 0,10},
+    { Gun_Eng,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,  Sound_Melee,  500,  0,  0, 1,  500, 20,  160, 1,   10, 20, 2, 0,10},
     { Gun_Eng,   Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,  0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 0},
 };
 
@@ -553,6 +553,7 @@ struct gamestate
     int gunselect, gunwait;
     int ammo[Gun_NumGuns];
     int aitype, skill;
+    int combatclass;
 
     gamestate() : maxhealth(1), aitype(AI_None), skill(0) {}
 
@@ -578,25 +579,19 @@ struct gamestate
         }
     }
 
-    void spawnstate(int gamemode)
+    void spawnstate()
     {
-        if(modecheck(gamemode, Mode_All))
+        if(combatclass == 0)
         {
             gunselect = Gun_Rail;
-            for(int i = 0; i < Gun_NumGuns; ++i)
-            {
-                ammo[i] = 1;
-            }
         }
-        else if(modecheck(gamemode, Mode_Rail))
-        {
-            gunselect = Gun_Rail;
-            ammo[Gun_Rail] = 1;
-        }
-        else if(modecheck(gamemode, Mode_Pulse))
+        else if(combatclass == 2)
         {
             gunselect = Gun_Pulse;
-            ammo[Gun_Pulse] = 1;
+        }
+        else if(combatclass == 3)
+        {
+            gunselect = Gun_Pulse;
         }
     }
 
@@ -659,6 +654,7 @@ struct gameent : dynent, gamestate
     editinfo *edit;
     float deltayaw, deltapitch, deltaroll, newyaw, newpitch, newroll;
     int smoothmillis;
+    int combatclass;
 
     string name, info;
     int team, playermodel, playercolor;
@@ -855,6 +851,7 @@ namespace game
     extern void sendposition(gameent *d, bool reliable = false);
 
     // weapon
+    extern int spawncombatclass;
     extern int getweapon(const char *name);
     extern void shoot(gameent *d, const vec &targ);
     extern void shoteffects(int atk, const vec &from, const vec &to, gameent *d, bool local, int id, int prevaction);

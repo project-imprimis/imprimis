@@ -8,6 +8,8 @@
 //parsing state changes from server
 //demo commands (core logic in game/server.cpp)
 
+#include <iostream>
+
 VAR(editing, 1, 0, 0);
 namespace game
 {
@@ -1852,7 +1854,14 @@ namespace game
         else
         {
             int gun = getint(p);
-            d->gunselect = std::clamp(gun, 0, Gun_NumGuns-1);
+            if(d==player1)
+            {
+                d->gunselect = spawncombatclass;
+            }
+            else
+            {
+                d->gunselect = std::clamp(gun, 0, Gun_NumGuns-1);
+            }
             for(int i = 0; i < Gun_NumGuns; ++i)
             {
                 d->ammo[i] = getint(p);
@@ -2175,14 +2184,15 @@ namespace game
                     {
                         saveragdoll(s);
                     }
+                    s->respawn();
                     if(s==player1)
                     {
                         if(editmode)
                         {
                             toggleedit();
                         }
+                        s->combatclass = spawncombatclass;
                     }
-                    s->respawn();
                     parsestate(s, p);
                     s->state = ClientState_Alive;
                     if(cmode)

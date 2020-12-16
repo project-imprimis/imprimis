@@ -1,9 +1,9 @@
 // weapon.cpp: all shooting and effects code, projectile management
 #include "game.h"
-
 namespace game
 {
     static const int offsetmillis = 500;
+    static const int projdepth = 2; //depth to have projectile die at upon hitting cube geometry
     vec rays[MAXRAYS];
 
     struct hitmsg
@@ -22,6 +22,8 @@ namespace game
  */
     ICOMMAND(getweapon, "", (), intret(player1->gunselect));
 
+    VAR(spawncombatclass, 0, 0, 2);
+
     void gunselect(int gun, gameent *d)
     {
         if(gun!=d->gunselect)
@@ -32,6 +34,56 @@ namespace game
         d->gunselect = gun;
     }
 
+    bool weaponallowed(int weapon)
+    {
+        //rifle
+        if(player1->combatclass == 0)
+        {
+            switch(weapon)
+            {
+                case 0:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        //demo
+        else if(player1->combatclass == 1)
+        {
+            switch(weapon)
+            {
+                case 1:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        //eng
+        else if(player1->combatclass == 2)
+        {
+            switch(weapon)
+            {
+                case 2:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+/*nextweapon
+ *changes player to an adjacent weapon, forwards if no dir is passed
+ * Arguments:
+ *  int *dir: direction (backwards if negative, forwards if positive)
+ *  int *force: forces change if 1
+ * Returns:
+ *  void
+ */
     void nextweapon(int dir, bool force = false)
     {
         if(player1->state!=ClientState_Alive)
@@ -42,11 +94,14 @@ namespace game
         int gun = player1->gunselect;
         for(int i = 0; i < Gun_NumGuns; ++i)
         {
-            gun = (gun + dir)%Gun_NumGuns;
             if(force || player1->ammo[gun])
             {
                 break;
             }
+        }
+        if(!weaponallowed(gun))
+        {
+            return;
         }
         if(gun != player1->gunselect)
         {
@@ -57,14 +112,6 @@ namespace game
             playsound(Sound_NoAmmo);
         }
     }
-/*nextweapon
- *changes player to an adjacent weapon, forwards if no dir is passed
- * Arguments:
- *  int *dir: direction (backwards if negative, forwards if positive)
- *  int *force: forces change if 1
- * Returns:
- *  void
- */
     ICOMMAND(nextweapon, "ii", (int *dir, int *force), nextweapon(*dir, *force!=0));
 
     int getweapon(const char *name)
@@ -87,10 +134,14 @@ namespace game
         return -1;
     }
 
-    void setweapon(const char *name, bool force = false)
+    void setweapon(const char *name, bool force)
     {
         int gun = getweapon(name);
         if(player1->state!=ClientState_Alive || !validgun(gun))
+        {
+            return;
+        }
+        if(!weaponallowed(gun))
         {
             return;
         }
@@ -98,7 +149,10 @@ namespace game
         {
             gunselect(gun, player1);
         }
-        else playsound(Sound_NoAmmo);
+        else
+        {
+            playsound(Sound_NoAmmo);
+        }
     }
     ICOMMAND(setweapon, "si", (char *name, int *force), setweapon(name, *force!=0));
 
@@ -528,7 +582,6 @@ namespace game
     {
         vec dir = vec(p.dir).neg();
         float rad = attacks[p.atk].exprad*0.75f;
-        addstain(Stain_PulseScorch, pos, dir, rad);
         addstain(Stain_PulseGlow, pos, dir, rad, 0x50CFE5);
     }
 
@@ -622,22 +675,24 @@ namespace game
         mpdelcube(sel, true);
     }
 
-    /*placecube: places a cube at a world vector location
+    /*placecube: places a cube volume at a world vector location
      * Arguments:
      *  loc: world vector to fill
-     *  gridpower: size of cube to place
+     *  gridpower: size of cubes to place
+     *  offset: offset for origin of cube volume
+     *  size: size in cubes for cube volume (goes +x,+y,+z from origin)
      * Returns:
      *  void
      */
-    void placecube(ivec loc, int gridpower)
+    void placecube(ivec loc, int gridpower, ivec offset = ivec(0,0,0), ivec size = ivec(1,1,1))
     {
         int gridpow = static_cast<int>(pow(2,gridpower));
         ivec minloc( loc.x - loc.x % gridpow,
                      loc.y - loc.y % gridpow,
                      loc.z - loc.z % gridpow );
         selinfo sel;
-        sel.o = minloc;
-        sel.s = ivec(1,1,1);
+        sel.o = minloc + offset;
+        sel.s = size;
         mpplacecube(sel, 1, true);
     }
 
@@ -680,7 +735,7 @@ namespace game
             }
             if(!exploded) //if we haven't already hit somebody, start checking for collisions with cube geometry
             {
-                if(dist<4) // dist is the distance to the `to` location
+                if(dist<projdepth*2) // dist is the distance to the `to` location, plus projdepth
                 {
                     if(p.o!=p.to) // if original target was moving, reevaluate endpoint
                     {
@@ -698,7 +753,16 @@ namespace game
                         }
                         case 2:
                         {
-                            placecube(static_cast<ivec>(p.o),3);
+                            if(iscubesolid(lookupcube(static_cast<ivec>(p.o))))
+                            {
+                                //note: 8 and 3 are linked magic numbers (gridpower)
+                                ivec offsetloc = static_cast<ivec>(p.o) + ivec(0,0,8);
+                                placecube(offsetloc,3);
+                            }
+                            else
+                            {
+                                placecube(static_cast<ivec>(p.o),3);
+                            }
                             break;
                         }
                     }
@@ -947,7 +1011,7 @@ namespace game
         }
         if(shorten)
         {
-            to = vec(dir).mul(shorten).add(from);
+            to = vec(dir).mul(shorten).add(from).add(dir.mul(projdepth));
         }
 
         if(attacks[atk].rays > 1)

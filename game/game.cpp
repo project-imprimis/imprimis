@@ -160,7 +160,7 @@ namespace game
     gameent *spawnstate(gameent *d)              // reset player state not persistent accross spawns
     {
         d->respawn();
-        d->spawnstate(gamemode);
+        d->spawnstate();
         return d;
     }
 
@@ -170,24 +170,11 @@ namespace game
         {
             return;
         }
-        if(!modecheck(gamemode, Mode_LocalOnly))
+        int seq = (player1->lifesequence<<16)|((lastmillis/1000)&0xFFFF);
+        if(player1->respawned!=seq)
         {
-            int seq = (player1->lifesequence<<16)|((lastmillis/1000)&0xFFFF);
-            if(player1->respawned!=seq)
-            {
-                addmsg(NetMsg_TrySpawn, "rc", player1);
-                player1->respawned = seq;
-            }
-        }
-        else
-        {
-            spawnplayer(player1);
-            showscores(false);
-            lasthit = 0;
-            if(cmode)
-            {
-                cmode->respawned(player1);
-            }
+            addmsg(NetMsg_TrySpawn, "rc", player1);
+            player1->respawned = seq;
         }
     }
 
@@ -439,7 +426,7 @@ namespace game
             if(wait>0)
             {
                 lastspawnattempt = lastmillis;
-                //conoutf(ConsoleMsg_GameInfo, "\f2you must wait %d second%s before respawn!", wait, wait!=1 ? "s" : "");
+                conoutf(ConsoleMsg_GameInfo, "\f2you must wait %d second%s before respawn!", wait, wait!=1 ? "s" : "");
                 return;
             }
             if(lastmillis < player1->lastpain + spawnwait)
