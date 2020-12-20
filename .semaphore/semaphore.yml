@@ -17,7 +17,8 @@ blocks:
             - git clone --recurse-submodules https://github.com/project-imprimis/libprimis.git
             - cd libprimis
             - make -C src clean
-            - make -C src -j3 install
+            - make -C src -j3
+            - mv src/libprimis.so /usr/lib/libprimis.so
             - cd ..
             - git submodule update --init --remote libprimis-headers
             - git submodule update --init --remote enet
