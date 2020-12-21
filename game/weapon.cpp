@@ -41,7 +41,8 @@ namespace game
         {
             switch(weapon)
             {
-                case 0:
+                case Gun_Rail:
+                case Gun_Carbine:
                     return true;
                 default:
                     return false;
@@ -52,7 +53,8 @@ namespace game
         {
             switch(weapon)
             {
-                case 1:
+                case Gun_Pulse:
+                case Gun_Carbine:
                     return true;
                 default:
                     return false;
@@ -63,7 +65,8 @@ namespace game
         {
             switch(weapon)
             {
-                case 2:
+                case Gun_Eng:
+                case Gun_Carbine:
                     return true;
                 default:
                     return false;
@@ -90,26 +93,15 @@ namespace game
         {
             return;
         }
-        dir = (dir < 0 ? Gun_NumGuns-1 : 1);
-        int gun = player1->gunselect;
-        for(int i = 0; i < Gun_NumGuns; ++i)
+        dir = dir ? -1 : 1;
+        for(uint i = 1; i < Gun_NumGuns; ++i)
         {
-            if(force || player1->ammo[gun])
+            int gun = (player1->gunselect + dir*i)%Gun_NumGuns;
+            if(weaponallowed(gun))
             {
+                gunselect(gun, player1);
                 break;
             }
-        }
-        if(!weaponallowed(gun))
-        {
-            return;
-        }
-        if(gun != player1->gunselect)
-        {
-            gunselect(gun, player1);
-        }
-        else
-        {
-            playsound(Sound_NoAmmo);
         }
     }
     ICOMMAND(nextweapon, "ii", (int *dir, int *force), nextweapon(*dir, *force!=0));
@@ -145,14 +137,7 @@ namespace game
         {
             return;
         }
-        if(force || player1->ammo[gun])
-        {
-            gunselect(gun, player1);
-        }
-        else
-        {
-            playsound(Sound_NoAmmo);
-        }
+        gunselect(gun, player1);
     }
     ICOMMAND(setweapon, "si", (char *name, int *force), setweapon(name, *force!=0));
 
@@ -856,6 +841,16 @@ namespace game
                 }
                 break;
             }
+            case Attack_CarbineShoot:
+                particle_splash(Part_Spark, 200, 250, to, 0x50CFE5, 0.45f);
+                particle_flare(hudgunorigin(gun, from, to, d), to, 500, Part_RailTrail, 0x50CFE5, 0.5f);
+                if(d->muzzle.x >= 0)
+                {
+                    particle_flare(d->muzzle, d->muzzle, 140, Part_RailMuzzleFlash, 0x50CFE5, 2.75f, d);
+                }
+                adddynlight(hudgunorigin(gun, d->o, to, d), 35, vec(0.25f, 0.75f, 1.0f), 75, 75, DynLight_Flash, 0, vec(0, 0, 0), d); //place a light for the muzzle flash
+                railhit(from, to);
+                break;
             default:
             {
                 break;

@@ -119,6 +119,7 @@ enum
     Gun_Rail = 0,
     Gun_Pulse,
     Gun_Eng,
+    Gun_Carbine,
     Gun_NumGuns
 };
 enum
@@ -137,6 +138,8 @@ enum
     Attack_PulseMelee,
     Attack_EngShoot,
     Attack_EngMelee,
+    Attack_CarbineShoot,
+    Attack_CarbineMelee,
     Attack_NumAttacks
 };
 
@@ -527,21 +530,25 @@ const float EXP_SELFPUSH  = 2.5f,
 // this defines weapon properties
 //                            1    2       3     4         5        6      7         8            9       10      11      12         13          14     15    16       17           18   19    20
 const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudsound, attackdelay, damage, spread, margin, projspeed, kickamount, range, rays, hitpush, exprad, worldfx, use, grav; } attacks[Attack_NumAttacks] =
-//    1          2          3           4               5             6              7            8     9   10 11    12  13    14 15  16    17 18 19 20
+//    1            2          3           4               5             6              7            8     9   10 11    12  13    14   15  16  17 18 19 20
 {
-    { Gun_Rail,  Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,  Sound_Rail2,  250,  5,  0, 0,    0, 10, 2048, 1,  200,  0, 0, 0, 0},
-    { Gun_Rail,  Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,  0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 0},
-    { Gun_Pulse, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1, Sound_Pulse2,3000, 15,  0, 1,  700, 50, 1024, 1, 2500, 50, 1, 0, 0},
-    { Gun_Pulse, Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,  0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 0},
-    { Gun_Eng,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,  Sound_Melee,  500,  0,  0, 1,  500, 20,  160, 1,   10, 20, 2, 0,10},
-    { Gun_Eng,   Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,  0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 0},
+    { Gun_Rail,    Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,  Sound_Rail2,  250,  5,   0, 0,    0, 10, 2048, 1,  200,  0, 0, 0, 0},
+    { Gun_Rail,    Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,   0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 0},
+    { Gun_Pulse,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1, Sound_Pulse2,3000, 15,   0, 1,  700, 50, 1024, 1, 2500, 50, 1, 0, 0},
+    { Gun_Pulse,   Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,   0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 0},
+    { Gun_Eng,     Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,  Sound_Melee,  500,  0,   0, 1,  500, 20,  160, 1,   10, 20, 2, 0,10},
+    { Gun_Eng,     Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,   0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 0},
+    { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,  Sound_Rail2,   90,  2, 150, 0,    0,  5,  512, 1,   50,  0, 0, 0, 0},
+    { Gun_Carbine, Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500,  7,   0, 0,    0,  5,   14, 1,   50,  0, 0, 0, 0},
+
 };
 
 const struct guninfo { const char *name, *file, *vwep; int attacks[Act_NumActs]; } guns[Gun_NumGuns] =
 {
     { "railgun", "railgun", "worldgun/railgun", { -1, Attack_RailShot, Attack_RailMelee } },
     { "pulse rifle", "pulserifle", "worldgun/pulserifle", { -1, Attack_PulseShoot, Attack_PulseMelee } },
-    { "engineer rifle", "enggun", "worldgun/pulserifle", { -1, Attack_EngShoot, Attack_EngMelee } }
+    { "engineer rifle", "enggun", "worldgun/pulserifle", { -1, Attack_EngShoot, Attack_EngMelee } },
+    { "carbine", "carbine", "worldgun/carbine", { -1, Attack_CarbineShoot, Attack_CarbineMelee } }
 };
 
 #include "ai.h"
@@ -585,13 +592,17 @@ struct gamestate
         {
             gunselect = Gun_Rail;
         }
-        else if(combatclass == 2)
+        else if(combatclass == 1)
         {
             gunselect = Gun_Pulse;
         }
-        else if(combatclass == 3)
+        else if(combatclass == 2)
         {
-            gunselect = Gun_Pulse;
+            gunselect = Gun_Eng;
+        }
+        else
+        {
+            gunselect = Gun_Carbine;
         }
     }
 
