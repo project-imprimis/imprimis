@@ -18,7 +18,7 @@ blocks:
             - cd libprimis
             - make -C src clean
             - make -C src -j3
-            - mv src/libprimis.so /usr/lib/libprimis.so
+            - sudo mv src/libprimis.so /usr/lib/libprimis.so
             - cd ..
             - git submodule update --init --remote libprimis-headers
             - git submodule update --init --remote enet
