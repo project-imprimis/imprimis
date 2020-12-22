@@ -231,7 +231,6 @@ namespace game
             offset = vec(randomfloat(1), randomfloat(1), randomfloat(1)).sub(0.5f);
         } while(offset.squaredlen() > 0.5f*0.5f);
         offset.mul((to.dist(from)/1024)*spread);
-        offset.z /= 2;
         dest = vec(offset).add(to);
         if(dest != from)
         {
