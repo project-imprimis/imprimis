@@ -703,6 +703,15 @@ namespace game
                 float br = max(fabs(halfdv.x), fabs(halfdv.y)) + 1 + attacks[p.atk].margin;
                 for(int j = 0; j < numdynents; ++j)
                 {
+                    if(!attacks[p.atk].water)
+                    {
+                        cube projcube = lookupcube(static_cast<ivec>(p.o)); //cube located at projectile loc
+                        if(getmaterial(projcube) == Mat_Water &&
+                           iscubeempty(projcube) )
+                        {
+                            exploded = true;
+                        }//projs that can't go through water
+                    }
                     dynent *o = iterdynents(j); //start by setting cur to current dynent in loop
                     //check if dynent in question is the owner of the projectile or is within the bounds of some other dynent (actor)
                     //if projectile is owned by a player or projectile is not within the bounds of a dynent, skip explode check
