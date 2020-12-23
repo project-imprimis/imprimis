@@ -681,7 +681,7 @@ namespace game
                 conoutf(ConsoleMsg_GameInfo, "\f2player frags: %d, deaths: %d", player1->frags, player1->deaths);
             }
             int accuracy = (player1->totaldamage*100)/max(player1->totalshots, 1);
-            conoutf(ConsoleMsg_GameInfo, "\f2player total damage dealt: %d, damage wasted: %d, accuracy(%%): %d", player1->totaldamage, player1->totalshots-player1->totaldamage, accuracy);
+            conoutf(ConsoleMsg_GameInfo, "\f2player total damage dealt: %d, damage wasted: %d, efficiency(%%): %d", player1->totaldamage, player1->totalshots-player1->totaldamage, accuracy);
             showscores(true);
             disablezoom();
             execident("intermission");

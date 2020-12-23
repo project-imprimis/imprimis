@@ -460,7 +460,7 @@ namespace game
         gameent *f = (gameent *)d;
 
         f->lastpain = lastmillis;
-        if(at->type==PhysEnt_Player && !modecheck(gamemode, Mode_Team) && at->team != f->team)
+        if(at->type==PhysEnt_Player && at->team != f->team)
         {
             at->totaldamage += damage;
         }
