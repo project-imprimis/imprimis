@@ -132,9 +132,6 @@ int efocus    = -1,
 bool undonext = true;
 
 vector<int> outsideents;
-int spotlights       = 0,
-    volumetriclights = 0,
-    nospeclights     = 0;
 
 //=== ent modification functions ===//
 
