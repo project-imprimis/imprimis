@@ -131,8 +131,6 @@ int efocus    = -1,
     oldhover  = -1;
 bool undonext = true;
 
-vector<int> outsideents;
-
 //=== ent modification functions ===//
 
 void entadd(int id)
@@ -480,17 +478,6 @@ static inline void findents(cube *c, const ivec &o, int size, const ivec &bo, co
         }
     }
 }
-
-VARF(entediting, 0, 0, 1,
-{
-    if(!entediting)
-    {
-        entcancel();
-        efocus = enthover = -1;
-    }
-});
-
-vector<int> entgroup;
 
 //returns origin "o" of selected region
 vec getselpos()
