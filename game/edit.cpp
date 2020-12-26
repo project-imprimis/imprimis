@@ -792,42 +792,6 @@ static void filltexlist()
     }
 }
 
-void compactmruvslots()
-{
-    remappedvslots.setsize(0);
-    for(int i = texmru.length(); --i >=0;) //note reverse iteration
-    {
-        if(vslots.inrange(texmru[i]))
-        {
-            VSlot &vs = *vslots[texmru[i]];
-            if(vs.index >= 0)
-            {
-                texmru[i] = vs.index;
-                continue;
-            }
-        }
-        if(curtexindex > i)
-        {
-            curtexindex--;
-        }
-        else if(curtexindex == i)
-        {
-            curtexindex = -1;
-        }
-        texmru.remove(i);
-    }
-    if(vslots.inrange(lasttex))
-    {
-        VSlot &vs = *vslots[lasttex];
-        lasttex = vs.index >= 0 ? vs.index : 0;
-    }
-    else
-    {
-        lasttex = 0;
-    }
-    reptex = vslots.inrange(reptex) ? vslots[reptex]->index : -1;
-}
-
 void edittex(int i, bool save = true)
 {
     lasttex = i;
