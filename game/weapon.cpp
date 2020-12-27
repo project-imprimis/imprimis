@@ -744,20 +744,6 @@ namespace game
                             explodecubes(static_cast<ivec>(p.o),3);
                             break;
                         }
-                        case 2:
-                        {
-                            if(iscubesolid(lookupcube(static_cast<ivec>(p.o))))
-                            {
-                                //note: 8 and 3 are linked magic numbers (gridpower)
-                                ivec offsetloc = static_cast<ivec>(p.o) + ivec(0,0,8);
-                                placecube(offsetloc,3);
-                            }
-                            else
-                            {
-                                placecube(static_cast<ivec>(p.o),3);
-                            }
-                            break;
-                        }
                     }
                     projsplash(p, v, NULL);
                     exploded = true;
@@ -827,11 +813,10 @@ namespace game
             }
             case Attack_EngShoot:
             {
-                if(d->muzzle.x >= 0)
+                if(!local)
                 {
-                    particle_flare(d->muzzle, d->muzzle, 250, Part_PulseMuzzleFlash, 0x50CFE5, 3.50f, d); //place a light that runs with the shot projectile
+                    railhit(from, to, false);
                 }
-                newprojectile(from, to, attacks[atk].projspeed, local, id, d, atk);
                 break;
             }
             case Attack_RailShot:
@@ -857,7 +842,10 @@ namespace game
                     particle_flare(d->muzzle, d->muzzle, 140, Part_RailMuzzleFlash, 0x50CFE5, 2.75f, d);
                 }
                 adddynlight(hudgunorigin(gun, d->o, to, d), 35, vec(0.25f, 0.75f, 1.0f), 75, 75, DynLight_Flash, 0, vec(0, 0, 0), d); //place a light for the muzzle flash
-                railhit(from, to);
+                if(!local)
+                {
+                    railhit(from, to);
+                }
                 break;
             default:
             {
@@ -1029,7 +1017,23 @@ namespace game
 
         if(!attacks[atk].projspeed)
         {
-            raydamage(from, to, d, atk);
+            if(attacks[atk].worldfx == 2)
+            {
+                if(iscubesolid(lookupcube(static_cast<ivec>(to))))
+                {
+                    //note: 8 and 3 are linked magic numbers (gridpower)
+                    ivec offsetloc = static_cast<ivec>(to) + ivec(0,0,8);
+                    placecube(offsetloc,2);
+                }
+                else if (!iscubeempty(lookupcube(static_cast<ivec>(to))))
+                {
+                    placecube(static_cast<ivec>(to),3);
+                }
+            }
+            else
+            {
+                raydamage(from, to, d, atk);
+            }
         }
         shoteffects(atk, from, to, d, true, 0, prevaction);
 
