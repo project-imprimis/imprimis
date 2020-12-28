@@ -44,7 +44,7 @@ void quit()
     writeservercfg();
     abortconnect();
     disconnect();
-    writecfg(game::savedconfig(), game::autoexec(), game::defaultconfig());
+    writecfg(game::defaultconfig());
     SDL_ShowCursor(SDL_TRUE);
     SDL_SetRelativeMouseMode(SDL_FALSE);
     if(screen)
@@ -222,13 +222,8 @@ int main(int argc, char **argv)
     }
     identflags |= Idf_Persist;
     //personal configs
-    if(!execfile(game::savedconfig(), false))
-    {
-        execfile(game::defaultconfig());
-        writecfg(game::savedconfig(), game::autoexec(), game::defaultconfig(), game::restoreconfig());
-    }
-    //autoexec
-    execfile(game::autoexec(), false);
+    execfile(game::defaultconfig());
+    writecfg(game::defaultconfig());
     identflags &= ~Idf_Persist;
     initing = Init_Game;
     game::loadconfigs();

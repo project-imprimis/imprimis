@@ -947,10 +947,7 @@ namespace game
     extern const char *getmapinfo();
     extern const char *getclientmap();
     extern const char *gameident();
-    extern const char *restoreconfig();
-    extern const char *savedconfig();
     extern const char *defaultconfig();
-    extern const char *autoexec();
     extern bool allowmove(physent *d);
 }
 
