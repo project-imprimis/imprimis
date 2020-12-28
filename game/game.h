@@ -666,6 +666,7 @@ struct gameent : dynent, gamestate
     float deltayaw, deltapitch, deltaroll, newyaw, newpitch, newroll;
     int smoothmillis;
     int combatclass;
+    int parachutetime; //time when parachute spawned
 
     string name, info;
     int team, playermodel, playercolor;
@@ -714,6 +715,7 @@ struct gameent : dynent, gamestate
         lasttaunt = 0;
         lastpickup = -1;
         lastpickupmillis = 0;
+        parachutetime = lastmillis;
         flagpickup = 0;
         lastnode = -1;
     }
@@ -782,6 +784,10 @@ namespace entities
     extern void setspawn(int i, bool on);
 }
 extern void mpeditent(int i, const vec &o, int type, int attr1, int attr2, int attr3, int attr4, int attr5, bool local);
+
+extern void modifygravity(gameent *pl, bool water, int curtime);
+extern void moveplayer(gameent *pl, int moveres, bool local);
+extern bool moveplayer(gameent *pl, int moveres, bool local, int curtime);
 
 namespace game
 {
@@ -954,7 +960,6 @@ namespace game
 // game
 extern int thirdperson;
 extern bool isthirdperson();
-
 
 // server
 extern ENetAddress masteraddress;

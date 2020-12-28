@@ -8,6 +8,10 @@
 
 void physicsframe();
 
+static constexpr int parachutemaxtime = 8000, //time until parachute cancels after spawning
+                     parachutespeed = 150, //max speed in cubits/s with parachute activated
+                     defaultspeed = 35;  //default walk speed
+
 namespace game
 {
     bool intermission = false;
@@ -1605,7 +1609,20 @@ static const int physframetimestd = 8;
 
 static const int inairsounddelay = 800; //time before midair players are allowed to land with a "thud"
 
-bool moveplayer(physent *pl, int moveres, bool local, int curtime)
+static void handleparachute(gameent *pl)
+{
+    if(lastmillis - pl->parachutetime < parachutemaxtime && pl->timeinair > 0 && !modecheck(game::gamemode, Mode_Edit))
+    {
+        pl->maxspeed = parachutespeed;
+    }
+    else
+    {
+        pl->parachutetime -= parachutemaxtime; //immediately cancel parachute
+        pl->maxspeed = defaultspeed;
+    }
+}
+
+bool moveplayer(gameent *pl, int moveres, bool local, int curtime)
 {
     int material = lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (3*pl->aboveeye - pl->eyeheight)/4));
     bool water = IS_LIQUID(material&MatFlag_Volume);
@@ -1629,7 +1646,7 @@ bool moveplayer(physent *pl, int moveres, bool local, int curtime)
     d.mul(secs);
 
     pl->blocked = false;
-
+    handleparachute(pl);
     if(floating)                // just apply velocity
     {
         if(pl->physstate != PhysEntState_Float)
@@ -1759,13 +1776,22 @@ void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curt
 //    pl->vel.lerp(pl->vel, d, fpsfric);
 }
 
-void modifygravity(physent *pl, bool water, int curtime)
+void modifygravity(gameent *pl, bool water, int curtime)
 {
     float secs = curtime/1000.0f;
     vec g(0, 0, 0);
     if(pl->physstate == PhysEntState_Fall)
     {
-        g.z -= gravity*secs;
+        //parachute
+        if(lastmillis - pl->parachutetime < parachutemaxtime)
+        {
+            g.z -= 0.05;
+        }
+        //normal fall
+        else
+        {
+            g.z -= gravity*secs;
+        }
     }
     else if(pl->floor.z > 0 && pl->floor.z < floorz)
     {
@@ -1825,7 +1851,7 @@ void interppos(physent *pl)
     pl->o.add(deltapos);
 }
 
-void moveplayer(physent *pl, int moveres, bool local)
+void moveplayer(gameent *pl, int moveres, bool local)
 {
     if(physsteps <= 0)
     {
