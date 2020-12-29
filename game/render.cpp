@@ -105,6 +105,8 @@ namespace game
         }
     };
 
+    static const char * parachutemodel = "parachute";
+
     extern void changedplayermodel();
     VARFP(playermodel, 0, 0, sizeof(playermodels)/sizeof(playermodels[0])-1, changedplayermodel());
 
@@ -272,6 +274,7 @@ namespace game
             {
                 preloadmodel(mdl->model[0]);
             }
+            preloadmodel(parachutemodel);
         }
     }
 
@@ -482,6 +485,12 @@ namespace game
         renderplayer(d, getplayermodelinfo(d), getplayercolor(d, team), team, fade, flags);
     }
 
+    static void renderparachute(gameent *d)
+    {
+        vec loc = vec(0,0,24).add(d->o); //three meters above player
+        rendermodel(parachutemodel, Anim_Mapmodel | Anim_Loop, loc, atan2(d->vel.y,d->vel.x)/RAD, 0, 0);
+    }
+
     void rendergame()
     {
         ai::render();
@@ -521,6 +530,10 @@ namespace game
                 int team = modecheck(gamemode, Mode_Team) && validteam(d->team) ? d->team : 0;
                 particle_text(d->abovehead(), d->info, Part_Text, 1, teamtextcolor[team], 2.0f);
             }
+            if(lastmillis - d->parachutetime < parachutemaxtime && d->timeinair > 0 && !modecheck(game::gamemode, Mode_Edit))
+            {
+                renderparachute(d);
+            }
         }
         for(int i = 0; i < ragdolls.length(); i++)
         {
@@ -539,6 +552,10 @@ namespace game
         else if(!f && (player1->state==ClientState_Alive || (player1->state==ClientState_Editing && third) || (player1->state==ClientState_Dead && showdead)))
         {
             renderplayer(player1, 1, third ? 0 : Model_OnlyShadow);
+            if(lastmillis - player1->parachutetime < parachutemaxtime && player1->timeinair > 0 && !modecheck(game::gamemode, Mode_Edit))
+            {
+                renderparachute(player1);
+            }
         }
         renderbouncers();
         if(cmode)

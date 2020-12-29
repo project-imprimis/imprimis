@@ -8,10 +8,6 @@
 
 void physicsframe();
 
-static constexpr int parachutemaxtime = 8000, //time until parachute cancels after spawning
-                     parachutespeed = 150, //max speed in cubits/s with parachute activated
-                     defaultspeed = 35;  //default walk speed
-
 namespace game
 {
     bool intermission = false;
