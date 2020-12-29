@@ -689,9 +689,9 @@ struct gameent : dynent, gamestate
         respawn();
         //overwrite dynent phyical parameters
         radius = 3.0f;
-        eyeheight = 12;
-        maxheight = 13;
-        aboveeye = 2;
+        eyeheight = 15;
+        maxheight = 15;
+        aboveeye = 0;
         xradius = 3.0f;
         yradius = 1.0f;
     }
