@@ -933,6 +933,7 @@ namespace game
     extern vec hudgunorigin(int gun, const vec &from, const vec &to, gameent *d);
     extern void rendergame();
     extern void renderavatar();
+    extern void rendereditcursor();
 
     // additional fxns needed by server/main code
 
@@ -1012,6 +1013,8 @@ extern void mpcalclight(bool local);
 extern undoblock *copyundoents(undoblock *u);
 extern void pasteundoents(undoblock *u);
 extern void pasteundoent(int idx, const entity &ue);
+extern bool hoveringonent(int ent, int orient);
+extern void renderentselection(const vec &o, const vec &ray, bool entmoving);
 
 // serverbrowser
 
