@@ -135,7 +135,7 @@ void mpcopy(editinfo *&e, selinfo &sel, bool local)
     }
     if(e==NULL)
     {
-        e = editinfos.add(new editinfo);
+        e = editinfos.emplace_back(new editinfo());
     }
     if(e->copy)
     {
