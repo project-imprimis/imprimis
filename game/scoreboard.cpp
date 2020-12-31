@@ -176,8 +176,12 @@ namespace game
     }
 //scoreboard commands
     COMMAND(refreshscoreboard, "");
-    ICOMMAND(numscoreboard, "i", (int *team), intret(*team < 0 ? spectators.length() : (*team <= maxteams ? teamplayers[*team].length() : 0)));
-    ICOMMAND(loopscoreboard, "rie", (ident *id, int *team, uint *body),
+    void numscoreboard(int *team)
+    {
+        intret(*team < 0 ? spectators.length() : (*team <= maxteams ? teamplayers[*team].length() : 0));
+    }
+    COMMAND(numscoreboard, "i");
+    void loopscoreboard(ident *id, int *team, uint *body)
     {
         if(*team > maxteams)
         {
@@ -191,9 +195,10 @@ namespace game
             execute(body);
         }
         loopend(id, stack);
-    });
+    }
+    COMMAND(loopscoreboard, "rie");
 
-    ICOMMAND(scoreboardstatus, "i", (int *cn),
+    void scoreboardstatus(int *cn)
     {
         gameent *d = getclient(*cn);
         if(d)
@@ -209,9 +214,10 @@ namespace game
             }
             intret(status);
         }
-    });
+    }
+    COMMAND(scoreboardstatus, "i");
     //scoreboard packet jump
-    ICOMMAND(scoreboardpj, "i", (int *cn),
+    void scoreboardpj (int *cn)
     {
         gameent *d = getclient(*cn);
         if(d && d != player1)
@@ -225,9 +231,10 @@ namespace game
                 intret(d->plag);
             }
         }
-    });
+    }
+    COMMAND(scoreboardpj, "i");
 
-    ICOMMAND(scoreboardping, "i", (int *cn),
+    void scoreboardping(int *cn)
     {
         gameent *d = getclient(*cn);
         if(d)
@@ -241,16 +248,32 @@ namespace game
                 intret(d->ping);
             }
         }
-    });
+    }
+    COMMAND(scoreboardping, "i");
 //scoreboard booleans
-    ICOMMAND(scoreboardshowfrags, "", (), intret(cmode && cmode->hidefrags() && !showfrags ? 0 : 1));
-    ICOMMAND(scoreboardshowclientnum, "", (), intret(showclientnum || player1->privilege>=Priv_Master ? 1 : 0));
-    ICOMMAND(scoreboardmultiplayer, "", (), intret(multiplayer || demoplayback ? 1 : 0));
+    void scoreboardshowfrags()
+    {
+        intret(cmode && cmode->hidefrags() && !showfrags ? 0 : 1);
+    }
+    COMMAND(scoreboardshowfrags, "");
+    void scoreboardshowclientnum()
+    {
+        intret(showclientnum || player1->privilege>=Priv_Master ? 1 : 0);
+    }
+    COMMAND(scoreboardshowclientnum, "");
+    void scoreboardmultiplayer()
+    {
+        intret(multiplayer || demoplayback ? 1 : 0);
+    }
+    COMMAND(scoreboardmultiplayer, "");
 
-    ICOMMAND(scoreboardhighlight, "i", (int *cn),
-        intret(*cn == player1->clientnum && highlightscore && (multiplayer || demoplayback || players.length() > 1) ? 0x808080 : 0));
+    void scoreboardhighlight(int *cn)
+    {
+        intret(*cn == player1->clientnum && highlightscore && (multiplayer || demoplayback || players.length() > 1) ? 0x808080 : 0);
+    }
+    COMMAND(scoreboardhighlight, "i");
 
-    ICOMMAND(scoreboardservinfo, "", (),
+    void scoreboardservinfo()
     {
         if(!showservinfo)
         {
@@ -272,20 +295,23 @@ namespace game
                 }
             }
         }
-    });
+    }
+    COMMAND(scoreboardservinfo, "");
 
-    ICOMMAND(scoreboardmode, "", (),
+    void scoreboardmode()
     {
         result(server::modeprettyname(gamemode));
-    });
+    }
+    COMMAND(scoreboardmode, "");
 
-    ICOMMAND(scoreboardmap, "", (),
+    void scoreboardmap()
     {
         const char *mname = getclientmap();
         result(mname[0] ? mname : "[new map]");
-    });
+    }
+    COMMAND(scoreboardmap, "");
 
-    ICOMMAND(scoreboardtime, "", (),
+    void scoreboardtime()
     {
         if(!modecheck(gamemode, Mode_Untimed) && getclientmap() && (maplimit >= 0 || intermission))
         {
@@ -299,9 +325,10 @@ namespace game
                 result(tempformatstring("%d:%02d", secs/60, secs%60));
             }
         }
-    });
+    }
+    COMMAND(scoreboardtime, "");
 
-    ICOMMAND(getteamscore, "i", (int *team),
+    void getteamscore(int *team)
     {
         if(modecheck(gamemode, Mode_Team) && validteam(*team))
         {
@@ -314,11 +341,11 @@ namespace game
                 intret(teaminfos[*team-1].frags);
             }
         }
-    });
+    }
+    COMMAND(getteamscore, "i");
 
     void showscores(bool on)
     {
         UI::holdui("scoreboard", on);
     }
 }
-
