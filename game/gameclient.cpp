@@ -212,21 +212,11 @@ namespace game
         }
     }
 
-    #include "ctf.h"
-
     clientmode *cmode = NULL;
-    ctfclientmode ctfmode;
 
     void setclientmode()
     {
-        if(modecheck(gamemode, Mode_CTF))
-        {
-            cmode = &ctfmode;
-        }
-        else
-        {
-            cmode = NULL;
-        }
+        cmode = NULL;
     }
 
     bool senditemstoserver = false,
@@ -542,12 +532,12 @@ namespace game
         }
     });
 
-    ICOMMAND(getclientflags, "i", (int *cn),
+    ICOMMAND(getclientscore, "i", (int *cn),
     {
         gameent *d = getclient(*cn);
         if(d)
         {
-            intret(d->flags);
+            intret(d->score);
         }
     });
 
@@ -917,7 +907,6 @@ namespace game
     });
     ICOMMAND(intermission, "", (), intret(intermission ? 1 : 0));
 
-    ICOMMANDS("MODE_CTF", "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_CTF)); });
     ICOMMANDS("MODE_TEAMMODE", "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Team)); });
     ICOMMANDS("MODE_RAIL", "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Rail)); });
     ICOMMANDS("MODE_PULSE", "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Pulse)); });
@@ -1837,7 +1826,7 @@ namespace game
                 d->state = getint(p);
             }
             d->frags = getint(p);
-            d->flags = getint(p);
+            d->score = getint(p);
             d->deaths = getint(p);
         }
         d->lifesequence = getint(p);
@@ -1879,7 +1868,8 @@ namespace game
              demopacket = false;
         while(p.remaining())
         {
-            switch(type = getint(p))
+            type = getint(p);
+            switch(type)
             {
                 case NetMsg_DemoPacket:
                 {
@@ -2840,108 +2830,6 @@ namespace game
                     }
                     break;
                 }
-                /* CTF network messages */
-                case NetMsg_InitFlags:
-                {
-                    ctfmode.parseflags(p, modecheck(gamemode, Mode_CTF));
-                    break;
-                }
-
-                case NetMsg_DropFlag:
-                {
-                    int ocn  = getint(p),
-                        flag = getint(p),
-                        version = getint(p);
-                    vec droploc;
-                    for(int k = 0; k < 3; ++k)
-                    {
-                        droploc[k] = getint(p)/DMF;
-                    }
-                    gameent *o = ocn==player1->clientnum ? player1 : newclient(ocn);
-                    if(o && modecheck(gamemode, Mode_CTF))
-                    {
-                        ctfmode.dropflag(o, flag, version, droploc);
-                    }
-                    break;
-                }
-
-                case NetMsg_ScoreFlag:
-                {
-                    int ocn = getint(p),
-                        relayflag    = getint(p),
-                        relayversion = getint(p),
-                        goalflag     = getint(p),
-                        goalversion  = getint(p),
-                        team   = getint(p),
-                        score  = getint(p),
-                        oflags = getint(p);
-                    gameent *o = ocn==player1->clientnum ? player1 : newclient(ocn);
-                    if(o && modecheck(gamemode, Mode_CTF))
-                    {
-                        ctfmode.scoreflag(o, relayflag, relayversion, goalflag, goalversion, team, score, oflags);
-                    }
-                    break;
-                }
-
-                case NetMsg_ReturnFlag:
-                {
-                    int ocn = getint(p),
-                        flag = getint(p),
-                        version = getint(p);
-                    gameent *o = ocn==player1->clientnum ? player1 : newclient(ocn);
-                    if(o && modecheck(gamemode, Mode_CTF))
-                    {
-                        ctfmode.returnflag(o, flag, version);
-                    }
-                    break;
-                }
-
-                case NetMsg_TakeFlag:
-                {
-                    int ocn = getint(p),
-                        flag = getint(p),
-                        version = getint(p);
-                    gameent *o = ocn==player1->clientnum ? player1 : newclient(ocn);
-                    if(o && modecheck(gamemode, Mode_CTF))
-                    {
-                        ctfmode.takeflag(o, flag, version);
-                    }
-                    break;
-                }
-
-                case NetMsg_ResetFlag:
-                {
-                    int flag = getint(p), version = getint(p);
-                    if(modecheck(gamemode, Mode_CTF))
-                    {
-                        ctfmode.resetflag(flag, version);
-                    }
-                    break;
-                }
-                /* end of ctf messages */
-                case NetMsg_Newmap:
-                {
-                    int size = getint(p);
-                    if(size>=0)
-                    {
-                        emptymap(size, true, NULL);
-                        startmap(NULL);
-                    }
-                    else
-                    {
-                        enlargemap(true);
-                    }
-                    if(d && d!=player1)
-                    {
-                        int newsize = 0;
-                        while(1<<newsize < getworldsize())
-                        {
-                            newsize++;
-                        }
-                        conoutf(size>=0 ? "%s started a new map of size %d" : "%s enlarged the map to size %d", colorname(d), newsize);
-                    }
-                    break;
-                }
                 case NetMsg_ReqAuth:
                 {
                     getstring(text, p);
@@ -2994,6 +2882,18 @@ namespace game
                 case NetMsg_ServerCommand:
                 {
                     getstring(text, p);
+                    break;
+                }
+                case NetMsg_GetScore:
+                {
+                    int a = getint(p);
+                    int b = getint(p);
+                    gameent * player = getclient(a);
+                    player->score = b;
+                    int team1score = getint(p);
+                    int team2score = getint(p);
+                    teaminfos[0].score = team1score;
+                    teaminfos[1].score = team2score;
                     break;
                 }
                 default:

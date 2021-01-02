@@ -12,7 +12,7 @@ namespace game
     VARP(showconnecting, 0, 0, 1);
     VARP(showfrags, 0, 1, 1);
 
-    static teaminfo teaminfos[maxteams];
+    teaminfo teaminfos[maxteams];
 
     void clearteaminfo()
     {
@@ -52,17 +52,6 @@ namespace game
         else if(b->state==ClientState_Spectator)
         {
             return true;
-        }
-        if(modecheck(gamemode, Mode_CTF))
-        {
-            if(a->flags > b->flags)
-            {
-                return true;
-            }
-            if(a->flags < b->flags)
-            {
-                return false;
-            }
         }
         if(a->frags > b->frags)
         {
@@ -338,7 +327,7 @@ namespace game
             }
             else
             {
-                intret(teaminfos[*team-1].frags);
+                intret(teaminfos[*team-1].score);
             }
         }
     }
