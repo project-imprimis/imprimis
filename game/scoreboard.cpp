@@ -53,11 +53,11 @@ namespace game
         {
             return true;
         }
-        if(a->frags > b->frags)
+        if(a->score > b->score)
         {
             return true;
         }
-        if(a->frags < b->frags)
+        if(a->score < b->score)
         {
             return false;
         }
