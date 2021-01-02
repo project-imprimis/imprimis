@@ -105,6 +105,8 @@ namespace game
         }
     };
 
+    static const char * parachutemodel = "parachute";
+
     extern void changedplayermodel();
     VARFP(playermodel, 0, 0, sizeof(playermodels)/sizeof(playermodels[0])-1, changedplayermodel());
 
@@ -272,6 +274,7 @@ namespace game
             {
                 preloadmodel(mdl->model[0]);
             }
+            preloadmodel(parachutemodel);
         }
     }
 
@@ -482,6 +485,12 @@ namespace game
         renderplayer(d, getplayermodelinfo(d), getplayercolor(d, team), team, fade, flags);
     }
 
+    static void renderparachute(gameent *d)
+    {
+        vec loc = vec(0,0,24).add(d->o); //three meters above player
+        rendermodel(parachutemodel, Anim_Mapmodel | Anim_Loop, loc, atan2(d->vel.y,d->vel.x)/RAD, 0, 0);
+    }
+
     void rendergame()
     {
         ai::render();
@@ -521,6 +530,10 @@ namespace game
                 int team = modecheck(gamemode, Mode_Team) && validteam(d->team) ? d->team : 0;
                 particle_text(d->abovehead(), d->info, Part_Text, 1, teamtextcolor[team], 2.0f);
             }
+            if(lastmillis - d->parachutetime < parachutemaxtime && d->timeinair > 0 && !modecheck(game::gamemode, Mode_Edit))
+            {
+                renderparachute(d);
+            }
         }
         for(int i = 0; i < ragdolls.length(); i++)
         {
@@ -539,6 +552,10 @@ namespace game
         else if(!f && (player1->state==ClientState_Alive || (player1->state==ClientState_Editing && third) || (player1->state==ClientState_Dead && showdead)))
         {
             renderplayer(player1, 1, third ? 0 : Model_OnlyShadow);
+            if(lastmillis - player1->parachutetime < parachutemaxtime && player1->timeinair > 0 && !modecheck(game::gamemode, Mode_Edit))
+            {
+                renderparachute(player1);
+            }
         }
         renderbouncers();
         if(cmode)
@@ -731,5 +748,221 @@ namespace game
         entitiesinoctanodes();
         attachentities();
         allchanged(true);
+    }
+    //============================================ edit cursor rendering ============================//
+
+    void rendereditcursor()
+    {
+        int d   = DIMENSION(sel.orient),
+            od  = DIMENSION(orient),
+            odc = DIM_COORD(orient);
+        bool hidecursor = UI::hascursor(),
+             hovering   = false;
+        hmapsel = false;
+
+        if(moving)
+        {
+            static vec dest, handle;
+            if(editmoveplane(vec(sel.o), camdir, od, sel.o[D[od]]+odc*sel.grid*sel.s[D[od]], handle, dest, moving==1))
+            {
+                if(moving==1)
+                {
+                    dest.add(handle);
+                    handle = vec(ivec(handle).mask(~(sel.grid-1)));
+                    dest.sub(handle);
+                    moving = 2;
+                }
+                ivec o = ivec(dest).mask(~(sel.grid-1));
+                sel.o[R[od]] = o[R[od]];
+                sel.o[C[od]] = o[C[od]];
+            }
+        }
+        else
+        {
+            ivec w;
+            float sdist = 0,
+                  wdist = 0,
+                  t;
+            int entorient = 0,
+                ent = -1;
+
+            wdist = rayent(player->o, camdir, 1e16f,
+                           (editmode && showmat ? Ray_EditMat : 0)   // select cubes first
+                           | (!dragging && entediting ? Ray_Ents : 0)
+                           | Ray_SkipFirst
+                           | (passthroughcube==1 ? Ray_Pass : 0), gridsize, entorient, ent);
+
+            if((havesel || dragging) && !passthroughsel && !hmapedit)     // now try selecting the selection
+                if(rayboxintersect(vec(sel.o), vec(sel.s).mul(sel.grid), player->o, camdir, sdist, orient))
+                {   // and choose the nearest of the two
+                    if(sdist < wdist)
+                    {
+                        wdist = sdist;
+                        ent   = -1;
+                    }
+                }
+
+            if((hovering = hoveringonent(hidecursor ? -1 : ent, entorient)))
+            {
+               if(!havesel)
+               {
+                   selchildcount = 0;
+                   selchildmat = -1;
+                   sel.s = ivec(0, 0, 0);
+               }
+            }
+            else
+            {
+                vec w = vec(camdir).mul(wdist+0.05f).add(player->o);
+                if(!insideworld(w))
+                {
+                    for(int i = 0; i < 3; ++i)
+                    {
+                        wdist = std::min(wdist, ((camdir[i] > 0 ? worldsize : 0) - player->o[i]) / camdir[i]);
+                    }
+                    w = vec(camdir).mul(wdist-0.05f).add(player->o);
+                    if(!insideworld(w))
+                    {
+                        wdist = 0;
+                        for(int i = 0; i < 3; ++i)
+                        {
+                            w[i] = std::clamp(player->o[i], 0.0f, float(worldsize));
+                        }
+                    }
+                }
+                cube *c = &lookupcube(ivec(w));
+                if(gridlookup && !dragging && !moving && !havesel && hmapedit!=1)
+                {
+                    gridsize = lusize;
+                }
+                int mag = lusize / gridsize;
+                normalizelookupcube(ivec(w));
+                if(sdist == 0 || sdist > wdist)
+                {
+                    rayboxintersect(vec(lu), vec(gridsize), player->o, camdir, t=0, orient); // just getting orient
+                }
+                cur = lu;
+                cor = ivec(vec(w).mul(2).div(gridsize));
+                od = DIMENSION(orient);
+                d = DIMENSION(sel.orient);
+
+                if(hmapedit==1 && DIM_COORD(horient) == (camdir[DIMENSION(horient)]<0))
+                {
+                    hmapsel = hmap::isheightmap(horient, DIMENSION(horient), false, c);
+                    if(hmapsel)
+                    {
+                        od = DIMENSION(orient = horient);
+                    }
+                }
+                if(dragging)
+                {
+                    updateselection();
+                    sel.cx   = std::min(cor[R[d]], lastcor[R[d]]);
+                    sel.cy   = std::min(cor[C[d]], lastcor[C[d]]);
+                    sel.cxs  = std::max(cor[R[d]], lastcor[R[d]]);
+                    sel.cys  = std::max(cor[C[d]], lastcor[C[d]]);
+                    if(!selectcorners)
+                    {
+                        sel.cx &= ~1;
+                        sel.cy &= ~1;
+                        sel.cxs &= ~1;
+                        sel.cys &= ~1;
+                        sel.cxs -= sel.cx-2;
+                        sel.cys -= sel.cy-2;
+                    }
+                    else
+                    {
+                        sel.cxs -= sel.cx-1;
+                        sel.cys -= sel.cy-1;
+                    }
+                    sel.cx  &= 1;
+                    sel.cy  &= 1;
+                    havesel = true;
+                }
+                else if(!havesel)
+                {
+                    sel.o = lu;
+                    sel.s.x = sel.s.y = sel.s.z = 1;
+                    sel.cx = sel.cy = 0;
+                    sel.cxs = sel.cys = 2;
+                    sel.grid = gridsize;
+                    sel.orient = orient;
+                    d = od;
+                }
+                sel.corner = (cor[R[d]]-(lu[R[d]]*2)/gridsize)+(cor[C[d]]-(lu[C[d]]*2)/gridsize)*2;
+                selchildcount = 0;
+                selchildmat = -1;
+                countselchild(worldroot, ivec(0, 0, 0), worldsize/2);
+                if(mag>=1 && selchildcount==1)
+                {
+                    selchildmat = c->material;
+                    if(mag>1)
+                    {
+                        selchildcount = -mag;
+                    }
+                }
+            }
+        }
+
+        glDisable(GL_CULL_FACE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+
+        // cursors
+
+        ldrnotextureshader->set();
+
+        renderentselection(player->o, camdir, entmoving!=0);
+
+        boxoutline = outline!=0;
+
+        enablepolygonoffset(GL_POLYGON_OFFSET_LINE);
+
+        if(!moving && !hovering && !hidecursor)
+        {
+            if(hmapedit==1)
+            {
+                gle::colorub(0, hmapsel ? 255 : 40, 0);
+            }
+            else
+            {
+                gle::colorub(120,120,120);
+            }
+            boxs(orient, vec(lu), vec(lusize));
+        }
+
+        // selections
+        if(havesel || moving)
+        {
+            d = DIMENSION(sel.orient);
+            gle::colorub(50,50,50);   // grid
+            boxsgrid(sel.orient, vec(sel.o), vec(sel.s), sel.grid);
+            gle::colorub(200,0,0);    // 0 reference
+            boxs3D(vec(sel.o).sub(0.5f*std::min(gridsize*0.25f, 2.0f)), vec(std::min(gridsize*0.25f, 2.0f)), 1);
+            gle::colorub(200,200,200);// 2D selection box
+            vec co(sel.o.v), cs(sel.s.v);
+            co[R[d]] += 0.5f*(sel.cx*gridsize);
+            co[C[d]] += 0.5f*(sel.cy*gridsize);
+            cs[R[d]]  = 0.5f*(sel.cxs*gridsize);
+            cs[C[d]]  = 0.5f*(sel.cys*gridsize);
+            cs[D[d]] *= gridsize;
+            boxs(sel.orient, co, cs);
+            if(hmapedit==1)         // 3D selection box
+            {
+                gle::colorub(0,120,0);
+            }
+            else
+            {
+                gle::colorub(0,0,120);
+            }
+            boxs3D(vec(sel.o), vec(sel.s), sel.grid);
+        }
+
+        disablepolygonoffset(GL_POLYGON_OFFSET_LINE);
+
+        boxoutline = false;
+
+        glDisable(GL_BLEND);
+        glEnable(GL_CULL_FACE);
     }
 }

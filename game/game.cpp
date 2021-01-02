@@ -8,10 +8,6 @@
 
 void physicsframe();
 
-static constexpr int parachutemaxtime = 8000, //time until parachute cancels after spawning
-                     parachutespeed = 150, //max speed in cubits/s with parachute activated
-                     defaultspeed = 35;  //default walk speed
-
 namespace game
 {
     bool intermission = false;
@@ -378,10 +374,6 @@ namespace game
                 crouchplayer(player1, 10, true);
                 moveplayer(player1, 10, true);
                 swayhudgun(curtime);
-                if(cmode)
-                {
-                    cmode->checkitems(player1);
-                }
             }
         }
         if(player1->clientnum>=0)
@@ -392,14 +384,7 @@ namespace game
 
     void spawnplayer(gameent *d)   // place at random spawn
     {
-        if(cmode)
-        {
-            cmode->pickspawn(d);
-        }
-        else
-        {
-            findplayerspawn(d, -1, modecheck(gamemode, Mode_Team) ? d->team : 0);
-        }
+        findplayerspawn(d, -1, modecheck(gamemode, Mode_Team) ? d->team : 0);
         spawnstate(d);
         if(d==player1)
         {
@@ -426,13 +411,6 @@ namespace game
         if(player1->state==ClientState_Dead)
         {
             player1->attacking = Act_Idle;
-            int wait = cmode ? cmode->respawnwait(player1) : 0;
-            if(wait>0)
-            {
-                lastspawnattempt = lastmillis;
-                conoutf(ConsoleMsg_GameInfo, "\f2you must wait %d second%s before respawn!", wait, wait!=1 ? "s" : "");
-                return;
-            }
             if(lastmillis < player1->lastpain + spawnwait)
             {
                 return;
@@ -670,20 +648,9 @@ namespace game
         {
             intermission = true;
             player1->attacking = Act_Idle;
-            if(cmode)
-            {
-                cmode->gameover();
-            }
             conoutf(ConsoleMsg_GameInfo, "\f2intermission:");
             conoutf(ConsoleMsg_GameInfo, "\f2game has ended!");
-            if(modecheck(gamemode, Mode_CTF))
-            {
-                conoutf(ConsoleMsg_GameInfo, "\f2player frags: %d, flags: %d, deaths: %d", player1->frags, player1->flags, player1->deaths);
-            }
-            else
-            {
-                conoutf(ConsoleMsg_GameInfo, "\f2player frags: %d, deaths: %d", player1->frags, player1->deaths);
-            }
+            conoutf(ConsoleMsg_GameInfo, "\f2player frags: %d, deaths: %d, score: %d", player1->frags, player1->deaths, player1->score);
             int accuracy = (player1->totaldamage*100)/max(player1->totalshots, 1);
             conoutf(ConsoleMsg_GameInfo, "\f2player total damage dealt: %d, damage wasted: %d, efficiency(%%): %d", player1->totaldamage, player1->totalshots-player1->totaldamage, accuracy);
             showscores(true);
@@ -693,7 +660,7 @@ namespace game
     }
 
     ICOMMAND(getfrags, "", (), intret(player1->frags));
-    ICOMMAND(getflags, "", (), intret(player1->flags));
+    ICOMMAND(getscore, "", (), intret(player1->score));
     ICOMMAND(getdeaths, "", (), intret(player1->deaths));
     ICOMMAND(getaccuracy, "", (), intret((player1->totaldamage*100)/max(player1->totalshots, 1)));
     ICOMMAND(gettotaldamage, "", (), intret(player1->totaldamage));
@@ -752,10 +719,6 @@ namespace game
             removeweapons(d);
             removetrackedparticles(d);
             removetrackeddynlights(d);
-            if(cmode)
-            {
-                cmode->removeplayer(d);
-            }
             removegroupedplayer(d);
             players.removeobj(d);
             DELETEP(clients[cn]);
@@ -809,11 +772,6 @@ namespace game
         intermission = false;
         maptime = maprealtime = 0;
         maplimit = -1;
-        if(cmode)
-        {
-            cmode->preload();
-            cmode->setup();
-        }
         conoutf(ConsoleMsg_GameInfo, "\f2game mode is %s", server::modeprettyname(gamemode));
         const char *info = validmode(gamemode) ? gamemodes[gamemode - startgamemode].info : NULL;
         if(showmodeinfo && info)

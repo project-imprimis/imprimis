@@ -117,8 +117,6 @@
 namespace entities
 {
     extern void editent(int i, bool local);
-    extern void fixentity(extentity &e);
-    extern void entradius(extentity &e, bool color);
     extern vector<extentity *> &getents();
 }
 
@@ -800,7 +798,6 @@ void renderentradius(extentity &e, bool color)
             {
                 gle::colorf(0, 1, 1); //always teal
             }
-            entities::entradius(e, color);
             vec dir;
             vecfromyawpitch(e.attr2, e.attr3, 1, 0, dir);
             renderentarrow(e, dir, 4);
@@ -813,7 +810,6 @@ void renderentradius(extentity &e, bool color)
             {
                 gle::colorf(0, 1, 1); //always teal
             }
-            entities::entradius(e, color);
             vec dir;
             vecfromyawpitch(e.attr1, 0, 1, 0, dir);
             renderentarrow(e, dir, 4); //points towards where player faces at spawn
@@ -840,7 +836,6 @@ void renderentradius(extentity &e, bool color)
                 {
                     gle::colorf(0, 1, 1);
                 }
-                entities::entradius(e, color);
             }
             break;
     }
@@ -1230,7 +1225,6 @@ extentity *newentity(bool local, const vec &o, int type, int v1, int v2, int v3,
                 break;
             }
         }
-        entities::fixentity(e);
     }
     if(ents.inrange(idx))
     {
@@ -1427,33 +1421,6 @@ namespace entities
         if(ents.inrange(i))
         {
             ents[i]->setspawned(on);
-        }
-    }
-
-    void fixentity(extentity &e)
-    {
-        switch(e.type)
-        {
-            case GamecodeEnt_Flag:
-            {
-                e.attr5 = e.attr4;
-                e.attr4 = e.attr3;
-                break;
-            }
-        }
-    }
-
-    void entradius(extentity &e, bool color)
-    {
-        switch(e.type)
-        {
-            case GamecodeEnt_Flag:
-            {
-                vec dir;
-                vecfromyawpitch(e.attr1, 0, 1, 0, dir);
-                renderentarrow(e, dir, 4);
-                break;
-            }
         }
     }
 

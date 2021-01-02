@@ -183,7 +183,7 @@ const struct gamemodeinfo
 {
     { "demo", "Demo", Mode_Demo | Mode_LocalOnly, NULL},
     { "edit", "Edit", Mode_Edit | Mode_All, "Cooperative Editing:\nEdit maps with multiple players simultaneously." },
-    { "ctf", "CTF", Mode_CTF | Mode_Team | Mode_All, "Capture The Flag:\nCapture \fs\f3the enemy flag\fr and bring it back to \fs\f1your flag\fr to score points for \fs\f1your team\fr." },
+    { "tdm", "TDM", Mode_Team | Mode_All, "Team Deathmatch: fight for the most kills" },
 };
 
 //these are the checks for particular mechanics in particular modes
@@ -384,7 +384,9 @@ enum
     NetMsg_SwitchTeam,
     NetMsg_ServerCommand,
     NetMsg_DemoPacket,
-    NetMsg_NumMsgs //104
+    NetMsg_GetScore,
+
+    NetMsg_NumMsgs //105
 };
 
 /* list of messages with their sizes in bytes
@@ -502,6 +504,8 @@ const int msgsizes[] =
     NetMsg_SwitchTeam,    2,
     NetMsg_ServerCommand, 0,
     NetMsg_DemoPacket,    0,
+
+    NetMsg_GetScore,      0,
     -1
 };
 
@@ -619,6 +623,10 @@ struct gamestate
     }
 };
 
+constexpr int parachutemaxtime = 8000, //time until parachute cancels after spawning
+              parachutespeed = 150, //max speed in cubits/s with parachute activated
+              defaultspeed = 35;  //default walk speed
+
 constexpr int clientlimit = 128;
 constexpr int maxtrans = 5000;
 
@@ -661,7 +669,7 @@ struct gameent : dynent, gamestate
     int attacking;
     int lasttaunt;
     int lastpickup, lastpickupmillis, flagpickup;
-    int frags, flags, deaths, totaldamage, totalshots;
+    int frags, deaths, totaldamage, totalshots, score;
     editinfo *edit;
     float deltayaw, deltapitch, deltaroll, newyaw, newpitch, newroll;
     int smoothmillis;
@@ -677,7 +685,7 @@ struct gameent : dynent, gamestate
 
     gameent() : weight(100), clientnum(-1), privilege(Priv_None), lastupdate(0),
                 plag(0), ping(0), lifesequence(0), respawned(-1), suicided(-1),
-                lastpain(0), frags(0), flags(0), deaths(0), totaldamage(0),
+                lastpain(0), frags(0), deaths(0), totaldamage(0),
                 totalshots(0), edit(NULL), smoothmillis(-1), team(0),
                 playermodel(-1), playercolor(0), ai(NULL), ownernum(-1), muzzle(-1, -1, -1)
     {
@@ -685,9 +693,9 @@ struct gameent : dynent, gamestate
         respawn();
         //overwrite dynent phyical parameters
         radius = 3.0f;
-        eyeheight = 12;
-        maxheight = 13;
-        aboveeye = 2;
+        eyeheight = 15;
+        maxheight = 15;
+        aboveeye = 0;
         xradius = 3.0f;
         yradius = 1.0f;
     }
@@ -722,7 +730,7 @@ struct gameent : dynent, gamestate
 
     void startgame()
     {
-        frags = flags = deaths = 0;
+        frags = deaths = 0;
         totaldamage = totalshots = 0;
         maxhealth = 1;
         lifesequence = -1;
@@ -762,7 +770,7 @@ inline bool htcmp(int team, const teamscore &t)
 
 struct teaminfo
 {
-    int frags;
+    int frags, score;
 
     teaminfo()
     {
@@ -772,6 +780,7 @@ struct teaminfo
     void reset()
     {
         frags = 0;
+        score = 0;
     }
 };
 
@@ -903,6 +912,7 @@ namespace game
     extern void avoidweapons(ai::avoidset &obstacles, float radius);
 
     // scoreboard
+    extern teaminfo teaminfos[maxteams];
     extern void showscores(bool on);
     extern void getbestplayers(vector<gameent *> &best);
     extern void getbestteams(vector<int> &best);
@@ -929,6 +939,7 @@ namespace game
     extern vec hudgunorigin(int gun, const vec &from, const vec &to, gameent *d);
     extern void rendergame();
     extern void renderavatar();
+    extern void rendereditcursor();
 
     // additional fxns needed by server/main code
 
@@ -1008,6 +1019,8 @@ extern void mpcalclight(bool local);
 extern undoblock *copyundoents(undoblock *u);
 extern void pasteundoents(undoblock *u);
 extern void pasteundoent(int idx, const entity &ue);
+extern bool hoveringonent(int ent, int orient);
+extern void renderentselection(const vec &o, const vec &ray, bool entmoving);
 
 // serverbrowser
 

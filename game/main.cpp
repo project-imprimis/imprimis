@@ -300,7 +300,8 @@ int main(int argc, char **argv)
         //create pointers to the game & hud rendering we want the renderer to slip in
         void (*gamefxn)() = &game::rendergame;
         void (*hudfxn)() = &game::renderavatar;
-        gl_drawframe(crosshairindex, gamefxn, hudfxn); //rendering magic
+        void (*editfxn)() = &game::rendereditcursor;
+        gl_drawframe(crosshairindex, gamefxn, hudfxn, editfxn); //rendering magic
         swapbuffers();
         renderedframe = inbetweenframes = true; //done!
     }
