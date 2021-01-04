@@ -24,6 +24,22 @@ namespace game
 
     VAR(spawncombatclass, 0, 0, 2);
 
+/*getcombatclass
+ * returns the combat class the player currently has (may be different than
+ * `spawncombatclass` as `spawncombatclass` can be changed while the player
+ * is still alive)
+ *
+ * Arguments:
+ *   none
+ * Returns:
+ *  (to cubescript) player character's current combat class
+ */
+    void getcombatclass()
+    {
+        intret(player1->combatclass);
+    }
+    COMMAND(getcombatclass, "");
+
     void gunselect(int gun, gameent *d)
     {
         if(gun!=d->gunselect)
