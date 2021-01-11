@@ -1,5 +1,6 @@
 #ifndef GAME_H_
 #define GAME_H_
+#define SDL_MAIN_HANDLED
 
 #include "../libprimis-headers/cube.h"
 #include "../libprimis-headers/iengine.h"
