@@ -115,14 +115,6 @@ void startupconstants()
 
 int main(int argc, char **argv)
 {
-    #ifdef WIN32
-        //atexit((void (__cdecl *)(void))_CrtDumpMemoryLeaks);
-        #ifndef _DEBUG
-            #ifndef __GNUC__
-                __try {
-            #endif
-        #endif
-    #endif
     initidents();
     setlogfile(NULL);
     startupconstants();
