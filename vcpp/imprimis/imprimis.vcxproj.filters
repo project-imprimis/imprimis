@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Local Dependencies">
+      <UniqueIdentifier>{32d366b9-1ad0-4bba-a38c-e9557cc59a54}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\game\ai.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\ctf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\nettools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\3rdparty\headers\begin_code.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\3rdparty\headers\close_code.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\command.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\consts.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\cube.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\ents.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\geom.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\glemu.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\glexts.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\iengine.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\octa.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\texture.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\tools.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libprimis-headers\world.h">
+      <Filter>Local Dependencies</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\game\ai.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\cserver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\edit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\entities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\gameclient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\render.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\scoreboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\serverbrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\waypoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\weapon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\libprimis-headers\lib\enet.lib" />
+    <Library Include="..\..\libprimis-headers\3rdparty\bin\SDL2.lib" />
+    <Library Include="..\..\libprimis-headers\3rdparty\bin\SDL2_image.lib" />
+    <Library Include="..\..\libprimis-headers\3rdparty\bin\SDL2_mixer.lib" />
+    <Library Include="..\..\libprimis-headers\3rdparty\bin\zdll.lib" />
+    <Library Include="..\..\libprimis.lib" />
+  </ItemGroup>
+</Project>
