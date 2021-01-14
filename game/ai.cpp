@@ -1264,18 +1264,6 @@ namespace ai
 
     bool lockon(gameent *d, int atk, gameent *e, float maxdist)
     {
-        if(attacks[atk].action == Act_Melee && !d->blocked && !d->timeinair)
-        {
-            vec dir = vec(e->o).sub(d->o);
-            float xydist = dir.x*dir.x+dir.y*dir.y,
-                  zdist = dir.z*dir.z,
-                  mdist = maxdist*maxdist,
-                  ddist = d->radius*d->radius+e->radius*e->radius;
-            if(zdist <= ddist && xydist >= ddist+4 && xydist <= mdist+ddist)
-            {
-                return true;
-            }
-        }
         return false;
     }
     int process(gameent *d, aistate &b)

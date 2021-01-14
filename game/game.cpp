@@ -436,7 +436,6 @@ namespace game
     }
 
     ICOMMAND(shoot, "D", (int *down), doaction(*down ? Act_Shoot : Act_Idle));
-    ICOMMAND(melee, "D", (int *down), doaction(*down ? Act_Melee : Act_Idle));
 
     VARP(jumpspawn, 0, 1, 1);
 

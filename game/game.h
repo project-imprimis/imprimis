@@ -67,7 +67,6 @@ enum
     Anim_CrouchSink,
     Anim_CrouchSwim,
     Anim_Shoot,
-    Anim_Melee,
     Anim_Pain,
     Anim_Edit,
     Anim_Lag,
@@ -76,10 +75,8 @@ enum
     Anim_Lose, //50
     Anim_GunIdle,
     Anim_GunShoot,
-    Anim_GunMelee,
     Anim_VWepIdle,
     Anim_VWepShoot,
-    Anim_VWepMelee,
     Anim_NumAnims //57
 };
 
@@ -127,20 +124,15 @@ enum
 {
     Act_Idle = 0,
     Act_Shoot,
-    Act_Melee,
     Act_NumActs
 };
 
 enum
 {
     Attack_RailShot = 0,
-    Attack_RailMelee,
     Attack_PulseShoot,
-    Attack_PulseMelee,
     Attack_EngShoot,
-    Attack_EngMelee,
     Attack_CarbineShoot,
-    Attack_CarbineMelee,
     Attack_NumAttacks
 };
 
@@ -537,23 +529,18 @@ const float EXP_SELFPUSH  = 2.5f,
 const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudsound, attackdelay, damage, spread, margin, projspeed, kickamount, range, rays, hitpush, exprad, worldfx, use, water; } attacks[Attack_NumAttacks] =
 //    1            2          3           4               5             6              7            8     9   10  11    12  13    14   15  16  17 18 19 20
 {
-    { Gun_Rail,    Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,  Sound_Rail2,  250,  5,   0, 0,    0, 10, 2048, 1,  200,  0, 0, 0, 1},
-    { Gun_Rail,    Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,   0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 1},
-    { Gun_Pulse,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1, Sound_Pulse2,3000, 15,   0, 1,  700, 50, 1024, 1, 2500, 50, 1, 0, 0},
-    { Gun_Pulse,   Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,   0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 1},
-    { Gun_Eng,     Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,  Sound_Melee,  500,  0,   0, 1,    0,  0,   80, 1,   10, 20, 2, 0, 1},
-    { Gun_Eng,     Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500, 10,   0, 2,    0,  0,   14, 1,    0,  0, 0, 0, 1},
-    { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,  Sound_Rail2,   90,  2, 100, 0,    0,  2,  512, 1,   50,  0, 0, 0, 1},
-    { Gun_Carbine, Act_Melee, Anim_Melee, Anim_VWepMelee, Anim_GunMelee, Sound_Melee,  Sound_Melee,  500,  7,   0, 0,    0,  0,   14, 1,   50,  0, 0, 0, 1},
-
+    { Gun_Rail,    Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,    Sound_Rail2,    250,  5,   0, 0,    0, 10, 2048, 1,  200,  0, 0, 0, 1},
+    { Gun_Pulse,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1,   Sound_Pulse2,  3000, 15,   0, 1,  700, 50, 1024, 1, 2500, 50, 1, 0, 0},
+    { Gun_Eng,     Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,    Sound_Melee,    500,  0,   0, 1,    0,  0,   80, 1,   10, 20, 2, 0, 1},
+    { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1,  90,  2, 100, 0,    0,  2,  512, 1,   50,  0, 0, 0, 1},
 };
 
 const struct guninfo { const char *name, *file, *vwep; int attacks[Act_NumActs]; } guns[Gun_NumGuns] =
 {
-    { "railgun", "railgun", "worldgun/railgun", { -1, Attack_RailShot, Attack_RailMelee } },
-    { "pulse rifle", "pulserifle", "worldgun/pulserifle", { -1, Attack_PulseShoot, Attack_PulseMelee } },
-    { "engineer rifle", "enggun", "worldgun/pulserifle", { -1, Attack_EngShoot, Attack_EngMelee } },
-    { "carbine", "carbine", "worldgun/carbine", { -1, Attack_CarbineShoot, Attack_CarbineMelee } }
+    { "railgun", "railgun", "worldgun/railgun", { -1, Attack_RailShot } },
+    { "pulse rifle", "pulserifle", "worldgun/pulserifle", { -1, Attack_PulseShoot } },
+    { "engineer rifle", "enggun", "worldgun/pulserifle", { -1, Attack_EngShoot } },
+    { "carbine", "carbine", "worldgun/carbine", { -1, Attack_CarbineShoot } }
 };
 
 #include "ai.h"

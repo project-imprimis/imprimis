@@ -965,7 +965,7 @@ namespace game
             railhit(from, to, false);
             hitpush(attacks[atk].damage, o, d, from, to, atk, 1);
         }
-        else if(attacks[atk].action!=Act_Melee)
+        else
         {
             railhit(from, to);
         }
@@ -1062,7 +1062,7 @@ namespace game
         }
 
         d->gunwait = attacks[atk].attackdelay;
-        if(attacks[atk].action != Act_Melee && d->ai)
+        if(d->ai)
         {
             d->gunwait += static_cast<int>(d->gunwait*(((101-d->skill)+randomint(111-d->skill))/100.f));
         }

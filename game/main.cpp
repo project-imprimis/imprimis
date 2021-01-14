@@ -97,11 +97,11 @@ void startupconstants()
         "crouch", "crouch N", "crouch NE", "crouch E", "crouch SE", "crouch S", "crouch SW", "crouch W", "crouch NW",
         "crouch jump", "crouch jump N", "crouch jump NE", "crouch jump E", "crouch jump SE", "crouch jump S", "crouch jump SW", "crouch jump W", "crouch jump NW",
         "crouch sink", "crouch swim",
-        "shoot", "melee",
+        "shoot",
         "pain",
         "edit", "lag", "taunt", "win", "lose",
-        "gun idle", "gun shoot", "gun melee",
-        "vwep idle", "vwep shoot", "vwep melee"
+        "gun idle", "gun shoot",
+        "vwep idle", "vwep shoot",
     };
     animnames = std::vector<std::string>(std::begin(animlist), std::end(animlist));
 
