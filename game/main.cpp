@@ -99,7 +99,7 @@ void startupconstants()
         "crouch sink", "crouch swim",
         "shoot",
         "pain",
-        "edit", "lag", "taunt", "win", "lose",
+        "edit", "lag", "win", "lose",
         "gun idle", "gun shoot",
         "vwep idle", "vwep shoot",
     };

@@ -300,12 +300,6 @@ namespace game
                 anim = attack = Anim_Win | Anim_Loop;
             }
         }
-        else if(d->state==ClientState_Alive && d->lasttaunt && lastmillis-d->lasttaunt<1000 && lastmillis-d->lastaction>delay)
-        {
-            lastaction = d->lasttaunt;
-            anim = attack = Anim_Taunt;
-            delay = 1000;
-        }
         modelattach a[5];
         int ai = 0;
         if(guns[d->gunselect].vwep)

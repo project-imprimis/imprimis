@@ -2335,15 +2335,6 @@ namespace game
                     playsound(Sound_WeapLoad, &d->o);
                     break;
                 }
-                case NetMsg_Taunt:
-                {
-                    if(!d)
-                    {
-                        return;
-                    }
-                    d->lasttaunt = lastmillis;
-                    break;
-                }
                 case NetMsg_Resume:
                 {
                     for(;;)

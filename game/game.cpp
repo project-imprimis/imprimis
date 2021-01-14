@@ -463,27 +463,8 @@ namespace game
 
     bool allowmove(physent *d)
     {
-        if(d->type!=PhysEnt_Player)
-        {
-            return true;
-        }
-        return !((gameent *)d)->lasttaunt || lastmillis-((gameent *)d)->lasttaunt>=1000;
+        return true;
     }
-
-    void taunt()
-    {
-        if(player1->state!=ClientState_Alive || player1->physstate<PhysEntState_Slope)
-        {
-            return;
-        }
-        if(lastmillis-player1->lasttaunt<1000)
-        {
-            return;
-        }
-        player1->lasttaunt = lastmillis;
-        addmsg(NetMsg_Taunt, "rc", player1);
-    }
-    COMMAND(taunt, "");
 
     VARP(hitsound, 0, 0, 1);
 
