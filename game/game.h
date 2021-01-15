@@ -243,13 +243,7 @@ enum
     Sound_Pain2,
     Sound_Die1,
     Sound_Die2,
-
-    Sound_FlagPickup,
-    Sound_FlagDrop,
-    Sound_FlagReturn,
-    Sound_FlagScore,
-    Sound_FlagReset,
-    Sound_FlagFail
+    Sound_Carbine1
 };
 
 // network messages codes, c2s, c2c, s2c
