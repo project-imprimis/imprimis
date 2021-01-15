@@ -2202,7 +2202,7 @@ namespace game
                     {
                         cmode->respawned(s);
                     }
-                    ai::spawned(s);
+                    s->ai->spawned(s);
                     checkfollow();
                     addmsg(NetMsg_Spawn, "rcii", s, s->lifesequence, s->gunselect);
                     break;
@@ -2867,7 +2867,7 @@ namespace game
                     {
                         break;
                     }
-                    ai::init(b, at, on, sk, bn, pm, col, name, team);
+                    b->ai->init(b, at, on, sk, bn, pm, col, name, team);
                     break;
                 }
                 case NetMsg_ServerCommand:
