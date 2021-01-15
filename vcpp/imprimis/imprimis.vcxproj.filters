@@ -21,9 +21,6 @@
     <ClInclude Include="..\..\game\ai.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\game\ctf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\game\game.h">
       <Filter>Header Files</Filter>
     </ClInclude>

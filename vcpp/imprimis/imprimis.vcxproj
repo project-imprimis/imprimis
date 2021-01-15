@@ -57,7 +57,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\game\ai.h" />
-    <ClInclude Include="..\..\game\ctf.h" />
     <ClInclude Include="..\..\game\game.h" />
     <ClInclude Include="..\..\game\nettools.h" />
     <ClInclude Include="..\..\include\3rdparty\headers\begin_code.h" />
