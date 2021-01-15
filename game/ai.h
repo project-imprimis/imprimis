@@ -60,7 +60,6 @@ namespace ai
                 return -1;
             }
 
-        private:
             bool haslinks()
             {
                 return links[0]!=0;
@@ -285,91 +284,16 @@ namespace ai
             vec target;
             gameent *parent;
 
-            void clearsetup()
-            {
-                weappref = Gun_Rail;
-                spot = target = vec(0, 0, 0);
-                lastaction = lasthunt = lastcheck = enemyseen = enemymillis = blocktime = huntseq = blockseq = targtime = targseq = lastaimrnd = 0;
-                lastrun = jumpseed = lastmillis;
-                jumprand = lastmillis+5000;
-                targnode = targlast = enemy = -1;
-            }
+            void clearsetup();
+            void clear(bool prev = false);
+            void wipe(bool prev = false);
+            void clean(bool tryit = false);
+            void reset(bool tryit = false);
+            aistate &addstate(int t, int r = -1, int v = -1);
+            void removestate(int index = -1);
+            aistate &getstate(int idx = -1);
+            aistate &switchstate(aistate &b, int t, int r = -1, int v = -1);
 
-            void clear(bool prev = false)
-            {
-                if(prev)
-                {
-                    memset(prevnodes, -1, sizeof(prevnodes));
-                }
-                route.setsize(0);
-            }
-
-            void wipe(bool prev = false)
-            {
-                clear(prev);
-                state.setsize(0);
-                addstate(AIState_Wait);
-                trywipe = false;
-            }
-
-            void clean(bool tryit = false)
-            {
-                if(!tryit)
-                {
-                    becareful = dontmove = false;
-                }
-                targyaw = randomint(360);
-                targpitch = 0.f;
-                tryreset = tryit;
-            }
-
-            void reset(bool tryit = false)
-            {
-                wipe();
-                clean(tryit);
-            }
-
-            aistate &addstate(int t, int r = -1, int v = -1)
-            {
-                return state.add(aistate(lastmillis, t, r, v));
-            }
-
-            void removestate(int index = -1)
-            {
-                if(index < 0)
-                {
-                    state.pop();
-                }
-                else if(state.inrange(index))
-                {
-                    state.remove(index);
-                }
-                if(!state.length())
-                {
-                    addstate(AIState_Wait);
-                }
-            }
-
-            aistate &getstate(int idx = -1)
-            {
-                if(state.inrange(idx))
-                {
-                    return state[idx];
-                }
-                return state.last();
-            }
-
-            aistate &switchstate(aistate &b, int t, int r = -1, int v = -1)
-            {
-                if((b.type == t && b.targtype == r) || (b.type == AIState_Interest && b.targtype == AITravel_Node))
-                {
-                    b.millis = lastmillis;
-                    b.target = v;
-                    b.reset();
-                    return b;
-                }
-                return addstate(t, r, v);
-            }
             float viewdist(int skill);
             float viewfieldx(int skill);
             float viewfieldy(int skill);
