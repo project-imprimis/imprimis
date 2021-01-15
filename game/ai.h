@@ -25,44 +25,46 @@ namespace ai
     const float viewmin         = 90.f;    // minimum field of view
     const float viewmax         = 180.f;   // maximum field of view
 
-    struct waypoint
+    class waypoint
     {
-        vec o;
-        float curscore, estscore;
-        int weight;
-        ushort route, prev;
-        ushort links[maxwaypointlinks];
+        public:
+            vec o;
+            int weight;
+            ushort links[maxwaypointlinks];
+            ushort route, prev;
+            float curscore, estscore;
 
-        waypoint()
-        {
-        }
-
-        waypoint(const vec &o, int weight = 0) : o(o), weight(weight), route(0)
-        {
-            memset(links, 0, sizeof(links));
-        }
-
-        int score() const
-        {
-            return static_cast<int>(curscore) + static_cast<int>(estscore);
-        }
-
-        int find(int wp)
-        {
-            for(int i = 0; i < maxwaypointlinks; ++i)
+            waypoint()
             {
-                if(links[i] == wp)
-                {
-                    return i;
-                }
             }
-            return -1;
-        }
 
-        bool haslinks()
-        {
-            return links[0]!=0;
-        }
+            waypoint(const vec &o, int weight = 0) : o(o), weight(weight), route(0)
+            {
+                memset(links, 0, sizeof(links));
+            }
+
+            int score() const
+            {
+                return static_cast<int>(curscore) + static_cast<int>(estscore);
+            }
+
+            int find(int wp)
+            {
+                for(int i = 0; i < maxwaypointlinks; ++i)
+                {
+                    if(links[i] == wp)
+                    {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+
+        private:
+            bool haslinks()
+            {
+                return links[0]!=0;
+            }
     };
     extern vector<waypoint> waypoints;
 
