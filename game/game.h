@@ -942,7 +942,6 @@ namespace game
     extern const char *getclientmap();
     extern const char *gameident();
     extern const char *defaultconfig();
-    extern bool allowmove(physent *d);
 }
 
 // game

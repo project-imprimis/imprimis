@@ -365,7 +365,7 @@ namespace game
 
             if(d->inwater && d->physstate<=PhysEntState_Fall)
             {
-                anim |= (((game::allowmove(d) && (d->move || d->strafe)) || d->vel.z+d->falling.z>0 ? Anim_Swim : Anim_Sink) | Anim_Loop) << Anim_Secondary;
+                anim |= ((d->move || d->strafe || d->vel.z+d->falling.z>0 ? Anim_Swim : Anim_Sink) | Anim_Loop) << Anim_Secondary;
             }
             else
             {
@@ -380,7 +380,7 @@ namespace game
                 {
                     anim |= ((dir ? dir+Anim_JumpN-Anim_RunN : Anim_Jump) | Anim_End) << Anim_Secondary;
                 }
-                else if(dir && game::allowmove(d))
+                else if(dir)
                 {
                     anim |= (dir | Anim_Loop) << Anim_Secondary;
                 }

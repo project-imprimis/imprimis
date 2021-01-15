@@ -461,11 +461,6 @@ namespace game
         return player1->state!=ClientState_Dead;
     }
 
-    bool allowmove(physent *d)
-    {
-        return true;
-    }
-
     VARP(hitsound, 0, 0, 1);
 
     void damaged(int damage, gameent *d, gameent *actor, bool local)
@@ -1237,7 +1232,7 @@ bool trystepdown(physent *d, vec &dir, float step, float xy, float z, bool init 
 
 bool trystepdown(physent *d, vec &dir, bool init = false)
 {
-    if((!d->move && !d->strafe) || !game::allowmove(d))
+    if((!d->move && !d->strafe))
     {
         return false;
     }
@@ -1644,10 +1639,9 @@ bool moveplayer(gameent *pl, int moveres, bool local, int curtime)
 
 void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curtime)
 {
-    bool allowmove = game::allowmove(pl);
     if(floating)
     {
-        if(pl->jumping && allowmove)
+        if(pl->jumping)
         {
             pl->jumping = false;
             pl->vel.z = max(pl->vel.z, jumpvel);
@@ -1659,7 +1653,7 @@ void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curt
         {
             pl->vel.div(8);
         }
-        if(pl->jumping && allowmove)
+        if(pl->jumping)
         {
             pl->jumping = false;
             pl->vel.z = max(pl->vel.z, jumpvel); // physics impulse upwards
@@ -1676,7 +1670,7 @@ void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curt
         pl->timeinair += curtime;
     }
     vec m(0.0f, 0.0f, 0.0f);
-    if((pl->move || pl->strafe) && allowmove)
+    if(pl->move || pl->strafe)
     {
         vecfromyawpitch(pl->yaw, floating || water || pl->type==PhysEnt_Camera ? pl->pitch : 0, pl->move, pl->strafe, m);
         if(!floating && pl->physstate >= PhysEntState_Slope)
@@ -1738,7 +1732,7 @@ void modifygravity(gameent *pl, bool water, int curtime)
         g.normalize();
         g.mul(gravity*secs);
     }
-    if(!water || !game::allowmove(pl) || (!pl->move && !pl->strafe))
+    if(!water || (!pl->move && !pl->strafe))
     {
         pl->falling.add(g);
     }
