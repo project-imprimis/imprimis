@@ -1262,10 +1262,6 @@ namespace ai
         fixrange(yaw, pitch);
     }
 
-    bool lockon(gameent *d, int atk, gameent *e, float maxdist)
-    {
-        return false;
-    }
     int process(gameent *d, aistate &b)
     {
         int result = 0,
@@ -1338,16 +1334,6 @@ namespace ai
             if(idle || insight || hasseen || quick)
             {
                 float sskew = insight || d->skill > 100 ? 1.5f : (hasseen ? 1.f : 0.5f);
-                if(insight && lockon(d, atk, e, 16))
-                {
-                    d->ai->targyaw = yaw;
-                    d->ai->targpitch = pitch;
-                    if(!idle)
-                    {
-                        frame *= 2;
-                    }
-                    d->ai->becareful = false;
-                }
                 scaleyawpitch(d->yaw, d->pitch, yaw, pitch, frame, sskew);
                 if(insight || quick)
                 {
