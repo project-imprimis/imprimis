@@ -76,90 +76,90 @@ namespace ai
     extern void findwaypointswithin(const vec &pos, float mindist, float maxdist, vector<int> &results);
     extern void inferwaypoints(gameent *d, const vec &o, const vec &v, float mindist = ai::closedist);
 
-    struct avoidset
+    class avoidset
     {
-        struct obstacle
-        {
-            void *owner;
-            int numwaypoints;
-            float above;
-
-            obstacle(void *owner, float above = -1) : owner(owner), numwaypoints(0), above(above) {}
-        };
-
-        vector<obstacle> obstacles;
-        vector<int> waypoints;
-
-        void clear()
-        {
-            obstacles.setsize(0);
-            waypoints.setsize(0);
-        }
-
-        void add(void *owner, float above)
-        {
-            obstacles.add(obstacle(owner, above));
-        }
-
-        void add(void *owner, float above, int wp)
-        {
-            if(obstacles.empty() || owner != obstacles.last().owner)
+        public:
+            struct obstacle
             {
-                add(owner, above);
+                void *owner;
+                int numwaypoints;
+                float above;
+
+                obstacle(void *owner, float above = -1) : owner(owner), numwaypoints(0), above(above) {}
+            };
+            vector<obstacle> obstacles;
+            vector<int> waypoints;
+
+            void clear()
+            {
+                obstacles.setsize(0);
+                waypoints.setsize(0);
             }
-            obstacles.last().numwaypoints++;
-            waypoints.add(wp);
-        }
 
-        void add(avoidset &avoid)
-        {
-            waypoints.put(avoid.waypoints.getbuf(), avoid.waypoints.length());
-            for(int i = 0; i < avoid.obstacles.length(); i++)
+            void add(avoidset &avoid)
             {
-                obstacle &o = avoid.obstacles[i];
-                if(obstacles.empty() || o.owner != obstacles.last().owner)
+                waypoints.put(avoid.waypoints.getbuf(), avoid.waypoints.length());
+                for(int i = 0; i < avoid.obstacles.length(); i++)
                 {
-                    add(o.owner, o.above);
+                    obstacle &o = avoid.obstacles[i];
+                    if(obstacles.empty() || o.owner != obstacles.last().owner)
+                    {
+                        add(o.owner, o.above);
+                    }
+                    obstacles.last().numwaypoints += o.numwaypoints;
                 }
-                obstacles.last().numwaypoints += o.numwaypoints;
             }
-        }
 
-        void avoidnear(void *owner, float above, const vec &pos, float limit);
-
-        #define LOOP_AVOID(v, d, body) \
-            if(!(v).obstacles.empty()) \
-            { \
-                int cur = 0; \
-                for(int i = 0; i < (v).obstacles.length(); i++) \
+            #define LOOP_AVOID(v, d, body) \
+                if(!(v).obstacles.empty()) \
                 { \
-                    const ai::avoidset::obstacle &ob = (v).obstacles[i]; \
-                    int next = cur + ob.numwaypoints; \
-                    if(ob.owner != d) \
+                    int cur = 0; \
+                    for(int i = 0; i < (v).obstacles.length(); i++) \
                     { \
-                        for(; cur < next; cur++) \
+                        const ai::avoidset::obstacle &ob = (v).obstacles[i]; \
+                        int next = cur + ob.numwaypoints; \
+                        if(ob.owner != d) \
                         { \
-                            int wp = (v).waypoints[cur]; \
-                            body; \
+                            for(; cur < next; cur++) \
+                            { \
+                                int wp = (v).waypoints[cur]; \
+                                body; \
+                            } \
                         } \
+                        cur = next; \
                     } \
-                    cur = next; \
-                } \
+                }
+
+            bool find(int n, gameent *d) const
+            {
+                LOOP_AVOID(*this, d,
+                {
+                    if(wp == n)
+                    {
+                        return true;
+                    }
+                });
+                return false;
             }
 
-        bool find(int n, gameent *d) const
-        {
-            LOOP_AVOID(*this, d,
-            {
-                if(wp == n)
-                {
-                    return true;
-                }
-            });
-            return false;
-        }
+            void avoidnear(void *owner, float above, const vec &pos, float limit);
+            int remap(gameent *d, int n, vec &pos, bool retry = false);
 
-        int remap(gameent *d, int n, vec &pos, bool retry = false);
+        private:
+            void add(void *owner, float above)
+            {
+                obstacles.add(obstacle(owner, above));
+            }
+
+            void add(void *owner, float above, int wp)
+            {
+                if(obstacles.empty() || owner != obstacles.last().owner)
+                {
+                    add(owner, above);
+                }
+                obstacles.last().numwaypoints++;
+                waypoints.add(wp);
+            }
     };
 
     extern bool route(gameent *d, int node, int goal, vector<int> &route, const avoidset &obstacles, int retries = 0);
