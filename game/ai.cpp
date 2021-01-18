@@ -210,14 +210,14 @@ namespace ai
 
     bool aiinfo::canshoot(int atk)
     {
-        return !aiplayer->ai->becareful && aiplayer->ammo[attacks[atk].gun] > 0 && lastmillis - aiplayer->lastaction >= aiplayer->gunwait;
+        return !becareful && aiplayer->ammo[attacks[atk].gun] > 0 && lastmillis - aiplayer->lastaction >= aiplayer->gunwait;
     }
 
     bool aiinfo::hastarget(int atk, aistate &b, gameent *e, float yaw, float pitch, float dist)
     { // add margins of error
         if(attackrange(atk, dist) || (aiplayer->skill <= 100 && !randomint(aiplayer->skill)))
         {
-            float skew = std::clamp(static_cast<float>(lastmillis-aiplayer->ai->enemymillis)/static_cast<float>((aiplayer->skill*attacks[atk].attackdelay/200.f)), 0.f, attacks[atk].projspeed ? 0.25f : 1e16f),
+            float skew = std::clamp(static_cast<float>(lastmillis-enemymillis)/static_cast<float>((aiplayer->skill*attacks[atk].attackdelay/200.f)), 0.f, attacks[atk].projspeed ? 0.25f : 1e16f),
                   offy = yaw-aiplayer->yaw,
                   offp = pitch-aiplayer->pitch;
             if(offy > 180)
@@ -228,7 +228,7 @@ namespace ai
             {
                 offy += 360;
             }
-            if(fabs(offy) <= aiplayer->ai->views[0]*skew && fabs(offp) <= aiplayer->ai->views[1]*skew)
+            if(fabs(offy) <= views[0]*skew && fabs(offp) <= views[1]*skew)
             {
                 return true;
             }
@@ -249,7 +249,7 @@ namespace ai
         }
         if(aiplayer->skill <= 100)
         {
-            if(lastmillis >= aiplayer->ai->lastaimrnd)
+            if(lastmillis >= lastaimrnd)
             {
                 int aiskew = 1;
                 switch(atk)
@@ -268,14 +268,14 @@ namespace ai
                 }
                 for(int k = 0; k < 3; ++k)
                 {//e->radius is what's being plugged in here
-                    aiplayer->ai->aimrnd[k] = ((randomint(static_cast<int>((e->radius)*aiskew*2)+1)-((e->radius)*aiskew))*(1.f/static_cast<float>(max(aiplayer->skill, 1))));
+                    aimrnd[k] = ((randomint(static_cast<int>((e->radius)*aiskew*2)+1)-((e->radius)*aiskew))*(1.f/static_cast<float>(max(aiplayer->skill, 1))));
                 }
                 int dur = (aiplayer->skill+10)*10;
-                aiplayer->ai->lastaimrnd = lastmillis+dur+randomint(dur);
+                lastaimrnd = lastmillis+dur+randomint(dur);
             }
             for(int k = 0; k < 3; ++k)
             {
-                o[k] += aiplayer->ai->aimrnd[k];
+                o[k] += aimrnd[k];
             }
         }
         return o;
@@ -481,7 +481,7 @@ namespace ai
         {
             int w = randomint(candidates.length()),
                 n = candidates.removeunordered(w);
-            if(n != aiplayer->lastnode && !aiplayer->ai->hasprevnode(n) && !obstacles.find(n, aiplayer) && makeroute(aiplayer, b, n))
+            if(n != aiplayer->lastnode && !hasprevnode(n) && !obstacles.find(n, aiplayer) && makeroute(aiplayer, b, n))
             {
                 return true;
             }
@@ -533,7 +533,7 @@ namespace ai
                 b.override = true;
                 return true;
             }
-            else if(aiplayer->ai->route.empty())
+            else if(route.empty())
             {
                 if(!retry)
                 {
@@ -571,17 +571,17 @@ namespace ai
             {
                 if((b.targtype != AITravel_Affinity || !(pursue%2)) && makeroute(aiplayer, b, e->lastnode))
                 {
-                    aiplayer->ai->switchstate(b, AIState_Pursue, AITravel_Player, e->clientnum);
+                    switchstate(b, AIState_Pursue, AITravel_Player, e->clientnum);
                 }
                 else if(pursue >= 3)
                 {
                     return false; // can't pursue
                 }
             }
-            if(aiplayer->ai->enemy != e->clientnum)
+            if(enemy != e->clientnum)
             {
-                aiplayer->ai->enemyseen = aiplayer->ai->enemymillis = lastmillis;
-                aiplayer->ai->enemy = e->clientnum;
+                enemyseen = enemymillis = lastmillis;
+                enemy = e->clientnum;
             }
             return true;
         }
@@ -699,7 +699,7 @@ namespace ai
             }
             if(proceed && makeroute(aiplayer, b, n.node))
             {
-                aiplayer->ai->switchstate(b, n.state, n.targtype, n.target);
+                switchstate(b, n.state, n.targtype, n.target);
                 return true;
             }
         }
@@ -726,7 +726,7 @@ namespace ai
     {
         if(aiplayer && canmove() && targetable(e)) // see if this ai is interested in a grudge
         {
-            aistate &b = aiplayer->ai->getstate();
+            aistate &b = getstate();
             if(violence(b, e))
             {
                 return;
@@ -762,19 +762,19 @@ namespace ai
 
     void aiinfo::setup()
     {
-        aiplayer->ai->clearsetup();
-        aiplayer->ai->reset(true);
-        aiplayer->ai->lastrun = lastmillis;
+        clearsetup();
+        reset(true);
+        lastrun = lastmillis;
         if(forcegun >= 0 && forcegun < Gun_NumGuns)
         {
-            aiplayer->ai->weappref = forcegun;
+            weappref = forcegun;
         }
         else
         {
-            aiplayer->ai->weappref = randomint(Gun_NumGuns);
+            weappref = randomint(Gun_NumGuns);
         }
         vec dp = aiplayer->headpos();
-        findorientation(dp, aiplayer->yaw, aiplayer->pitch, aiplayer->ai->target);
+        findorientation(dp, aiplayer->yaw, aiplayer->pitch, target);
     }
 
     void aiinfo::spawned(gameent *d)
@@ -804,7 +804,7 @@ namespace ai
 
     int aiinfo::dowait(aistate &b)
     {
-        aiplayer->ai->clear(true); // ensure they're clean
+        clear(true); // ensure they're clean
         if(check(b) || find(b))
         {
             return 1;
@@ -819,7 +819,7 @@ namespace ai
         }
         if(randomnode(b, sightmin, 1e16f))
         {
-            aiplayer->ai->switchstate(b, AIState_Interest, AITravel_Node, aiplayer->ai->route[0]);
+            switchstate(b, AIState_Interest, AITravel_Node, route[0]);
             return 1;
         }
         return 0; // but don't pop the state
@@ -975,17 +975,17 @@ namespace ai
             node2 = -1;
         float mindist1 = closedist*closedist, //close_dist not closed_ist
               mindist2 = closedist*closedist;
-        for(int i = 0; i < aiplayer->ai->route.length(); i++)
+        for(int i = 0; i < route.length(); i++)
         {
-            if(iswaypoint(aiplayer->ai->route[i]))
+            if(iswaypoint(route[i]))
             {
-                vec epos = waypoints[aiplayer->ai->route[i]].o;
+                vec epos = waypoints[route[i]].o;
                 float dist = epos.squaredist(pos);
                 if(dist > fardist*fardist)
                 {
                     continue;
                 }
-                int entid = obstacles.remap(aiplayer, aiplayer->ai->route[i], epos);
+                int entid = obstacles.remap(aiplayer, route[i], epos);
                 if(entid >= 0)
                 {
                     if(entid != i)
@@ -1018,8 +1018,8 @@ namespace ai
                 int entid = obstacles.remap(aiplayer, n, epos, k!=0);
                 if(iswaypoint(entid))
                 {
-                    aiplayer->ai->spot = epos;
-                    aiplayer->ai->targnode = entid;
+                    spot = epos;
+                    targnode = entid;
                     return !check || aiplayer->feetpos().squaredist(epos) > minwpdist*minwpdist ? 1 : 2;
                 }
             }
@@ -1040,8 +1040,8 @@ namespace ai
                 {
                     break;
                 }
-                if(iswaypoint(w.links[i]) && !aiplayer->ai->hasprevnode(w.links[i]) &&
-                   aiplayer->ai->route.find(w.links[i]) < 0)
+                if(iswaypoint(w.links[i]) && !hasprevnode(w.links[i]) &&
+                   route.find(w.links[i]) < 0)
                 {
                     linkmap.add(w.links[i]);
                 }
@@ -1060,18 +1060,18 @@ namespace ai
         {
             for(int k = 0; k < 2; ++k)
             {
-                aiplayer->ai->clear(k ? true : false);
+                clear(k ? true : false);
                 int n = randomlink(aiplayer->lastnode);
                 if(wpspot(n))
                 {
-                    aiplayer->ai->route.add(n);
-                    aiplayer->ai->route.add(aiplayer->lastnode);
+                    route.add(n);
+                    route.add(aiplayer->lastnode);
                     for(int i = 0; i < len; ++i)
                     {
                         n = randomlink(n);
                         if(iswaypoint(n))
                         {
-                            aiplayer->ai->route.insert(0, n);
+                            route.insert(0, n);
                         }
                         else
                         {
@@ -1139,22 +1139,22 @@ namespace ai
 
     bool aiinfo::hunt(aistate &b)
     {
-        if(!aiplayer->ai->route.empty())
+        if(!route.empty())
         {
             int n = closenode();
-            if(aiplayer->ai->route.inrange(n) && checkroute(aiplayer, n))
+            if(route.inrange(n) && checkroute(aiplayer, n))
             {
                 n = closenode();
             }
-            if(aiplayer->ai->route.inrange(n))
+            if(route.inrange(n))
             {
                 if(!n)
                 {
-                    switch(wpspot(aiplayer->ai->route[n], true))
+                    switch(wpspot(route[n], true))
                     {
                         case 2:
                         {
-                            aiplayer->ai->clear(false);
+                            clear(false);
                         }
                         [[fallthrough]];
                         case 1:
@@ -1170,12 +1170,12 @@ namespace ai
                 }
                 else
                 {
-                    while(aiplayer->ai->route.length() > n+1)
+                    while(route.length() > n+1)
                     {
-                        aiplayer->ai->route.pop(); // waka-waka-waka-waka
+                        route.pop(); // waka-waka-waka-waka
                     }
                     int m = n-1; // next, please!
-                    if(aiplayer->ai->route.inrange(m) && wpspot(aiplayer->ai->route[m]))
+                    if(route.inrange(m) && wpspot(route[m]))
                     {
                         return true;
                     }
@@ -1190,9 +1190,9 @@ namespace ai
     {
         vec off = vec(pos).sub(aiplayer->feetpos()),
             dir(off.x, off.y, 0);
-        bool sequenced = aiplayer->ai->blockseq || aiplayer->ai->targseq,
+        bool sequenced = blockseq || targseq,
              offground = aiplayer->timeinair && !aiplayer->inwater,
-             jump = !offground && lastmillis >= aiplayer->ai->jumpseed && (sequenced || off.z >= jumpmin || lastmillis >= aiplayer->ai->jumprand);
+             jump = !offground && lastmillis >= jumpseed && (sequenced || off.z >= jumpmin || lastmillis >= jumprand);
         if(jump)
         {
             vec old = aiplayer->o;
@@ -1207,9 +1207,9 @@ namespace ai
         {
             aiplayer->jumping = true;
             int seed = (111-aiplayer->skill)*(aiplayer->inwater ? 3 : 5);
-            aiplayer->ai->jumpseed = lastmillis+seed+randomint(seed);
+            jumpseed = lastmillis+seed+randomint(seed);
             seed *= b.idle ? 50 : 25;
-            aiplayer->ai->jumprand = lastmillis+seed+randomint(seed);
+            jumprand = lastmillis+seed+randomint(seed);
         }
     }
 
@@ -1328,35 +1328,35 @@ namespace ai
         int result = 0,
             stupify = aiplayer->skill <= 10+randomint(15) ? randomint(aiplayer->skill*1000) : 0,
             skmod = 101-aiplayer->skill;
-        float frame = aiplayer->skill <= 100 ? static_cast<float>(lastmillis-aiplayer->ai->lastrun)/static_cast<float>(max(skmod,1)*10) : 1;
+        float frame = aiplayer->skill <= 100 ? static_cast<float>(lastmillis-lastrun)/static_cast<float>(max(skmod,1)*10) : 1;
         vec dp = aiplayer->headpos();
         bool idle = b.idle == 1 || (stupify && stupify <= skmod);
-        aiplayer->ai->dontmove = false;
+        dontmove = false;
         if(idle)
         {
-            aiplayer->ai->lastaction = aiplayer->ai->lasthunt = lastmillis;
-            aiplayer->ai->dontmove = true;
-            aiplayer->ai->spot = vec(0, 0, 0);
+            lastaction = lasthunt = lastmillis;
+            dontmove = true;
+            spot = vec(0, 0, 0);
         }
         else if(hunt(b))
         {
-            getyawpitch(dp, vec(aiplayer->ai->spot).addz(aiplayer->eyeheight), aiplayer->ai->targyaw, aiplayer->ai->targpitch);
-            aiplayer->ai->lasthunt = lastmillis;
+            getyawpitch(dp, vec(spot).addz(aiplayer->eyeheight), targyaw, targpitch);
+            lasthunt = lastmillis;
         }
         else
         {
-            idle = aiplayer->ai->dontmove = true;
-            aiplayer->ai->spot = vec(0, 0, 0);
+            idle = dontmove = true;
+            spot = vec(0, 0, 0);
         }
-        if(!aiplayer->ai->dontmove)
+        if(!dontmove)
         {
-            jumpto(b, aiplayer->ai->spot);
+            jumpto(b, spot);
         }
-        gameent *e = getclient(aiplayer->ai->enemy);
+        gameent *e = getclient(enemy);
         bool enemyok = e && targetable(e);
         if(!enemyok || aiplayer->skill >= 50)
         {
-            gameent *f = static_cast<gameent *>(intersectclosest(dp, aiplayer->ai->target, aiplayer, 1));
+            gameent *f = static_cast<gameent *>(intersectclosest(dp, target, aiplayer, 1));
             if(f)
             {
                 if(targetable(f))
@@ -1375,7 +1375,7 @@ namespace ai
             }
             else if(!enemyok && istarget(b, 0, false, sightmin))
             {
-                enemyok = (e = getclient(aiplayer->ai->enemy)) != NULL;
+                enemyok = (e = getclient(enemy)) != NULL;
             }
         }
         if(enemyok)
@@ -1386,11 +1386,11 @@ namespace ai
             getyawpitch(dp, ep, yaw, pitch);
             fixrange(yaw, pitch);
             bool insight = cansee(dp, ep),
-                 hasseen = aiplayer->ai->enemyseen && lastmillis-aiplayer->ai->enemyseen <= (aiplayer->skill*10)+3000,
-                 quick = aiplayer->ai->enemyseen && lastmillis-aiplayer->ai->enemyseen <= skmod+30;
+                 hasseen = enemyseen && lastmillis-enemyseen <= (aiplayer->skill*10)+3000,
+                 quick = enemyseen && lastmillis-enemyseen <= skmod+30;
             if(insight)
             {
-                aiplayer->ai->enemyseen = lastmillis;
+                enemyseen = lastmillis;
             }
             if(idle || insight || hasseen || quick)
             {
@@ -1401,7 +1401,7 @@ namespace ai
                     if(canshoot(atk, e) && hastarget(atk, b, e, yaw, pitch, dp.squaredist(ep)))
                     {
                         aiplayer->attacking = attacks[atk].action;
-                        aiplayer->ai->lastaction = lastmillis;
+                        lastaction = lastmillis;
                         result = 3;
                     }
                     else
@@ -1416,10 +1416,10 @@ namespace ai
             }
             else
             {
-                if(!aiplayer->ai->enemyseen || lastmillis-aiplayer->ai->enemyseen > (aiplayer->skill*50)+3000)
+                if(!enemyseen || lastmillis-enemyseen > (aiplayer->skill*50)+3000)
                 {
-                    aiplayer->ai->enemy = -1;
-                    aiplayer->ai->enemyseen = aiplayer->ai->enemymillis = 0;
+                    enemy = -1;
+                    enemyseen = enemymillis = 0;
                 }
                 enemyok = false;
                 result = 0;
@@ -1429,18 +1429,18 @@ namespace ai
         {
             if(!enemyok)
             {
-                aiplayer->ai->enemy = -1;
-                aiplayer->ai->enemyseen = aiplayer->ai->enemymillis = 0;
+                enemy = -1;
+                enemyseen = enemymillis = 0;
             }
             enemyok = false;
             result = 0;
         }
-        fixrange(aiplayer->ai->targyaw, aiplayer->ai->targpitch);
+        fixrange(targyaw, targpitch);
         if(!result)
         {
-            scaleyawpitch(aiplayer->yaw, aiplayer->pitch, aiplayer->ai->targyaw, aiplayer->ai->targpitch, frame*0.25f, 1.f);
+            scaleyawpitch(aiplayer->yaw, aiplayer->pitch, targyaw, targpitch, frame*0.25f, 1.f);
         }
-        if(aiplayer->ai->becareful && aiplayer->physstate == PhysEntState_Fall)
+        if(becareful && aiplayer->physstate == PhysEntState_Fall)
         {
             float offyaw, offpitch;
             vectoyawpitch(aiplayer->vel, offyaw, offpitch);
@@ -1448,18 +1448,18 @@ namespace ai
             offpitch -= aiplayer->pitch;
             if(fabs(offyaw)+fabs(offpitch) >= 135)
             {
-                aiplayer->ai->becareful = false;
+                becareful = false;
             }
-            else if(aiplayer->ai->becareful)
+            else if(becareful)
             {
-                aiplayer->ai->dontmove = true;
+                dontmove = true;
             }
         }
         else
         {
-            aiplayer->ai->becareful = false;
+            becareful = false;
         }
-        if(aiplayer->ai->dontmove)
+        if(dontmove)
         {
             aiplayer->move = aiplayer->strafe = 0;
         }
@@ -1479,7 +1479,7 @@ namespace ai
                 {  0,   1, 270 },
                 {  1,   1, 315 }
             };
-            float yaw = aiplayer->ai->targyaw-aiplayer->yaw;
+            float yaw = targyaw-aiplayer->yaw;
             //reset yaws to within 0-360 bounds
             while(yaw < 0.0f)
             {
@@ -1497,7 +1497,7 @@ namespace ai
             aiplayer->move = ad.move;
             aiplayer->strafe = ad.strafe;
         }
-        findorientation(dp, aiplayer->yaw, aiplayer->pitch, aiplayer->ai->target);
+        findorientation(dp, aiplayer->yaw, aiplayer->pitch, target);
         return result;
     }
 
@@ -1522,8 +1522,8 @@ namespace ai
 
     bool aiinfo::request(aistate &b)
     {
-        gameent *e = getclient(aiplayer->ai->enemy);
-        if(!aiplayer->hasammo(aiplayer->gunselect) || !hasrange(e, aiplayer->gunselect) || (aiplayer->gunselect != aiplayer->ai->weappref && (!isgoodammo(aiplayer->gunselect) || aiplayer->hasammo(aiplayer->ai->weappref))))
+        gameent *e = getclient(enemy);
+        if(!aiplayer->hasammo(aiplayer->gunselect) || !hasrange(e, aiplayer->gunselect) || (aiplayer->gunselect != weappref && (!isgoodammo(aiplayer->gunselect) || aiplayer->hasammo(weappref))))
         {
             static const int gunprefs[] =
             {
@@ -1531,9 +1531,9 @@ namespace ai
                 Gun_Rail
             };
             int gun = -1;
-            if(aiplayer->hasammo(aiplayer->ai->weappref) && hasrange(e, aiplayer->ai->weappref))
+            if(aiplayer->hasammo(weappref) && hasrange(e, weappref))
             {
-                gun = aiplayer->ai->weappref;
+                gun = weappref;
             }
             else
             {
@@ -1558,31 +1558,31 @@ namespace ai
     {
         if(aiplayer->blocked)
         {
-            aiplayer->ai->blocktime += lastmillis-aiplayer->ai->lastrun;
-            if(aiplayer->ai->blocktime > (aiplayer->ai->blockseq+1)*1000)
+            blocktime += lastmillis-lastrun;
+            if(blocktime > (blockseq+1)*1000)
             {
-                aiplayer->ai->blockseq++;
-                switch(aiplayer->ai->blockseq)
+                blockseq++;
+                switch(blockseq)
                 {
                     case 1:
                     case 2:
                     case 3:
                     {
-                        if(entities::ents.inrange(aiplayer->ai->targnode))
+                        if(entities::ents.inrange(targnode))
                         {
-                            aiplayer->ai->addprevnode(aiplayer->ai->targnode);
+                            addprevnode(targnode);
                         }
-                        aiplayer->ai->clear(false);
+                        clear(false);
                         break;
                     }
                     case 4:
                     {
-                        aiplayer->ai->reset(true);
+                        reset(true);
                         break;
                     }
                     case 5:
                     {
-                        aiplayer->ai->reset(false);
+                        reset(false);
                         break;
                     }
                     case 6:
@@ -1596,34 +1596,34 @@ namespace ai
         }
         else
         {
-            aiplayer->ai->blocktime = aiplayer->ai->blockseq = 0;
+            blocktime = blockseq = 0;
         }
-        if(aiplayer->ai->targnode == aiplayer->ai->targlast)
+        if(targnode == targlast)
         {
-            aiplayer->ai->targtime += lastmillis-aiplayer->ai->lastrun;
-            if(aiplayer->ai->targtime > (aiplayer->ai->targseq+1)*1000)
+            targtime += lastmillis-lastrun;
+            if(targtime > (targseq+1)*1000)
             {
-                aiplayer->ai->targseq++;
-                switch(aiplayer->ai->targseq)
+                targseq++;
+                switch(targseq)
                 {
                     case 1:
                     case 2:
                     case 3:
                     {
-                        if(entities::ents.inrange(aiplayer->ai->targnode)) aiplayer->ai->addprevnode(aiplayer->ai->targnode);
+                        if(entities::ents.inrange(targnode)) addprevnode(targnode);
                         {
-                            aiplayer->ai->clear(false);
+                            clear(false);
                         }
                         break;
                     }
                     case 4:
                     {
-                        aiplayer->ai->reset(true);
+                        reset(true);
                         break;
                     }
                     case 5:
                     {
-                        aiplayer->ai->reset(false);
+                        reset(false);
                         break;
                     }
                     case 6:
@@ -1637,31 +1637,31 @@ namespace ai
         }
         else
         {
-            aiplayer->ai->targtime = aiplayer->ai->targseq = 0;
-            aiplayer->ai->targlast = aiplayer->ai->targnode;
+            targtime = targseq = 0;
+            targlast = targnode;
         }
 
-        if(aiplayer->ai->lasthunt)
+        if(lasthunt)
         {
-            int millis = lastmillis-aiplayer->ai->lasthunt;
+            int millis = lastmillis-lasthunt;
             if(millis <= 1000)
             {
-                aiplayer->ai->tryreset = false;
-                aiplayer->ai->huntseq = 0;
+                tryreset = false;
+                huntseq = 0;
             }
-            else if(millis > (aiplayer->ai->huntseq+1)*1000)
+            else if(millis > (huntseq+1)*1000)
             {
-                aiplayer->ai->huntseq++;
-                switch(aiplayer->ai->huntseq)
+                huntseq++;
+                switch(huntseq)
                 {
                     case 1:
                     {
-                        aiplayer->ai->reset(true);
+                        reset(true);
                         break;
                     }
                     case 2:
                     {
-                        aiplayer->ai->reset(false);
+                        reset(false);
                         break;
                     }
                     case 3:
@@ -1688,7 +1688,7 @@ namespace ai
             {
                 if(!request(b)) istarget(b, 0, b.idle ? true : false);
                 {
-                    shoot(aiplayer, aiplayer->ai->target);
+                    shoot(aiplayer, target);
                 }
             }
             if(!intermission)
