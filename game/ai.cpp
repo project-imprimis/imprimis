@@ -98,7 +98,7 @@ namespace ai
 
     aistate &aiinfo::switchstate(aistate &b, int t, int r, int v)
     {
-        if((b.type == t && b.targtype == r) || (b.type == AIState_Interest && b.targtype == AITravel_Node))
+        if(b.type == t && b.targtype == r)
         {
             b.millis = lastmillis;
             b.target = v;
@@ -819,7 +819,7 @@ namespace ai
         }
         if(randomnode(b, sightmin, 1e16f))
         {
-            switchstate(b, AIState_Interest, AITravel_Node, route[0]);
+            switchstate(b, AIState_Pursue, AITravel_Node, route[0]);
             return 1;
         }
         return 0; // but don't pop the state
@@ -881,40 +881,6 @@ namespace ai
                     break;
                 }
             }
-        }
-        return 0;
-    }
-
-    int aiinfo::dointerest(aistate &b)
-    {
-        if(aiplayer->state != ClientState_Alive)
-        {
-            return 0;
-        }
-        switch(b.targtype)
-        {
-            case AITravel_Node: // this is like a wait state without sitting still..
-                if(check(b) || find(b))
-                {
-                    return 1;
-                }
-                if(istarget(b, 4, true))
-                {
-                    return 1;
-                }
-                if(iswaypoint(b.target) && vec(waypoints[b.target].o).sub(aiplayer->feetpos()).magnitude() > closedist)
-                {
-                    return makeroute(aiplayer, b, waypoints[b.target].o) ? 1 : 0;
-                }
-                break;
-            case AITravel_Entity:
-                if(entities::ents.inrange(b.target))
-                {
-                    extentity &e = *static_cast<extentity *>(entities::ents[b.target]);
-                    return 0; // FIXME
-                    return makeroute(aiplayer, b, e.o) ? 1 : 0;
-                }
-                break;
         }
         return 0;
     }
@@ -1788,11 +1754,6 @@ namespace ai
                         result = dopursue(c);
                         break;
                     }
-                    case AIState_Interest:
-                    {
-                        result = dointerest(c);
-                        break;
-                    }
                     default:
                     {
                         result = 0;
@@ -1883,7 +1844,7 @@ namespace ai
     VAR(showwaypoints, 0, 0, 1); //display waypoint locations in edit mode
     VAR(showwaypointsradius, 0, 200, 10000); //maximum distance to display (200 = 25m)
 
-    const char *stnames[AIState_Max]    = { "wait", "defend", "pursue", "interest" },
+    const char *stnames[AIState_Max]    = { "wait", "defend", "pursue"},
                *sttypes[AITravel_Max+1] = { "none", "node", "player", "affinity", "entity" };
     void render()
     {

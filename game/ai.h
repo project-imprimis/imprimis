@@ -176,7 +176,6 @@ namespace ai
         AIState_Wait = 0,      // waiting for next command
         AIState_Defend,        // defend goal target
         AIState_Pursue,        // pursue goal target
-        AIState_Interest,      // interest in goal entity
         AIState_Max,
     };
 
@@ -329,7 +328,6 @@ namespace ai
             bool check(aistate &b);
             int dowait(aistate &b);
             int dodefend(aistate &b);
-            int dointerest(aistate &b);
             int dopursue(aistate &b);
             int closenode();
             int wpspot(int n, bool check = false);
