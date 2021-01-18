@@ -34,9 +34,7 @@ namespace ai
             ushort route, prev;
             float curscore, estscore;
 
-            waypoint()
-            {
-            }
+            waypoint() : o(0,0,0), weight(), links(), route(), prev(), curscore(), estscore() {}
 
             waypoint(const vec &o, int weight = 0) : o(o), weight(weight), route(0)
             {
