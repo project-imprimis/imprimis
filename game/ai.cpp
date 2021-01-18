@@ -719,46 +719,7 @@ namespace ai
         {
             assist(d, b, interests);
         }
-        return parseinterests(d, b, interests, override);
-    }
-
-    bool aiinfo::findassist(gameent *d, aistate &b, bool override)
-    {
-        static vector<interest> interests;
-        interests.setsize(0);
-        assist(d, b, interests);
-        while(!interests.empty())
-        {
-            int q = interests.length()-1;
-            for(int i = 0; i < interests.length()-1; ++i)
-            {
-                if(interests[i].score < interests[q].score)
-                {
-                    q = i;
-                }
-            }
-            interest n = interests.removeunordered(q);
-            bool proceed = true;
-            switch(n.state)
-            {
-                case AIState_Defend: // don't get into herds
-                {
-                    int members = 0;
-                    proceed = !checkothers(targets, d, n.state, n.targtype, n.target, true, &members) && members > 1;
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-            if(proceed && makeroute(d, b, n.node))
-            {
-                d->ai->switchstate(b, n.state, n.targtype, n.target);
-                return true;
-            }
-        }
-        return false;
+        return parseinterests(b, interests, override);
     }
 
     void aiinfo::damaged(gameent *e)

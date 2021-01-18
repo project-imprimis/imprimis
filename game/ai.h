@@ -324,7 +324,6 @@ namespace ai
             void assist(gameent *d, aistate &b, vector<interest> &interests, bool all = false, bool force = false);
             bool parseinterests(gameent *d, aistate &b, vector<interest> &interests, bool override = false, bool ignore = false);
             bool find(gameent *d, aistate &b, bool override = false);
-            bool findassist(gameent *d, aistate &b, bool override = false);
             void findorientation(vec &o, float yaw, float pitch, vec &pos);
             void setup(gameent *d);
             bool check(gameent *d, aistate &b);
