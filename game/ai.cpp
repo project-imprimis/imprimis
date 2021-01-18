@@ -569,7 +569,7 @@ namespace ai
         {
             if(pursue)
             {
-                if((b.targtype != AITravel_Affinity || !(pursue%2)) && makeroute(aiplayer, b, e->lastnode))
+                if(makeroute(aiplayer, b, e->lastnode))
                 {
                     switchstate(b, AIState_Pursue, AITravel_Player, e->clientnum);
                 }
@@ -855,14 +855,6 @@ namespace ai
                     }
                     break;
                 }
-                case AITravel_Affinity:
-                {
-                    if(cmode)
-                    {
-                        return cmode->aidefend(aiplayer, b) ? 1 : 0;
-                    }
-                    break;
-                }
                 case AITravel_Player:
                 {
                     if(check(b))
@@ -903,16 +895,6 @@ namespace ai
                     }
                     break;
                 }
-
-                case AITravel_Affinity:
-                {
-                    if(cmode)
-                    {
-                        return cmode->aipursue(aiplayer, b) ? 1 : 0;
-                    }
-                    break;
-                }
-
                 case AITravel_Player:
                 {
                     gameent *e = getclient(b.target);
@@ -1845,7 +1827,7 @@ namespace ai
     VAR(showwaypointsradius, 0, 200, 10000); //maximum distance to display (200 = 25m)
 
     const char *stnames[AIState_Max]    = { "wait", "defend", "pursue"},
-               *sttypes[AITravel_Max+1] = { "none", "node", "player", "affinity", "entity" };
+               *sttypes[AITravel_Max+1] = { "none", "node", "player", "entity" };
     void render()
     {
         if(aidebug > 1)

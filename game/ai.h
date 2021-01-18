@@ -183,7 +183,6 @@ namespace ai
     { //renamed to Travel, but "T" could mean something else
         AITravel_Node,
         AITravel_Player,
-        AITravel_Affinity,
         AITravel_Entity,
         AITravel_Max,
     };
