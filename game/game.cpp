@@ -493,7 +493,10 @@ namespace game
         }
         damageeffect(damage, d, d!=h);
 
-        d->ai->damaged(d, actor);
+        if(d->ai)
+        {
+            d->ai->damaged(actor);
+        }
 
         if(d->health<=0)
         {

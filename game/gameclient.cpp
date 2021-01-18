@@ -2858,6 +2858,7 @@ namespace game
                     {
                         break;
                     }
+                    b->ai = new ai::aiinfo();
                     b->ai->init(b, at, on, sk, bn, pm, col, name, team);
                     break;
                 }

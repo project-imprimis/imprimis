@@ -226,6 +226,7 @@ namespace ai
             vector<aistate> state;
             vector<int> route;
             vec spot;
+            gameent * aiplayer;
             aiinfo()
             {
                 clearsetup();
@@ -260,7 +261,7 @@ namespace ai
 
             void init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team);
             void spawned(gameent *d);
-            void damaged(gameent *d, gameent *e);
+            void damaged(gameent *e);
             void killed(gameent *d, gameent *e);
             void think(gameent *d, bool run);
 
@@ -297,28 +298,27 @@ namespace ai
             float viewdist(int skill);
             float viewfieldx(int skill);
             float viewfieldy(int skill);
-            bool canmove(gameent *d);
+            bool canmove();
             float attackmindist(int atk);
             float attackmaxdist(int atk);
-            bool attackrange(gameent *d, int atk, float dist);
-            bool targetable(gameent *d, gameent *e);
+            bool attackrange(int atk, float dist);
+            bool targetable(gameent *e);
             bool getsight(vec &o, float yaw, float pitch, vec &q, vec &v, float mdist, float fovx, float fovy);
-            bool cansee(gameent *d, vec &x, vec &y, vec &targ = aitarget);
-            bool canshoot(gameent *d, int atk, gameent *e);
-            bool canshoot(gameent *d, int atk);
-            bool hastarget(gameent *d, int atk, aistate &b, gameent *e, float yaw, float pitch, float dist);
-            vec getaimpos(gameent *d, int atk, gameent *e);
-            void create(gameent *d);
-            void destroy(gameent *d);
+            bool cansee(vec &x, vec &y, vec &targ = aitarget);
+            bool canshoot(int atk, gameent *e);
+            bool canshoot(int atk);
+            bool hastarget(int atk, aistate &b, gameent *e, float yaw, float pitch, float dist);
+            vec getaimpos(int atk, gameent *e);
+            void create();
+            void destroy();
             bool checkothers(vector<int> &targets, gameent *d = NULL, int state = -1, int targtype = -1, int target = -1, bool teams = false, int *members = NULL);
-            bool randomnode(gameent *d, aistate &b, const vec &pos, float guard, float wander);
-            bool randomnode(gameent *d, aistate &b, float guard, float wander);
-            bool badhealth(gameent *d);
-            bool isenemy(gameent *d, aistate &b, const vec &pos, float guard = sightmin, int pursue = 0);
-            bool patrol(gameent *d, aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax, int walk = 1, bool retry = false);
-            bool defend(gameent *d, aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax, int walk = 1);
-            bool violence(gameent *d, aistate &b, gameent *e, int pursue = 0);
-            bool istarget(gameent *d, aistate &b, int pursue = 0, bool force = false, float mindist = 0.f);
+            bool randomnode(aistate &b, const vec &pos, float guard, float wander);
+            bool randomnode(aistate &b, float guard, float wander);
+            bool isenemy(aistate &b, const vec &pos, float guard = sightmin, int pursue = 0);
+            bool patrol(aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax, int walk = 1, bool retry = false);
+            bool defend(aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax, int walk = 1);
+            bool violence(aistate &b, gameent *e, int pursue = 0);
+            bool istarget(aistate &b, int pursue = 0, bool force = false, float mindist = 0.f);
             int isgoodammo(int gun);
             bool hasgoodammo(gameent *d);
             void assist(gameent *d, aistate &b, vector<interest> &interests, bool all = false, bool force = false);
@@ -371,8 +371,6 @@ namespace ai
     extern bool randomnode(gameent *d, aistate &b, float guard = sightmin, float wander = sightmax);
     extern bool violence(gameent *d, aistate &b, gameent *e, int pursue = 0);
     extern void spawned(gameent *d);
-    extern void damaged(gameent *d, gameent *e);
-    extern void killed(gameent *d, gameent *e);
 
     extern void render();
 }
