@@ -81,6 +81,8 @@ void updateenginevalues()
     dynents = dyns;
 }
 
+constexpr const char * versionstring = "Alpha 2 \"Ballard\"";
+
 //sets engine constants that need information from the game
 //as a result, all values set here are global variables defined elsewhere in
 //global scope
@@ -165,6 +167,7 @@ int main(int argc, char **argv)
     SDL_ShowCursor(SDL_FALSE);
     SDL_StopTextInput(); // workaround for spurious text-input events getting sent on first text input toggle?
     logoutf("init: gl");
+    conoutf(Console_Init, "Version: %s built %s", versionstring, __DATE__);
     gl_checkextensions();
     gl_init();
     notexture = textureload("media/texture/game/notexture.png");
