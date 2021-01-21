@@ -169,6 +169,7 @@ void disconnect(bool async, bool cleanup)
         conoutf("disconnected");
         game::gamedisconnect(cleanup);
         mainmenu = 1;
+        execident("resethud");
     }
     if(!connpeer && clienthost)
     {
@@ -190,7 +191,6 @@ void trydisconnect(bool local)
         disconnect(!discmillis);
     }
     else conoutf("not connected");
-    execident("resethud");
 }
 
 ICOMMAND(connect, "sis", (char *name, int *port, char *pw), connectserv(name, *port, pw));
