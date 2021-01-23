@@ -493,7 +493,10 @@ namespace game
         }
         damageeffect(damage, d, d!=h);
 
-        ai::damaged(d, actor);
+        if(d->ai)
+        {
+            d->ai->damaged(actor);
+        }
 
         if(d->health<=0)
         {
@@ -610,7 +613,10 @@ namespace game
             }
         }
         deathstate(d);
-        ai::killed(d, actor);
+        if(d->ai)
+        {
+            d->ai->killed();
+        }
     }
 
     void timeupdate(int secs)
