@@ -22,7 +22,7 @@ namespace ai
     ICOMMAND(botbalance, "i", (int *n), addmsg(NetMsg_BotBalance, "ri", *n));
 
 
-    void aiinfo::clearsetup()
+    void waypointai::clearsetup()
     {
         weappref = Gun_Rail;
         spot = target = vec(0, 0, 0);
@@ -32,7 +32,7 @@ namespace ai
         targnode = targlast = enemy = -1;
     }
 
-    void aiinfo::clear(bool prev)
+    void waypointai::clear(bool prev)
     {
         if(prev)
         {
@@ -41,7 +41,7 @@ namespace ai
         route.setsize(0);
     }
 
-    void aiinfo::wipe(bool prev)
+    void waypointai::wipe(bool prev)
     {
         clear(prev);
         state.setsize(0);
@@ -49,7 +49,7 @@ namespace ai
         trywipe = false;
     }
 
-    void aiinfo::clean(bool tryit)
+    void waypointai::clean(bool tryit)
     {
         if(!tryit)
         {
@@ -60,18 +60,18 @@ namespace ai
         tryreset = tryit;
     }
 
-    void aiinfo::reset(bool tryit)
+    void waypointai::reset(bool tryit)
     {
         wipe();
         clean(tryit);
     }
 
-    aistate &aiinfo::addstate(int t, int r, int v)
+    aistate &waypointai::addstate(int t, int r, int v)
     {
         return state.add(aistate(lastmillis, t, r, v));
     }
 
-    void aiinfo::removestate(int index)
+    void waypointai::removestate(int index)
     {
         if(index < 0)
         {
@@ -87,7 +87,7 @@ namespace ai
         }
     }
 
-    aistate &aiinfo::getstate(int idx)
+    aistate &waypointai::getstate(int idx)
     {
         if(state.inrange(idx))
         {
@@ -96,7 +96,7 @@ namespace ai
         return state.last();
     }
 
-    aistate &aiinfo::switchstate(aistate &b, int t, int r, int v)
+    aistate &waypointai::switchstate(aistate &b, int t, int r, int v)
     {
         if(b.type == t && b.targtype == r)
         {
@@ -108,7 +108,7 @@ namespace ai
         return addstate(t, r, v);
     }
 
-    float aiinfo::viewdist(int skill)
+    float waypointai::viewdist(int skill)
     {
         if(skill <= 100)
         {
@@ -120,7 +120,7 @@ namespace ai
         }
     }
 
-    float aiinfo::viewfieldx(int skill)
+    float waypointai::viewfieldx(int skill)
     {
         if(skill <= 100)
         {
@@ -132,29 +132,29 @@ namespace ai
         }
     }
 
-    float aiinfo::viewfieldy(int skill)
+    float waypointai::viewfieldy(int skill)
     {
         return viewfieldx(skill)*3.f/4.f;
     }
 
-    bool aiinfo::canmove()
+    bool waypointai::canmove()
     {
         return aiplayer->state != ClientState_Dead && !intermission;
         conoutf(ConsoleMsg_GameInfo, "%d", aiplayer->state);
         return true;
     }
 
-    float aiinfo::attackmindist(int atk)
+    float waypointai::attackmindist(int atk)
     {
         return max(int(attacks[atk].exprad), 2);
     }
 
-    float aiinfo::attackmaxdist(int atk)
+    float waypointai::attackmaxdist(int atk)
     {
         return attacks[atk].range + 4;
     }
 
-    bool aiinfo::attackrange(int atk, float dist)
+    bool waypointai::attackrange(int atk, float dist)
     {
         float mindist = attackmindist(atk),
               maxdist = attackmaxdist(atk);
@@ -162,7 +162,7 @@ namespace ai
     }
 
     //check if a player is alive and can be a valid target for another player (don't shoot up teammates)
-    bool aiinfo::targetable(gameent *e)
+    bool waypointai::targetable(gameent *e)
     {
         if(aiplayer == e || !canmove())
         {
@@ -173,7 +173,7 @@ namespace ai
     }
 
 
-    bool aiinfo::getsight(vec &o, float yaw, float pitch, vec &q, vec &v, float mdist, float fovx, float fovy)
+    bool waypointai::getsight(vec &o, float yaw, float pitch, vec &q, vec &v, float mdist, float fovx, float fovy)
     {
         float dist = o.dist(q);
 
@@ -189,7 +189,7 @@ namespace ai
         return false;
     }
 
-    bool aiinfo::cansee(vec &x, vec &y, vec &targ)
+    bool waypointai::cansee(vec &x, vec &y, vec &targ)
     {
         aistate &b = getstate();
         if(canmove() && b.type != AIState_Wait)
@@ -199,7 +199,7 @@ namespace ai
         return false;
     }
 
-    bool aiinfo::canshoot(int atk, gameent *e)
+    bool waypointai::canshoot(int atk, gameent *e)
     {
         if(attackrange(atk, e->o.squaredist(aiplayer->o)) && targetable(e))
         {
@@ -208,12 +208,12 @@ namespace ai
         return false;
     }
 
-    bool aiinfo::canshoot(int atk)
+    bool waypointai::canshoot(int atk)
     {
         return !becareful && aiplayer->ammo[attacks[atk].gun] > 0 && lastmillis - aiplayer->lastaction >= aiplayer->gunwait;
     }
 
-    bool aiinfo::hastarget(int atk, aistate &b, gameent *e, float yaw, float pitch, float dist)
+    bool waypointai::hastarget(int atk, aistate &b, gameent *e, float yaw, float pitch, float dist)
     { // add margins of error
         if(attackrange(atk, dist) || (aiplayer->skill <= 100 && !randomint(aiplayer->skill)))
         {
@@ -236,7 +236,7 @@ namespace ai
         return false;
     }
 
-    vec aiinfo::getaimpos(int atk, gameent *e)
+    vec waypointai::getaimpos(int atk, gameent *e)
     {
         vec o = e->o;
         if(atk == Attack_PulseShoot)
@@ -281,15 +281,15 @@ namespace ai
         return o;
     }
 
-    void aiinfo::create()
+    void waypointai::create()
     {
         if(!aiplayer->ai)
         {
-            aiplayer->ai = new aiinfo;
+            aiplayer->ai = new waypointai;
         }
     }
 
-    void aiinfo::destroy()
+    void waypointai::destroy()
     {
         if(aiplayer->ai)
         {
@@ -297,7 +297,7 @@ namespace ai
         }
     }
 
-    void aiinfo::init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team)
+    void waypointai::init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team)
     {
         loadwaypoints();
 
@@ -352,9 +352,9 @@ namespace ai
             create();
             if(d->ai)
             {
-                d->ai->views[0] = viewfieldx(d->skill);
-                d->ai->views[1] = viewfieldy(d->skill);
-                d->ai->views[2] = viewdist(d->skill);
+                views[0] = viewfieldx(d->skill);
+                views[1] = viewfieldy(d->skill);
+                views[2] = viewdist(d->skill);
             }
         }
         else if(d->ai)
@@ -403,46 +403,6 @@ namespace ai
         }
     }
 
-    bool aiinfo::checkothers(vector<int> &targets, gameent *d, int state, int targtype, int target, bool teams, int *members)
-    { // checks the states of other ai for a match
-        targets.setsize(0);
-        for(int i = 0; i < players.length(); i++)
-        {
-            gameent *e = players[i];
-            if(targets.find(e->clientnum) >= 0)
-            {
-                continue;
-            }
-            if(teams && d && !(modecheck(gamemode, Mode_Team) && d->team == e->team))
-            {
-                continue;
-            }
-            if(members)
-            {
-                (*members)++;
-            }
-            if(e == d || !e->ai || e->state != ClientState_Alive)
-            {
-                continue;
-            }
-            aistate &b = e->ai->getstate();
-            if(state >= 0 && b.type != state)
-            {
-                continue;
-            }
-            if(target >= 0 && b.target != target)
-            {
-                continue;
-            }
-            if(targtype >=0 && b.targtype != targtype)
-            {
-                continue;
-            }
-            targets.add(e->clientnum);
-        }
-        return !targets.empty();
-    }
-
     bool makeroute(gameent *d, aistate &b, int node, bool changed, int retries)
     {
         if(!iswaypoint(d->lastnode))
@@ -472,7 +432,7 @@ namespace ai
         return makeroute(d, b, node, changed, retries);
     }
 
-    bool aiinfo::randomnode(aistate &b, const vec &pos, float guard, float wander)
+    bool waypointai::randomnode(aistate &b, const vec &pos, float guard, float wander)
     {
         static vector<int> candidates;
         candidates.setsize(0);
@@ -489,12 +449,12 @@ namespace ai
         return false;
     }
 
-    bool aiinfo::randomnode(aistate &b, float guard, float wander)
+    bool waypointai::randomnode(aistate &b, float guard, float wander)
     {
         return randomnode(b, aiplayer->feetpos(), guard, wander);
     }
 
-    bool aiinfo::isenemy(aistate &b, const vec &pos, float guard, int pursue)
+    bool waypointai::isenemy(aistate &b, const vec &pos, float guard, int pursue)
     {
         gameent *t = NULL;
         vec dp = aiplayer->headpos();
@@ -523,7 +483,7 @@ namespace ai
         return false;
     }
 
-    bool aiinfo::patrol(aistate &b, const vec &pos, float guard, float wander, int walk, bool retry)
+    bool waypointai::patrol(aistate &b, const vec &pos, float guard, float wander, int walk, bool retry)
     {
         vec feet = aiplayer->feetpos();
         if(walk == 2 || b.override || (walk && feet.squaredist(pos) <= guard*guard) || !makeroute(aiplayer, b, pos))
@@ -548,7 +508,7 @@ namespace ai
         return true;
     }
 
-    bool aiinfo::defend(aistate &b, const vec &pos, float guard, float wander, int walk)
+    bool waypointai::defend(aistate &b, const vec &pos, float guard, float wander, int walk)
     {
         bool hasenemy = isenemy(b, pos, wander);
         if(!walk)
@@ -563,7 +523,7 @@ namespace ai
         return patrol(b, pos, guard, wander, walk);
     }
 
-    bool aiinfo::violence(aistate &b, gameent *e, int pursue)
+    bool waypointai::violence(aistate &b, gameent *e, int pursue)
     {
         if(e && targetable(e))
         {
@@ -588,7 +548,7 @@ namespace ai
         return false;
     }
 
-    bool aiinfo::istarget(aistate &b, int pursue, bool force, float mindist)
+    bool waypointai::istarget(aistate &b, int pursue, bool force, float mindist)
     {
         static vector<gameent *> hastried; hastried.setsize(0);
         vec dp = aiplayer->headpos();
@@ -628,12 +588,12 @@ namespace ai
         return false;
     }
 
-    int aiinfo::isgoodammo(int gun)
+    int waypointai::isgoodammo(int gun)
     {
         return gun == Gun_Pulse || gun == Gun_Rail;
     }
 
-    bool aiinfo::hasgoodammo()
+    bool waypointai::hasgoodammo()
     {
         static const int goodguns[] = { Gun_Pulse, Gun_Rail, Gun_Eng, Gun_Carbine };
         for(int i = 0; i < static_cast<int>(sizeof(goodguns)/sizeof(goodguns[0])); ++i)
@@ -646,7 +606,7 @@ namespace ai
         return false;
     }
 
-    void aiinfo::assist(aistate &b, vector<interest> &interests, bool all, bool force)
+    void waypointai::assist(aistate &b, vector<interest> &interests, bool all, bool force)
     {
         for(int i = 0; i < players.length(); i++) //loop through all players
         {
@@ -667,7 +627,7 @@ namespace ai
 
     static vector<int> targets;
 
-    bool aiinfo::parseinterests(aistate &b, vector<interest> &interests, bool override, bool ignore)
+    bool waypointai::parseinterests(aistate &b, vector<interest> &interests, bool override, bool ignore)
     {
         while(!interests.empty())
         {
@@ -687,8 +647,6 @@ namespace ai
                 {
                     case AIState_Defend: // don't get into herds
                     {
-                        int members = 0;
-                        proceed = !checkothers(targets, aiplayer, n.state, n.targtype, n.target, true, &members) && members > 1;
                         break;
                     }
                     default:
@@ -706,7 +664,7 @@ namespace ai
         return false;
     }
 
-    bool aiinfo::find(aistate &b, bool override)
+    bool waypointai::find(aistate &b, bool override)
     {
         static vector<interest> interests;
         interests.setsize(0);
@@ -722,7 +680,7 @@ namespace ai
         return parseinterests(b, interests, override);
     }
 
-    void aiinfo::damaged(gameent *e)
+    void waypointai::damaged(gameent *e)
     {
         if(aiplayer && canmove() && targetable(e)) // see if this ai is interested in a grudge
         {
@@ -732,25 +690,9 @@ namespace ai
                 return;
             }
         }
-        if(checkothers(targets, aiplayer, AIState_Defend, AITravel_Player, aiplayer->clientnum, true))
-        {
-            for(int i = 0; i < targets.length(); i++)
-            {
-                gameent *t = getclient(targets[i]);
-                if(!t->ai || !canmove() || !targetable(e))
-                {
-                    continue;
-                }
-                aistate &c = t->ai->getstate();
-                if(violence(c, e))
-                {
-                    return;
-                }
-            }
-        }
     }
 
-    void aiinfo::findorientation(vec &o, float yaw, float pitch, vec &pos)
+    void waypointai::findorientation(vec &o, float yaw, float pitch, vec &pos)
     {
         vec dir;
         vecfromyawpitch(yaw, pitch, 1, 0, dir);
@@ -760,7 +702,7 @@ namespace ai
         }
     }
 
-    void aiinfo::setup()
+    void waypointai::setup()
     {
         clearsetup();
         reset(true);
@@ -777,7 +719,7 @@ namespace ai
         findorientation(dp, aiplayer->yaw, aiplayer->pitch, target);
     }
 
-    void aiinfo::spawned(gameent *d)
+    void waypointai::spawned(gameent *d)
     {
         if(d->ai)
         {
@@ -785,15 +727,12 @@ namespace ai
         }
     }
 
-    void aiinfo::killed(gameent *d, gameent *e)
+    void waypointai::killed()
     {
-        if(d->ai)
-        {
-            d->ai->reset();
-        }
+        reset();
     }
 
-    bool aiinfo::check( aistate &b)
+    bool waypointai::check( aistate &b)
     {
         if(cmode && cmode->aicheck(aiplayer, b))
         {
@@ -802,7 +741,7 @@ namespace ai
         return false;
     }
 
-    int aiinfo::dowait(aistate &b)
+    int waypointai::dowait(aistate &b)
     {
         clear(true); // ensure they're clean
         if(check(b) || find(b))
@@ -825,7 +764,7 @@ namespace ai
         return 0; // but don't pop the state
     }
 
-    int aiinfo::dodefend(aistate &b)
+    int waypointai::dodefend(aistate &b)
     {
         if(aiplayer->state == ClientState_Alive)
         {
@@ -877,7 +816,7 @@ namespace ai
         return 0;
     }
 
-    int aiinfo::dopursue(aistate &b)
+    int waypointai::dopursue(aistate &b)
     {
         if(aiplayer->state == ClientState_Alive)
         {
@@ -916,7 +855,7 @@ namespace ai
         return 0;
     }
 
-    int aiinfo::closenode()
+    int waypointai::closenode()
     {
         vec pos = aiplayer->feetpos();
         int node1 = -1,
@@ -956,7 +895,7 @@ namespace ai
         return node1 >= 0 ? node1 : node2;
     }
 
-    int aiinfo::wpspot(int n, bool check)
+    int waypointai::wpspot(int n, bool check)
     {
         if(iswaypoint(n))
         {
@@ -975,7 +914,7 @@ namespace ai
         return 0;
     }
 
-    int aiinfo::randomlink(int n)
+    int waypointai::randomlink(int n)
     {
         if(iswaypoint(n) && waypoints[n].haslinks())
         {
@@ -1002,7 +941,7 @@ namespace ai
         return -1;
     }
 
-    bool aiinfo::anynode(aistate &b, int len)
+    bool waypointai::anynode(aistate &b, int len)
     {
         if(iswaypoint(aiplayer->lastnode))
         {
@@ -1085,7 +1024,7 @@ namespace ai
         return false;
     }
 
-    bool aiinfo::hunt(aistate &b)
+    bool waypointai::hunt(aistate &b)
     {
         if(!route.empty())
         {
@@ -1134,7 +1073,7 @@ namespace ai
         return anynode(b);
     }
 
-    void aiinfo::jumpto(aistate &b, const vec &pos)
+    void waypointai::jumpto(aistate &b, const vec &pos)
     {
         vec off = vec(pos).sub(aiplayer->feetpos()),
             dir(off.x, off.y, 0);
@@ -1161,7 +1100,7 @@ namespace ai
         }
     }
 
-    void aiinfo::fixfullrange(float &yaw, float &pitch, float &roll, bool full)
+    void waypointai::fixfullrange(float &yaw, float &pitch, float &roll, bool full)
     {
         if(full) //modulus check if full range allowed
         {
@@ -1211,20 +1150,20 @@ namespace ai
         }
     }
 
-    void aiinfo::fixrange(float &yaw, float &pitch)
+    void waypointai::fixrange(float &yaw, float &pitch)
     {
         float r = 0.f;
         fixfullrange(yaw, pitch, r, false);
     }
 
-    void aiinfo::getyawpitch(const vec &from, const vec &pos, float &yaw, float &pitch)
+    void waypointai::getyawpitch(const vec &from, const vec &pos, float &yaw, float &pitch)
     {
         float dist = from.dist(pos);
         yaw = -atan2(pos.x-from.x, pos.y-from.y)/RAD;
         pitch = asin((pos.z-from.z)/dist)/RAD;
     }
 
-    void aiinfo::scaleyawpitch(float &yaw, float &pitch, float targyaw, float targpitch, float frame, float scale)
+    void waypointai::scaleyawpitch(float &yaw, float &pitch, float targyaw, float targpitch, float frame, float scale)
     {
         if(yaw < targyaw-180.0f)
         {
@@ -1271,7 +1210,7 @@ namespace ai
         fixrange(yaw, pitch);
     }
 
-    int aiinfo::process(aistate &b)
+    int waypointai::process(aistate &b)
     {
         int result = 0,
             stupify = aiplayer->skill <= 10+randomint(15) ? randomint(aiplayer->skill*1000) : 0,
@@ -1449,7 +1388,7 @@ namespace ai
         return result;
     }
 
-    bool aiinfo::hasrange(gameent *e, int weap)
+    bool waypointai::hasrange(gameent *e, int weap)
     {
         if(!e)
         {
@@ -1468,7 +1407,7 @@ namespace ai
         return false;
     }
 
-    bool aiinfo::request(aistate &b)
+    bool waypointai::request(aistate &b)
     {
         gameent *e = getclient(enemy);
         if(!aiplayer->hasammo(aiplayer->gunselect) || !hasrange(e, aiplayer->gunselect) || (aiplayer->gunselect != weappref && (!isgoodammo(aiplayer->gunselect) || aiplayer->hasammo(weappref))))
@@ -1502,7 +1441,7 @@ namespace ai
         return process(b) >= 2;
     }
 
-    void aiinfo::timeouts(aistate &b)
+    void waypointai::timeouts(aistate &b)
     {
         if(aiplayer->blocked)
         {
@@ -1623,7 +1562,7 @@ namespace ai
         }
     }
 
-    void aiinfo::logic(aistate &b, bool run)
+    void waypointai::logic(aistate &b, bool run)
     {
         bool allowmove = canmove() && b.type != AIState_Wait;
         if(aiplayer->state != ClientState_Alive || !allowmove)
@@ -1691,31 +1630,31 @@ namespace ai
         avoidweapons(obstacles, guessradius);
     }
 
-    void aiinfo::think(gameent *d, bool run)
+    void waypointai::think(gameent *d, bool run)
     {
         // the state stack works like a chain of commands, certain commands simply replace each other
         // others spawn new commands to the stack the ai reads the top command from the stack and executes
         // it or pops the stack and goes back along the history until it finds a suitable command to execute
         bool cleannext = false;
-        if(d->ai->state.empty())
+        if(state.empty())
         {
-            d->ai->addstate(AIState_Wait);
+            addstate(AIState_Wait);
         }
-        for(int i = d->ai->state.length(); --i >=0;) //note reverse iteration
+        for(int i = state.length(); --i >=0;) //note reverse iteration
         {
-            aistate &c = d->ai->state[i];
+            aistate &c = state[i];
             if(cleannext)
             {
                 c.millis = lastmillis;
                 c.override = false;
                 cleannext = false;
             }
-            if(d->state == ClientState_Dead && d->respawned!=d->lifesequence && (!cmode || cmode->respawnwait(d) <= 0) && lastmillis - d->lastpain >= 500)
+            if(aiplayer->state == ClientState_Dead && aiplayer->respawned!=aiplayer->lifesequence && (!cmode || cmode->respawnwait(d) <= 0) && lastmillis - aiplayer->lastpain >= 500)
             {
                 addmsg(NetMsg_TrySpawn, "rc", d);
-                d->respawned = d->lifesequence;
+                aiplayer->respawned = aiplayer->lifesequence;
             }
-            else if(d->state == ClientState_Alive && run)
+            else if(aiplayer->state == ClientState_Alive && run)
             {
                 int result = 0;
                 c.idle = 0;
@@ -1751,13 +1690,13 @@ namespace ai
                             case 0:
                             default:
                             {
-                                d->ai->removestate(i);
+                                removestate(i);
                                 cleannext = true;
                                 break;
                             }
                             case -1:
                             {
-                                i = d->ai->state.length()-1;
+                                i = state.length()-1;
                                 break;
                             }
                         }
@@ -1768,11 +1707,11 @@ namespace ai
             logic(c, run);
             break;
         }
-        if(d->ai->trywipe)
+        if(trywipe)
         {
-            d->ai->wipe();
+            wipe();
         }
-        d->ai->lastrun = lastmillis;
+        lastrun = lastmillis;
     }
 
     void drawroute(gameent *d, float amt)

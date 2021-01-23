@@ -2202,7 +2202,10 @@ namespace game
                     {
                         cmode->respawned(s);
                     }
-                    s->ai->spawned(s);
+                    if(s->ai)
+                    {
+                        s->ai->spawned(s);
+                    }
                     checkfollow();
                     addmsg(NetMsg_Spawn, "rcii", s, s->lifesequence, s->gunselect);
                     break;
@@ -2867,7 +2870,7 @@ namespace game
                     {
                         break;
                     }
-                    b->ai = new ai::aiinfo();
+                    b->ai = new ai::waypointai();
                     b->ai->init(b, at, on, sk, bn, pm, col, name, team);
                     break;
                 }

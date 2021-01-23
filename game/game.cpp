@@ -613,7 +613,10 @@ namespace game
             }
         }
         deathstate(d);
-        d->ai->killed(d, actor);
+        if(d->ai)
+        {
+            d->ai->killed();
+        }
     }
 
     void timeupdate(int secs)
