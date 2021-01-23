@@ -214,6 +214,8 @@ namespace ai
     const int numprevnodes = 6;
     extern vec aitarget;
 
+    //the ai base class-- the interface by which different AIs can connect to the game
+    //by itself, can do nothing; must be extended by derived classes
     class aiinfo
     {
         public:
@@ -223,7 +225,23 @@ namespace ai
             vector<int> route;
             vec spot;
             gameent * aiplayer;
-            aiinfo()
+            aiinfo() {};
+            virtual ~aiinfo() {};
+
+            virtual bool hasprevnode(int n) const = 0;
+            virtual void addprevnode(int n) = 0;
+            virtual void init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team) = 0;
+            virtual void spawned(gameent *d) = 0;
+            virtual void damaged(gameent *e) = 0;
+            virtual void killed() = 0;
+            virtual void think(gameent *d, bool run) = 0;
+    };
+
+    //specific ai type that uses waypoints--
+    class waypointai : public aiinfo
+    {
+        public:
+            waypointai()
             {
                 clearsetup();
                 reset();
@@ -232,7 +250,7 @@ namespace ai
                     views[k] = 0.f;
                 }
             }
-            ~aiinfo() {}
+            ~waypointai() {}
 
             bool hasprevnode(int n) const
             {
@@ -258,7 +276,7 @@ namespace ai
             void init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team);
             void spawned(gameent *d);
             void damaged(gameent *e);
-            void killed(gameent *d, gameent *e);
+            void killed();
             void think(gameent *d, bool run);
 
         private:
@@ -307,7 +325,6 @@ namespace ai
             vec getaimpos(int atk, gameent *e);
             void create();
             void destroy();
-            bool checkothers(vector<int> &targets, gameent *d = NULL, int state = -1, int targtype = -1, int target = -1, bool teams = false, int *members = NULL);
             bool randomnode(aistate &b, const vec &pos, float guard, float wander);
             bool randomnode(aistate &b, float guard, float wander);
             bool isenemy(aistate &b, const vec &pos, float guard = sightmin, int pursue = 0);
