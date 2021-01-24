@@ -181,7 +181,6 @@ namespace game
                 return;
             }
         }
-        playsound(Sound_NoAmmo);
     }
     ICOMMAND(cycleweapon, "V", (tagval *args, int numargs),
     {
@@ -236,7 +235,6 @@ namespace game
                 return;
             }
         }
-        playsound(Sound_NoAmmo);
     });
 
     void offsetray(const vec &from, const vec &to, int spread, float range, vec &dest)
@@ -505,11 +503,6 @@ namespace game
                 {
                     damageblend(damage);
                     damagecompass(damage, at ? at->o : f->o);
-                    playsound(Sound_Pain2);
-                }
-                else
-                {
-                    playsound(Sound_Pain1, &f->o);
                 }
             }
         }
@@ -992,7 +985,6 @@ namespace game
         {
             if(d==player1)
             {
-                msgsound(Sound_NoAmmo, d);
                 d->gunwait = 600;
                 d->lastattack = -1;
                 weaponswitch(d);

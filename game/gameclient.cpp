@@ -2357,7 +2357,6 @@ namespace game
                         break;
                     }
                     entities::setspawn(i, true);
-                    playsound(Sound_ItemSpawn, &entities::ents[i]->o, NULL, 0, 0, 0, -1, 0, 1500);
                     break;
                 }
                 case NetMsg_ItemAcceptance:            // server acknowledges that I picked up this item

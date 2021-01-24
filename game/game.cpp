@@ -502,14 +502,6 @@ namespace game
                 killed(d, actor);
             }
         }
-        else if(d==h)
-        {
-            playsound(Sound_Pain2);
-        }
-        else
-        {
-            playsound(Sound_Pain1, &d->o);
-        }
     }
 
     VARP(deathscore, 0, 1, 1);
