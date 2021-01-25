@@ -1971,10 +1971,6 @@ namespace game
                     {
                         break;
                     }
-                    if(d->state!=ClientState_Dead && d->state!=ClientState_Spectator)
-                    {
-                        particle_textcopy(d->abovehead(), text, Part_Text, 2000, 0x32FF64, 4.0f, -8);
-                    }
                     conoutf(ConsoleMsg_Chat, "%s:%s %s", chatcolorname(d), teamtextcode[0], text);
                     break;
                 }
@@ -1989,10 +1985,6 @@ namespace game
                         break;
                     }
                     int team = validteam(t->team) ? t->team : 0;
-                    if(t->state!=ClientState_Dead && t->state!=ClientState_Spectator)
-                    {
-                        particle_textcopy(t->abovehead(), text, Part_Text, 2000, teamtextcolor[team], 4.0f, -8);
-                    }
                     conoutf(ConsoleMsg_TeamChat, "%s:%s %s", chatcolorname(t), teamtextcode[team], text);
                     break;
                 }
