@@ -25,44 +25,45 @@ namespace ai
     const float viewmin         = 90.f;    // minimum field of view
     const float viewmax         = 180.f;   // maximum field of view
 
-    struct waypoint
+    extern int aidebug;
+
+    class waypoint
     {
-        vec o;
-        float curscore, estscore;
-        int weight;
-        ushort route, prev;
-        ushort links[maxwaypointlinks];
+        public:
+            vec o;
+            int weight;
+            ushort links[maxwaypointlinks];
+            ushort route, prev;
+            float curscore, estscore;
 
-        waypoint()
-        {
-        }
+            waypoint() : o(0,0,0), weight(), links(), route(), prev(), curscore(), estscore() {}
 
-        waypoint(const vec &o, int weight = 0) : o(o), weight(weight), route(0)
-        {
-            memset(links, 0, sizeof(links));
-        }
-
-        int score() const
-        {
-            return static_cast<int>(curscore) + static_cast<int>(estscore);
-        }
-
-        int find(int wp)
-        {
-            for(int i = 0; i < maxwaypointlinks; ++i)
+            waypoint(const vec &o, int weight = 0) : o(o), weight(weight), route(0)
             {
-                if(links[i] == wp)
-                {
-                    return i;
-                }
+                memset(links, 0, sizeof(links));
             }
-            return -1;
-        }
 
-        bool haslinks()
-        {
-            return links[0]!=0;
-        }
+            int score() const
+            {
+                return static_cast<int>(curscore) + static_cast<int>(estscore);
+            }
+
+            int find(int wp)
+            {
+                for(int i = 0; i < maxwaypointlinks; ++i)
+                {
+                    if(links[i] == wp)
+                    {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+
+            bool haslinks()
+            {
+                return links[0]!=0;
+            }
     };
     extern vector<waypoint> waypoints;
 
@@ -76,90 +77,90 @@ namespace ai
     extern void findwaypointswithin(const vec &pos, float mindist, float maxdist, vector<int> &results);
     extern void inferwaypoints(gameent *d, const vec &o, const vec &v, float mindist = ai::closedist);
 
-    struct avoidset
+    class avoidset
     {
-        struct obstacle
-        {
-            void *owner;
-            int numwaypoints;
-            float above;
-
-            obstacle(void *owner, float above = -1) : owner(owner), numwaypoints(0), above(above) {}
-        };
-
-        vector<obstacle> obstacles;
-        vector<int> waypoints;
-
-        void clear()
-        {
-            obstacles.setsize(0);
-            waypoints.setsize(0);
-        }
-
-        void add(void *owner, float above)
-        {
-            obstacles.add(obstacle(owner, above));
-        }
-
-        void add(void *owner, float above, int wp)
-        {
-            if(obstacles.empty() || owner != obstacles.last().owner)
+        public:
+            struct obstacle
             {
-                add(owner, above);
+                void *owner;
+                int numwaypoints;
+                float above;
+
+                obstacle(void *owner, float above = -1) : owner(owner), numwaypoints(0), above(above) {}
+            };
+            vector<obstacle> obstacles;
+            vector<int> waypoints;
+
+            void clear()
+            {
+                obstacles.setsize(0);
+                waypoints.setsize(0);
             }
-            obstacles.last().numwaypoints++;
-            waypoints.add(wp);
-        }
 
-        void add(avoidset &avoid)
-        {
-            waypoints.put(avoid.waypoints.getbuf(), avoid.waypoints.length());
-            for(int i = 0; i < avoid.obstacles.length(); i++)
+            void add(avoidset &avoid)
             {
-                obstacle &o = avoid.obstacles[i];
-                if(obstacles.empty() || o.owner != obstacles.last().owner)
+                waypoints.put(avoid.waypoints.getbuf(), avoid.waypoints.length());
+                for(int i = 0; i < avoid.obstacles.length(); i++)
                 {
-                    add(o.owner, o.above);
+                    obstacle &o = avoid.obstacles[i];
+                    if(obstacles.empty() || o.owner != obstacles.last().owner)
+                    {
+                        add(o.owner, o.above);
+                    }
+                    obstacles.last().numwaypoints += o.numwaypoints;
                 }
-                obstacles.last().numwaypoints += o.numwaypoints;
             }
-        }
 
-        void avoidnear(void *owner, float above, const vec &pos, float limit);
-
-        #define LOOP_AVOID(v, d, body) \
-            if(!(v).obstacles.empty()) \
-            { \
-                int cur = 0; \
-                for(int i = 0; i < (v).obstacles.length(); i++) \
+            #define LOOP_AVOID(v, d, body) \
+                if(!(v).obstacles.empty()) \
                 { \
-                    const ai::avoidset::obstacle &ob = (v).obstacles[i]; \
-                    int next = cur + ob.numwaypoints; \
-                    if(ob.owner != d) \
+                    int cur = 0; \
+                    for(int i = 0; i < (v).obstacles.length(); i++) \
                     { \
-                        for(; cur < next; cur++) \
+                        const ai::avoidset::obstacle &ob = (v).obstacles[i]; \
+                        int next = cur + ob.numwaypoints; \
+                        if(ob.owner != d) \
                         { \
-                            int wp = (v).waypoints[cur]; \
-                            body; \
+                            for(; cur < next; cur++) \
+                            { \
+                                int wp = (v).waypoints[cur]; \
+                                body; \
+                            } \
                         } \
+                        cur = next; \
                     } \
-                    cur = next; \
-                } \
+                }
+
+            bool find(int n, gameent *d) const
+            {
+                LOOP_AVOID(*this, d,
+                {
+                    if(wp == n)
+                    {
+                        return true;
+                    }
+                });
+                return false;
             }
 
-        bool find(int n, gameent *d) const
-        {
-            LOOP_AVOID(*this, d,
-            {
-                if(wp == n)
-                {
-                    return true;
-                }
-            });
-            return false;
-        }
+            void avoidnear(void *owner, float above, const vec &pos, float limit);
+            int remap(gameent *d, int n, vec &pos, bool retry = false);
 
-        int remap(gameent *d, int n, vec &pos, bool retry = false);
+        private:
+            void add(void *owner, float above)
+            {
+                obstacles.add(obstacle(owner, above));
+            }
+
+            void add(void *owner, float above, int wp)
+            {
+                if(obstacles.empty() || owner != obstacles.last().owner)
+                {
+                    add(owner, above);
+                }
+                obstacles.last().numwaypoints++;
+                waypoints.add(wp);
+            }
     };
 
     extern bool route(gameent *d, int node, int goal, vector<int> &route, const avoidset &obstacles, int retries = 0);
@@ -175,7 +176,6 @@ namespace ai
         AIState_Wait = 0,      // waiting for next command
         AIState_Defend,        // defend goal target
         AIState_Pursue,        // pursue goal target
-        AIState_Interest,      // interest in goal entity
         AIState_Max,
     };
 
@@ -183,7 +183,6 @@ namespace ai
     { //renamed to Travel, but "T" could mean something else
         AITravel_Node,
         AITravel_Player,
-        AITravel_Affinity,
         AITravel_Entity,
         AITravel_Max,
     };
@@ -215,165 +214,176 @@ namespace ai
     };
 
     const int numprevnodes = 6;
+    extern vec aitarget;
 
-    struct aiinfo
+    //the ai base class-- the interface by which different AIs can connect to the game
+    //by itself, can do nothing; must be extended by derived classes
+    class aiinfo
     {
-        vector<aistate> state;
-        vector<int> route;
-        vec target, spot;
-        int enemy, enemyseen, enemymillis, weappref, prevnodes[numprevnodes], targnode, targlast, targtime, targseq,
-            lastrun, lasthunt, lastaction, lastcheck, jumpseed, jumprand, blocktime, huntseq, blockseq, lastaimrnd;
-        float targyaw, targpitch, views[3], aimrnd[3];
-        bool dontmove, becareful, tryreset, trywipe;
+        public:
+            int enemy, weappref, targnode, lastcheck;
+            int prevnodes[numprevnodes];
+            vector<aistate> state;
+            vector<int> route;
+            vec spot;
+            gameent * aiplayer;
+            aiinfo() {};
+            virtual ~aiinfo() {};
 
-        aiinfo()
-        {
-            clearsetup();
-            reset();
-            for(int k = 0; k < 3; ++k)
+            virtual bool hasprevnode(int n) const = 0;
+            virtual void addprevnode(int n) = 0;
+            virtual void init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team) = 0;
+            virtual void spawned(gameent *d) = 0;
+            virtual void damaged(gameent *e) = 0;
+            virtual void killed() = 0;
+            virtual void think(gameent *d, bool run) = 0;
+    };
+
+    //specific ai type that uses waypoints--
+    class waypointai : public aiinfo
+    {
+        public:
+            waypointai()
             {
-                views[k] = 0.f;
-            }
-        }
-        ~aiinfo() {}
-
-        void clearsetup()
-        {
-            weappref = Gun_Rail;
-            spot = target = vec(0, 0, 0);
-            lastaction = lasthunt = lastcheck = enemyseen = enemymillis = blocktime = huntseq = blockseq = targtime = targseq = lastaimrnd = 0;
-            lastrun = jumpseed = lastmillis;
-            jumprand = lastmillis+5000;
-            targnode = targlast = enemy = -1;
-        }
-
-        void clear(bool prev = false)
-        {
-            if(prev)
-            {
-                memset(prevnodes, -1, sizeof(prevnodes));
-            }
-            route.setsize(0);
-        }
-
-        void wipe(bool prev = false)
-        {
-            clear(prev);
-            state.setsize(0);
-            addstate(AIState_Wait);
-            trywipe = false;
-        }
-
-        void clean(bool tryit = false)
-        {
-            if(!tryit)
-            {
-                becareful = dontmove = false;
-            }
-            targyaw = randomint(360);
-            targpitch = 0.f;
-            tryreset = tryit;
-        }
-
-        void reset(bool tryit = false)
-        {
-            wipe();
-            clean(tryit);
-        }
-
-        bool hasprevnode(int n) const
-        {
-            for(int i = 0; i < numprevnodes; ++i)
-            {
-                if(prevnodes[i] == n)
+                clearsetup();
+                reset();
+                for(int k = 0; k < 3; ++k)
                 {
-                    return true;
+                    views[k] = 0.f;
                 }
             }
-            return false;
-        }
+            ~waypointai() {}
 
-        void addprevnode(int n)
-        {
-            if(prevnodes[0] != n)
+            bool hasprevnode(int n) const
             {
-                memmove(&prevnodes[1], prevnodes, sizeof(prevnodes) - sizeof(prevnodes[0]));
-                prevnodes[0] = n;
+                for(int i = 0; i < numprevnodes; ++i)
+                {
+                    if(prevnodes[i] == n)
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
-        }
 
-        aistate &addstate(int t, int r = -1, int v = -1)
-        {
-            return state.add(aistate(lastmillis, t, r, v));
-        }
+            void addprevnode(int n)
+            {
+                if(prevnodes[0] != n)
+                {
+                    memmove(&prevnodes[1], prevnodes, sizeof(prevnodes) - sizeof(prevnodes[0]));
+                    prevnodes[0] = n;
+                }
+            }
 
-        void removestate(int index = -1)
-        {
-            if(index < 0)
-            {
-                state.pop();
-            }
-            else if(state.inrange(index))
-            {
-                state.remove(index);
-            }
-            if(!state.length())
-            {
-                addstate(AIState_Wait);
-            }
-        }
+            void init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team);
+            void spawned(gameent *d);
+            void damaged(gameent *e);
+            void killed();
+            void think(gameent *d, bool run);
 
-        aistate &getstate(int idx = -1)
-        {
-            if(state.inrange(idx))
-            {
-                return state[idx];
-            }
-            return state.last();
-        }
+        private:
+            int enemyseen, enemymillis,
+                targlast, targtime, targseq,
+                lastrun, lasthunt, lastaction,
+                jumpseed, jumprand,
+                blocktime,
+                huntseq,
+                blockseq,
+                lastaimrnd;
+            float targyaw,
+                  targpitch,
+                  views[3],
+                  aimrnd[3];
+            bool dontmove,
+                 becareful,
+                 tryreset,
+                 trywipe;
+            vec target;
+            gameent *parent;
 
-        aistate &switchstate(aistate &b, int t, int r = -1, int v = -1)
-        {
-            if((b.type == t && b.targtype == r) || (b.type == AIState_Interest && b.targtype == AITravel_Node))
-            {
-                b.millis = lastmillis;
-                b.target = v;
-                b.reset();
-                return b;
-            }
-            return addstate(t, r, v);
-        }
+            void clearsetup();
+            void clear(bool prev = false);
+            void wipe(bool prev = false);
+            void clean(bool tryit = false);
+            void reset(bool tryit = false);
+            aistate &addstate(int t, int r = -1, int v = -1);
+            void removestate(int index = -1);
+            aistate &getstate(int idx = -1);
+            aistate &switchstate(aistate &b, int t, int r = -1, int v = -1);
+
+            float viewdist(int skill);
+            float viewfieldx(int skill);
+            float viewfieldy(int skill);
+            bool canmove();
+            float attackmindist(int atk);
+            float attackmaxdist(int atk);
+            bool attackrange(int atk, float dist);
+            bool targetable(gameent *e);
+            bool getsight(vec &o, float yaw, float pitch, vec &q, vec &v, float mdist, float fovx, float fovy);
+            bool cansee(vec &x, vec &y, vec &targ = aitarget);
+            bool canshoot(int atk, gameent *e);
+            bool canshoot(int atk);
+            bool hastarget(int atk, aistate &b, gameent *e, float yaw, float pitch, float dist);
+            vec getaimpos(int atk, gameent *e);
+            void create();
+            void destroy();
+            bool randomnode(aistate &b, const vec &pos, float guard, float wander);
+            bool randomnode(aistate &b, float guard, float wander);
+            bool isenemy(aistate &b, const vec &pos, float guard = sightmin, int pursue = 0);
+            bool patrol(aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax, int walk = 1, bool retry = false);
+            bool defend(aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax, int walk = 1);
+            bool violence(aistate &b, gameent *e, int pursue = 0);
+            bool istarget(aistate &b, int pursue = 0, bool force = false, float mindist = 0.f);
+            int isgoodammo(int gun);
+            bool hasgoodammo();
+            void assist(aistate &b, vector<interest> &interests, bool all = false, bool force = false);
+            bool parseinterests(aistate &b, vector<interest> &interests, bool override = false, bool ignore = false);
+            bool find(aistate &b, bool override = false);
+            void findorientation(vec &o, float yaw, float pitch, vec &pos);
+            void setup();
+            bool check(aistate &b);
+            int dowait(aistate &b);
+            int dodefend(aistate &b);
+            int dopursue(aistate &b);
+            int closenode();
+            int wpspot(int n, bool check = false);
+            int randomlink(int n);
+            bool anynode(aistate &b, int len = numprevnodes);
+            bool hunt(aistate &b);
+            void jumpto(aistate &b, const vec &pos);
+            void fixfullrange(float &yaw, float &pitch, float &roll, bool full);
+            void fixrange(float &yaw, float &pitch);
+            void getyawpitch(const vec &from, const vec &pos, float &yaw, float &pitch);
+            void scaleyawpitch(float &yaw, float &pitch, float targyaw, float targpitch, float frame, float scale);
+            int process(aistate &b);
+            bool hasrange(gameent *e, int weap);
+            bool request(aistate &b);
+            void timeouts(aistate &b);
+            void logic(aistate &b, bool run);
     };
 
     extern avoidset obstacles;
-    extern vec aitarget;
 
+    extern void avoid();
+    extern void update();
     extern float viewdist(int x = 101);
     extern float viewfieldx(int x = 101);
     extern float viewfieldy(int x = 101);
     extern bool targetable(gameent *d, gameent *e);
-    extern bool cansee(gameent *d, vec &x, vec &y, vec &targ = aitarget);
 
     extern void init(gameent *d, int at, int on, int sk, int bn, int pm, int col, const char *name, int team);
     extern void update();
     extern void avoid();
     extern void think(gameent *d, bool run);
 
+    bool checkroute(gameent *d, int n);
     extern bool badhealth(gameent *d);
-    extern bool checkothers(vector<int> &targets, gameent *d = NULL, int state = -1, int targtype = -1, int target = -1, bool teams = false, int *members = NULL);
     extern bool makeroute(gameent *d, aistate &b, int node, bool changed = true, int retries = 0);
     extern bool makeroute(gameent *d, aistate &b, const vec &pos, bool changed = true, int retries = 0);
     extern bool randomnode(gameent *d, aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax);
     extern bool randomnode(gameent *d, aistate &b, float guard = sightmin, float wander = sightmax);
     extern bool violence(gameent *d, aistate &b, gameent *e, int pursue = 0);
-    extern bool patrol(gameent *d, aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax, int walk = 1, bool retry = false);
-    extern bool defend(gameent *d, aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax, int walk = 1);
-    extern void assist(gameent *d, aistate &b, vector<interest> &interests, bool all = false, bool force = false);
-    extern bool parseinterests(gameent *d, aistate &b, vector<interest> &interests, bool override = false, bool ignore = false);
-
     extern void spawned(gameent *d);
-    extern void damaged(gameent *d, gameent *e);
-    extern void killed(gameent *d, gameent *e);
 
     extern void render();
 }
