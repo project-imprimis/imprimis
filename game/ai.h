@@ -25,6 +25,8 @@ namespace ai
     const float viewmin         = 90.f;    // minimum field of view
     const float viewmax         = 180.f;   // maximum field of view
 
+    extern int aidebug;
+
     class waypoint
     {
         public:

@@ -19,6 +19,7 @@ CLIENT_OBJS= \
 	game/server.o \
 	game/serverbrowser.o \
 	game/waypoint.o \
+	game/waypointai.o \
 	game/weapon.o
 
 default: client
