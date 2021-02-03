@@ -109,8 +109,7 @@ void startupconstants()
 
     std::string entnamelist[GamecodeEnt_MaxEntTypes] =
     {
-        "none?", "light", "mapmodel", "playerstart", "particles", "sound", "spotlight", "decal",
-        "flag"
+        "none?", "light", "mapmodel", "playerstart", "particles", "sound", "spotlight", "decal"
     };
     entnames = std::vector<std::string>(std::begin(entnamelist), std::end(entnamelist));
 }

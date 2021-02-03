@@ -107,7 +107,6 @@ enum                            // static entity types
     GamecodeEnt_MapSound             = EngineEnt_Sound,        // attr1 = index, attr2 = sound
     GamecodeEnt_Spotlight            = EngineEnt_Spotlight,    // attr1 = angle
     GamecodeEnt_Decal                = EngineEnt_Decal,        // attr1 = index, attr2 = yaw, attr3 = pitch, attr4 = roll, attr5 = scale
-    GamecodeEnt_Flag,                                          // attr1 = yaw, attr2 = team
     GamecodeEnt_MaxEntTypes,                                   // used for looping through full enum
 };
 
@@ -280,13 +279,11 @@ enum
     NetMsg_ItemSpawn,
     NetMsg_ItemPickup,
     NetMsg_ItemAcceptance,
-    NetMsg_Teleport,
-    NetMsg_Jumppad,
 
     NetMsg_Ping,
-    NetMsg_Pong, //30
+    NetMsg_Pong,
     NetMsg_ClientPing,
-    NetMsg_TimeUp,
+    NetMsg_TimeUp, //30
     NetMsg_ForceIntermission,
     NetMsg_ServerMsg,
     NetMsg_ItemList,
@@ -295,9 +292,9 @@ enum
     NetMsg_EditMode,
     NetMsg_EditEnt,
     NetMsg_EditFace,
-    NetMsg_EditTex, //40
+    NetMsg_EditTex,
     NetMsg_EditMat,
-    NetMsg_EditFlip,
+    NetMsg_EditFlip, //40
     NetMsg_Copy,
     NetMsg_Paste,
     NetMsg_Rotate,
@@ -306,9 +303,9 @@ enum
     NetMsg_AddCube,
     NetMsg_CalcLight,
     NetMsg_Remip,
-    NetMsg_EditVSlot, //50
+    NetMsg_EditVSlot,
     NetMsg_Undo,
-    NetMsg_Redo,
+    NetMsg_Redo, //50
     NetMsg_Newmap,
     NetMsg_GetMap,
     NetMsg_SendMap,
@@ -317,9 +314,9 @@ enum
     //master
     NetMsg_MasterMode,
     NetMsg_Kick,
-    NetMsg_ClearBans, //60
+    NetMsg_ClearBans,
     NetMsg_CurrentMaster,
-    NetMsg_Spectator,
+    NetMsg_Spectator, //60
     NetMsg_SetMaster,
     NetMsg_SetTeam,
     //demo
@@ -328,19 +325,11 @@ enum
     NetMsg_GetDemo,
     NetMsg_SendDemo,
     NetMsg_DemoPlayback,
-    NetMsg_RecordDemo, //70
+    NetMsg_RecordDemo,
     NetMsg_StopDemo,
-    NetMsg_ClearDemos,
-    //flag
-    NetMsg_TakeFlag,
-    NetMsg_ReturnFlag,
-    NetMsg_ResetFlag,
-    NetMsg_TryDropFlag,
-    NetMsg_DropFlag,
-    NetMsg_ScoreFlag,
-    NetMsg_InitFlags,
+    NetMsg_ClearDemos, //70
     //misc
-    NetMsg_SayTeam, //80
+    NetMsg_SayTeam,
     NetMsg_Client,
     NetMsg_AuthTry,
     NetMsg_AuthKick,
@@ -349,8 +338,8 @@ enum
     NetMsg_ReqAuth,
     NetMsg_PauseGame,
     NetMsg_GameSpeed,
-    NetMsg_AddBot,
-    NetMsg_DelBot, //90
+    NetMsg_AddBot, //80
+    NetMsg_DelBot,
     NetMsg_InitAI,
     NetMsg_FromAI,
     NetMsg_BotLimit,
@@ -359,13 +348,13 @@ enum
     NetMsg_CheckMaps,
     NetMsg_SwitchName,
     NetMsg_SwitchModel,
-    NetMsg_SwitchColor,
-    NetMsg_SwitchTeam, //100
+    NetMsg_SwitchColor, //90
+    NetMsg_SwitchTeam,
     NetMsg_ServerCommand,
     NetMsg_DemoPacket,
     NetMsg_GetScore,
 
-    NetMsg_NumMsgs //104
+    NetMsg_NumMsgs //95
 };
 
 /* list of messages with their sizes in bytes
@@ -450,14 +439,6 @@ const int msgsizes[] =
     NetMsg_RecordDemo,    2,
     NetMsg_StopDemo,      1,
     NetMsg_ClearDemos,    2,
-
-    NetMsg_TakeFlag,      3,
-    NetMsg_ReturnFlag,    4,
-    NetMsg_ResetFlag,     3,
-    NetMsg_TryDropFlag,   1,
-    NetMsg_DropFlag,      7,
-    NetMsg_ScoreFlag,     9,
-    NetMsg_InitFlags,     0,
 
     NetMsg_SayTeam,       0,
     NetMsg_Client,        0,

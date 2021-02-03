@@ -948,8 +948,8 @@ namespace ai
             extentity &e = *entities::ents[i];
             switch(e.type)
             {
+                //automatically connect to playerstarts in range
                 case GamecodeEnt_Playerstart:
-                case GamecodeEnt_Flag:
                 {
                     addwaypoint(e.o);
                     break;
