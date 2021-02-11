@@ -8,6 +8,28 @@
 
 void physicsframe();
 
+//re-definable strings
+//can be overwritten by script to change language
+
+//death notification messages
+SVAR(gamestr1, "suicided");
+SVAR(gamestr2, "fragged a teammate");
+SVAR(gamestr3, "got fragged by a teammate");
+SVAR(gamestr4, "fragged a teammate");
+SVAR(gamestr5, "got fragged by");
+SVAR(gamestr6, "fragged");
+
+//intermission messages
+SVAR(gamestr7,  "intermission");
+SVAR(gamestr8,  "game has ended!");
+SVAR(gamestr9,  "frags/deaths, score");
+SVAR(gamestr10, "total damage dealt/wasted, efficiency(%%)");
+
+SVAR(gamestr11, "leave"); //message for player leaving
+SVAR(gamestr12, "unnamed"); //name of players with no name str
+SVAR(gamestr13, "game mode is"); //new game gamemode indicator
+
+
 namespace game
 {
     bool intermission = false;
@@ -572,33 +594,33 @@ namespace game
         }
         if(d==actor)
         {
-            conoutf(contype, "\f2%s suicided%s", dname, d==player1 ? "!" : "");
+            conoutf(contype, "\f2%s%s%s", dname, gamestr1, d==player1 ? "!" : "");
         }
         else if(modecheck(gamemode, Mode_Team) && (d->team == actor->team)) //if player is on the same team in a team mode
         {
             contype |= ConsoleMsg_TeamKill;
             if(actor==player1)
             {
-                conoutf(contype, "\f6%s fragged a teammate (%s)", aname, dname);
+                conoutf(contype, "\f6%s %s (%s)", aname, gamestr2, dname);
             }
             else if(d==player1)
             {
-                conoutf(contype, "\f6%s got fragged by a teammate (%s)", dname, aname);
+                conoutf(contype, "\f6%s %s (%s)", dname, gamestr3, aname);
             }
             else
             {
-                conoutf(contype, "\f2%s fragged a teammate (%s)", aname, dname);
+                conoutf(contype, "\f2%s %s (%s)", aname, gamestr4, dname);
             }
         }
         else
         {
             if(d==player1)
             {
-                conoutf(contype, "\f2%s got fragged by %s", dname, aname);
+                conoutf(contype, "\f2%s %s %s", dname, gamestr5, aname);
             }
             else
             {
-                conoutf(contype, "\f2%s fragged %s", aname, dname);
+                conoutf(contype, "\f2%s %s %s", aname, gamestr6, dname);
             }
         }
         deathstate(d);
@@ -615,11 +637,11 @@ namespace game
         {
             intermission = true;
             player1->attacking = Act_Idle;
-            conoutf(ConsoleMsg_GameInfo, "\f2intermission:");
-            conoutf(ConsoleMsg_GameInfo, "\f2game has ended!");
-            conoutf(ConsoleMsg_GameInfo, "\f2player frags: %d, deaths: %d, score: %d", player1->frags, player1->deaths, player1->score);
+            conoutf(ConsoleMsg_GameInfo, "\f2%s:", gamestr7);
+            conoutf(ConsoleMsg_GameInfo, "\f2%s", gamestr8);
+            conoutf(ConsoleMsg_GameInfo, "\f2%d/%d %s: %d", player1->frags, player1->deaths, gamestr9, player1->score);
             int accuracy = (player1->totaldamage*100)/max(player1->totalshots, 1);
-            conoutf(ConsoleMsg_GameInfo, "\f2player total damage dealt: %d, damage wasted: %d, efficiency(%%): %d", player1->totaldamage, player1->totalshots-player1->totaldamage, accuracy);
+            conoutf(ConsoleMsg_GameInfo, "\f2%d/%d %s: %d", player1->totaldamage, player1->totalshots-player1->totaldamage, gamestr10, accuracy);
             showscores(true);
             disablezoom();
             execident("intermission");
@@ -681,7 +703,7 @@ namespace game
         {
             if(notify && d->name[0])
             {
-                conoutf("\f4leave:\f7 %s", colorname(d));
+                conoutf("\f4%s:\f7 %s", gamestr11, colorname(d));
             }
             removeweapons(d);
             removetrackedparticles(d);
@@ -718,7 +740,7 @@ namespace game
     void initclient()
     {
         player1 = spawnstate(new gameent);
-        filtertext(player1->name, "unnamed", false, false, maxnamelength);
+        filtertext(player1->name, gamestr12, false, false, maxnamelength);
         players.add(player1);
     }
 
@@ -739,7 +761,7 @@ namespace game
         intermission = false;
         maptime = maprealtime = 0;
         maplimit = -1;
-        conoutf(ConsoleMsg_GameInfo, "\f2game mode is %s", server::modeprettyname(gamemode));
+        conoutf(ConsoleMsg_GameInfo, "\f2%s %s", gamestr13, server::modeprettyname(gamemode));
         const char *info = validmode(gamemode) ? gamemodes[gamemode - startgamemode].info : NULL;
         if(showmodeinfo && info)
         {
