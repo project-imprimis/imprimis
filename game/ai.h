@@ -360,31 +360,18 @@ namespace ai
             bool request(aistate &b);
             void timeouts(aistate &b);
             void logic(aistate &b, bool run);
+
+            bool makeroute(gameent *d, aistate &b, int node, bool changed = true, int retries = 0);
+            bool makeroute(gameent *d, aistate &b, const vec &pos, bool changed = true, int retries = 0);
     };
 
     extern avoidset obstacles;
 
     extern void avoid();
     extern void update();
-    extern float viewdist(int x = 101);
-    extern float viewfieldx(int x = 101);
-    extern float viewfieldy(int x = 101);
     extern bool targetable(gameent *d, gameent *e);
 
-    extern void init(gameent *d, int at, int on, int sk, int bn, int pm, int col, const char *name, int team);
-    extern void update();
-    extern void avoid();
-    extern void think(gameent *d, bool run);
-
     bool checkroute(gameent *d, int n);
-    extern bool badhealth(gameent *d);
-    extern bool makeroute(gameent *d, aistate &b, int node, bool changed = true, int retries = 0);
-    extern bool makeroute(gameent *d, aistate &b, const vec &pos, bool changed = true, int retries = 0);
-    extern bool randomnode(gameent *d, aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax);
-    extern bool randomnode(gameent *d, aistate &b, float guard = sightmin, float wander = sightmax);
-    extern bool violence(gameent *d, aistate &b, gameent *e, int pursue = 0);
-    extern void spawned(gameent *d);
-
     extern void render();
 }
 
