@@ -1602,4 +1602,34 @@ namespace ai
         }
         lastrun = lastmillis;
     }
+
+    bool waypointai::makeroute(gameent *d, aistate &b, int node, bool changed, int retries)
+    {
+        if(!iswaypoint(d->lastnode))
+        {
+            return false;
+        }
+        if(changed && d->ai->route.length() > 1 && d->ai->route[0] == node)
+        {
+            return true;
+        }
+        if(ai::route(d, d->lastnode, node, d->ai->route, obstacles, retries))
+        {
+            b.override = false;
+            return true;
+        }
+        // retry fails: 0 = first attempt, 1 = try ignoring obstacles, 2 = try ignoring prevnodes too
+        if(retries <= 1)
+        {
+            return makeroute(d, b, node, false, retries+1);
+        }
+        return false;
+    }
+
+    bool waypointai::makeroute(gameent *d, aistate &b, const vec &pos, bool changed, int retries)
+    {
+        int node = closestwaypoint(pos, sightmin, true);
+        return makeroute(d, b, node, changed, retries);
+    }
+
 }
