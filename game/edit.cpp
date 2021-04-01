@@ -492,9 +492,11 @@ COMMAND(delcube, "");
 void tofronttex() // maintain most recently used of the texture lists when applying texture
 {
     int c = curtexindex;
-    if(texmru.inrange(c))
+    if(static_cast<int>(texmru.size()) > c)
     {
-        texmru.insert(0, texmru.remove(c));
+        uint modified = texmru[c];
+        texmru.erase(texmru.begin() + c);
+        texmru.insert(texmru.begin(), modified);
         curtexindex = -1;
     }
 }
@@ -522,11 +524,11 @@ void mpeditvslot(int delta, VSlot &ds, int allfaces, selinfo &sel, bool local)
     {
         lasttex = findedit->index;
         lasttexmillis = totalmillis;
-        curtexindex = texmru.find(lasttex);
+        curtexindex = std::distance(texmru.begin(), std::find(texmru.begin(), texmru.end(), lasttex));
         if(curtexindex < 0)
         {
-            curtexindex = texmru.length();
-            texmru.add(lasttex);
+            curtexindex = texmru.size();
+            texmru.push_back(lasttex);
         }
     }
 }
@@ -765,9 +767,9 @@ bool mpedittex(int tex, int allfaces, selinfo &sel, ucharbuf &buf)
 
 static void filltexlist()
 {
-    if(texmru.length()!=vslots.length())
+    if(static_cast<int>(texmru.size())!=vslots.length())
     {
-        for(int i = texmru.length(); --i >=0;) //note reverse iteration
+        for(int i = texmru.size(); --i >=0;) //note reverse iteration
         {
             if(texmru[i]>=vslots.length())
             {
@@ -779,14 +781,14 @@ static void filltexlist()
                 {
                     curtexindex = -1;
                 }
-                texmru.remove(i);
+                texmru.erase(texmru.begin() + i);
             }
         }
         for(int i = 0; i < vslots.length(); i++)
         {
-            if(texmru.find(i)<0)
+            if(std::find(texmru.begin(), texmru.end(), i) == texmru.end())
             {
-                texmru.add(i);
+                texmru.push_back(i);
             }
         }
     }
@@ -798,7 +800,7 @@ void edittex(int i, bool save = true)
     lasttexmillis = totalmillis;
     if(save)
     {
-        for(int j = 0; j < texmru.length(); j++)
+        for(uint j = 0; j < texmru.size(); j++)
         {
             if(texmru[j]==lasttex)
             {
@@ -826,7 +828,7 @@ void edittex_(int *dir)
     {
         tofronttex();
     }
-    curtexindex = std::clamp(curtexindex<0 ? 0 : curtexindex+*dir, 0, texmru.length()-1);
+    curtexindex = std::clamp(curtexindex<0 ? 0 : curtexindex+*dir, 0, static_cast<int>(texmru.size()-1));
     edittex(texmru[curtexindex], false);
 }
 
@@ -839,7 +841,7 @@ void gettex()
     filltexlist();
     int tex = -1;
     LOOP_XYZ(sel, sel.grid, tex = c.texture[sel.orient]);
-    for(int i = 0; i < texmru.length(); i++)
+    for(uint i = 0; i < texmru.size(); i++)
     {
         if(texmru[i]==tex)
         {
@@ -858,7 +860,7 @@ void getcurtex()
     }
     filltexlist();
     int index = curtexindex < 0 ? 0 : curtexindex;
-    if(!texmru.inrange(index))
+    if(!(static_cast<int>(texmru.size()) < index))
     {
         return;
     }
@@ -929,13 +931,13 @@ COMMAND(gettexname, "ii");
 ICOMMAND(texmru, "b", (int *idx),
 {
     filltexlist();
-    intret(texmru.inrange(*idx) ? texmru[*idx] : texmru.length());
+    intret( (static_cast<int>(texmru.size()) < *idx) ? texmru[*idx] : texmru.size());
 });
 ICOMMAND(looptexmru, "re", (ident *id, uint *body),
 {
     LOOP_START(id, stack);
     filltexlist();
-    for(int i = 0; i < texmru.length(); i++)
+    for(uint i = 0; i < texmru.size(); i++)
     {
         loopiter(id, stack, texmru[i]); execute(body);
     }
