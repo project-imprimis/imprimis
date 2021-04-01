@@ -648,22 +648,22 @@ namespace game
      */
     void explodecubes(ivec loc, int gridpower, int bias = 1)
     {
-        int gridpow = static_cast<int>(pow(2,gridpower));
         //define selection boundaries that align with gridpower
-        ivec minloc( loc.x - loc.x % gridpow -2*gridpow,
-                     loc.y - loc.y % gridpow -2*gridpow,
-                     loc.z - loc.z % gridpow -(2-bias)*gridpow);
-        ivec maxlocz(3,3,4);
-        ivec maxlocy(3,5,2);
-        ivec maxlocx(5,3,2);
+        ivec minloc( loc.x - loc.x % gridpower -2*gridpower,
+                     loc.y - loc.y % gridpower -2*gridpower,
+                     loc.z - loc.z % gridpower -(2-bias)*gridpower);
+        ivec maxlocz(3,3,5);
+        ivec maxlocy(3,5,3);
+        ivec maxlocx(5,3,3);
         selinfo sel;
-        sel.o = minloc + ivec(gridpow,gridpow,0);
+        sel.grid = gridpower;
+        sel.o = minloc + ivec(gridpower,gridpower,0);
         sel.s = maxlocz;
         mpdelcube(sel, true);
-        sel.o = minloc + ivec(gridpow,0,gridpow);
+        sel.o = minloc + ivec(gridpower,0,gridpower);
         sel.s = maxlocy;
         mpdelcube(sel, true);
-        sel.o = minloc + ivec(0,gridpow,gridpow);
+        sel.o = minloc + ivec(0,gridpower,gridpower);
         sel.s = maxlocx;
         mpdelcube(sel, true);
     }
@@ -750,7 +750,7 @@ namespace game
                     {
                         case 1:
                         {
-                            explodecubes(static_cast<ivec>(p.o),3);
+                            explodecubes(static_cast<ivec>(p.o), 8);
                             break;
                         }
                     }
