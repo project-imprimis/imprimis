@@ -45,7 +45,7 @@ namespace game
         if(gun!=d->gunselect)
         {
             addmsg(NetMsg_GunSelect, "rci", d, gun);
-            playsound(Sound_WeapLoad, d == player1 ? NULL : &d->o);
+            playsound(Sound_WeapLoad, d == player1 ? nullptr : &d->o);
         }
         d->gunselect = gun;
     }
@@ -600,7 +600,7 @@ namespace game
                     if(p.atk == atk && p.owner == d && p.id == id && !p.local)
                     {
                         vec pos = vec(p.offset).mul(p.offsetmillis/static_cast<float>(offsetmillis)).add(p.o);
-                        explode(p.local, p.owner, pos, p.dir, NULL, 0, atk);
+                        explode(p.local, p.owner, pos, p.dir, nullptr, 0, atk);
                         pulsestain(p, pos);
                         projs.remove(i);
                         break;
@@ -754,7 +754,7 @@ namespace game
                             break;
                         }
                     }
-                    projsplash(p, v, NULL);
+                    projsplash(p, v, nullptr);
                     exploded = true;
                 }
                 else
@@ -864,7 +864,7 @@ namespace game
 
         if(d==hudplayer())
         {
-            playsound(attacks[atk].hudsound, NULL);
+            playsound(attacks[atk].hudsound, nullptr);
         }
         else
         {
@@ -884,7 +884,7 @@ namespace game
 
     dynent *intersectclosest(const vec &from, const vec &to, gameent *at, float margin, float &bestdist)
     {
-        dynent *best = NULL;
+        dynent *best = nullptr;
         bestdist = 1e16f;
         for(int i = 0; i < numdynents; ++i)
         {
@@ -938,13 +938,13 @@ namespace game
                 if(hits[i])
                 {
                     o = hits[i];
-                    hits[i] = NULL;
+                    hits[i] = nullptr;
                     int numhits = 1;
                     for(int j = i+1; j < maxrays; j++)
                     {
                         if(hits[j] == o)
                         {
-                            hits[j] = NULL;
+                            hits[j] = nullptr;
                             numhits++;
                         }
                     }
@@ -1096,7 +1096,7 @@ namespace game
                 bnc.lastyaw = yaw;
             }
             pitch = -bnc.roll;
-            const char *mdl = NULL;
+            const char *mdl = nullptr;
             int cull = Model_CullVFC|Model_CullDist|Model_CullOccluded;
             float fade = 1;
             if(bnc.lifetime < 250)
@@ -1110,7 +1110,7 @@ namespace game
                     continue;
                 }
             }
-            rendermodel(mdl, Anim_Mapmodel | Anim_Loop, pos, yaw, pitch, 0, cull, NULL, NULL, 0, 0, fade);
+            rendermodel(mdl, Anim_Mapmodel | Anim_Loop, pos, yaw, pitch, 0, cull, nullptr, nullptr, 0, 0, fade);
         }
     }
 
@@ -1135,7 +1135,7 @@ namespace game
         for(int i = 0; i < projs.length(); i++)
         {
             projectile &p = projs[i];
-            obstacles.avoidnear(NULL, p.o.z + attacks[p.atk].exprad + 1, p.o, radius + attacks[p.atk].exprad);
+            obstacles.avoidnear(nullptr, p.o.z + attacks[p.atk].exprad + 1, p.o, radius + attacks[p.atk].exprad);
         }
     }
 };
