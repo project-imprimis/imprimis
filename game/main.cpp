@@ -117,7 +117,7 @@ void startupconstants()
 int main(int argc, char **argv)
 {
     initidents();
-    setlogfile(NULL);
+    setlogfile(nullptr);
     startupconstants();
     initing = Init_Reset;
     // set home dir first
@@ -195,8 +195,8 @@ int main(int argc, char **argv)
     logoutf("init: world");
     updateenginevalues();
     camera1 = player = iterdynents(0);
-    emptymap(0, true, NULL, false);
-    game::startmap(NULL);
+    emptymap(0, true, nullptr, false);
+    game::startmap(nullptr);
     logoutf("init: sound");
     initsound();
 
