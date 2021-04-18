@@ -163,7 +163,7 @@ namespace ai
             }
     };
 
-    extern bool route(gameent *d, int node, int goal, vector<int> &route, const avoidset &obstacles, int retries = 0);
+    extern bool wproute(gameent *d, int node, int goal, vector<int> &route, const avoidset &obstacles, int retries = 0);
     extern void navigate();
     extern void clearwaypoints(bool full = false);
     extern void seedwaypoints();
@@ -301,6 +301,7 @@ namespace ai
                  trywipe;
             vec target;
             gameent *parent;
+            vector<int> remapping;
 
             void clearsetup();
             void clear(bool prev = false);
@@ -361,10 +362,10 @@ namespace ai
             bool request(aistate &b);
             void timeouts(aistate &b);
             void logic(aistate &b, bool run);
-            bool checkroute(gameent *d, int n);
+            bool checkroute(int n);
 
-            bool makeroute(gameent *d, aistate &b, int node, bool changed = true, int retries = 0);
-            bool makeroute(gameent *d, aistate &b, const vec &pos, bool changed = true, int retries = 0);
+            bool makeroute(aistate &b, int node, bool changed = true, int retries = 0);
+            bool makeroute(aistate &b, const vec &pos, bool changed = true, int retries = 0);
     };
 
     extern avoidset obstacles;

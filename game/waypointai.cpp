@@ -422,7 +422,7 @@ namespace ai
                     }
                 }
             }
-            if(proceed && makeroute(aiplayer, b, n.node))
+            if(proceed && makeroute(b, n.node))
             {
                 switchstate(b, n.state, n.targtype, n.target);
                 return true;
@@ -748,7 +748,7 @@ namespace ai
         {
             int w = randomint(candidates.length()),
                 n = candidates.removeunordered(w);
-            if(n != aiplayer->lastnode && !hasprevnode(n) && !obstacles.find(n, aiplayer) && makeroute(aiplayer, b, n))
+            if(n != aiplayer->lastnode && !hasprevnode(n) && !obstacles.find(n, aiplayer) && makeroute(b, n))
             {
                 return true;
             }
@@ -793,7 +793,7 @@ namespace ai
     bool waypointai::patrol(aistate &b, const vec &pos, float guard, float wander, int walk, bool retry)
     {
         vec feet = aiplayer->feetpos();
-        if(walk == 2 || b.override || (walk && feet.squaredist(pos) <= guard*guard) || !makeroute(aiplayer, b, pos))
+        if(walk == 2 || b.override || (walk && feet.squaredist(pos) <= guard*guard) || !makeroute(b, pos))
         { // run away and back to keep ourselves busy
             if(!b.override && randomnode(b, pos, guard, wander))
             {
@@ -836,7 +836,7 @@ namespace ai
         {
             if(pursue)
             {
-                if(makeroute(aiplayer, b, e->lastnode))
+                if(makeroute(b, e->lastnode))
                 {
                     switchstate(b, AIState_Pursue, AITravel_Player, e->clientnum);
                 }
@@ -937,7 +937,7 @@ namespace ai
         if(!route.empty())
         {
             int n = closenode();
-            if(route.inrange(n) && checkroute(aiplayer, n))
+            if(route.inrange(n) && checkroute(n))
             {
                 n = closenode();
             }
@@ -1603,17 +1603,17 @@ namespace ai
         lastrun = lastmillis;
     }
 
-    bool waypointai::makeroute(gameent *d, aistate &b, int node, bool changed, int retries)
+    bool waypointai::makeroute(aistate &b, int node, bool changed, int retries)
     {
-        if(!iswaypoint(d->lastnode))
+        if(!iswaypoint(aiplayer->lastnode))
         {
             return false;
         }
-        if(changed && d->ai->route.length() > 1 && d->ai->route[0] == node)
+        if(changed && route.length() > 1 && route[0] == node)
         {
             return true;
         }
-        if(ai::route(d, d->lastnode, node, d->ai->route, obstacles, retries))
+        if(wproute(aiplayer, aiplayer->lastnode, node, route, obstacles, retries))
         {
             b.override = false;
             return true;
@@ -1621,36 +1621,36 @@ namespace ai
         // retry fails: 0 = first attempt, 1 = try ignoring obstacles, 2 = try ignoring prevnodes too
         if(retries <= 1)
         {
-            return makeroute(d, b, node, false, retries+1);
+            return makeroute(b, node, false, retries+1);
         }
         return false;
     }
 
-    bool waypointai::makeroute(gameent *d, aistate &b, const vec &pos, bool changed, int retries)
+    bool waypointai::makeroute(aistate &b, const vec &pos, bool changed, int retries)
     {
         int node = closestwaypoint(pos, sightmin, true);
-        return makeroute(d, b, node, changed, retries);
+        return makeroute(b, node, changed, retries);
     }
 
-    bool waypointai::checkroute(gameent *d, int n)
+    bool waypointai::checkroute(int n)
     {
-        if(d->ai->route.empty() || !d->ai->route.inrange(n))
+        if(route.empty() || !route.inrange(n))
         {
             return false;
         }
-        int last = d->ai->lastcheck ? lastmillis-d->ai->lastcheck : 0;
+        int last = lastcheck ? lastmillis-lastcheck : 0;
         if(last < 500 || n < 3)
         {
             return false; // route length is too short
         }
-        d->ai->lastcheck = lastmillis;
-        int w = iswaypoint(d->lastnode) ? d->lastnode : d->ai->route[n], c = min(n-1, numprevnodes);
+        lastcheck = lastmillis;
+        int w = iswaypoint(aiplayer->lastnode) ? aiplayer->lastnode : route[n], c = min(n-1, numprevnodes);
         // check ahead to see if we need to go around something
         for(int j = 0; j < c; ++j)
         {
             int p = n-j-1,
-                v = d->ai->route[p];
-            if(d->ai->hasprevnode(v) || obstacles.find(v, d)) // something is in the way, try to remap around it
+                v = route[p];
+            if(hasprevnode(v) || obstacles.find(v, aiplayer)) // something is in the way, try to remap around it
             {
                 int m = p-1;
                 if(m < 3)
@@ -1659,19 +1659,19 @@ namespace ai
                 }
                 for(int i = m; --i >= 0;) //note reverse iteration
                 {
-                    int t = d->ai->route[i];
-                    if(!d->ai->hasprevnode(t) && !obstacles.find(t, d))
+                    int t = route[i];
+                    if(!hasprevnode(t) && !obstacles.find(t, aiplayer))
                     {
-                        static vector<int> remap; remap.setsize(0);
-                        if(route(d, w, t, remap, obstacles))
+                        remapping.setsize(0);
+                        if(wproute(aiplayer, w, t, remapping, obstacles))
                         { // kill what we don't want and put the remap in
-                            while(d->ai->route.length() > i)
+                            while(route.length() > i)
                             {
-                                d->ai->route.pop();
+                                route.pop();
                             }
-                            for(int k = 0; k < remap.length(); k++)
+                            for(int k = 0; k < remapping.length(); k++)
                             {
-                                d->ai->route.add(remap[k]);
+                                route.add(remapping[k]);
                             }
                             return true;
                         }
@@ -1708,7 +1708,7 @@ namespace ai
         }
         if(aidebug >= 5)
         {
-            vec pos = d->feetpos();
+            vec pos = aiplayer->feetpos();
             if(spot != vec(0, 0, 0))
             {
                 particle_flare(pos, spot, 1, Part_Streak, 0x00FFFF);
@@ -1717,9 +1717,9 @@ namespace ai
             {
                 particle_flare(pos, waypoints[targnode].o, 1, Part_Streak, 0xFF00FF);
             }
-            if(iswaypoint(d->lastnode))
+            if(iswaypoint(aiplayer->lastnode))
             {
-                particle_flare(pos, waypoints[d->lastnode].o, 1, Part_Streak, 0xFFFF00);
+                particle_flare(pos, waypoints[aiplayer->lastnode].o, 1, Part_Streak, 0xFFFF00);
             }
             for(int i = 0; i < numprevnodes; ++i)
             {
