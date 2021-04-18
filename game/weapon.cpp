@@ -966,7 +966,8 @@ namespace game
 
     void shoot(gameent *d, const vec &targ)
     {
-        int prevaction = d->lastaction, attacktime = lastmillis-prevaction;
+        int prevaction = d->lastaction,
+            attacktime = lastmillis-prevaction;
         if(attacktime<d->gunwait)
         {
             return;

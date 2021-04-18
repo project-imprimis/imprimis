@@ -648,7 +648,7 @@ namespace ai
         return q->score();
     }
 
-    bool route(gameent *d, int node, int goal, vector<int> &route, const avoidset &obstacles, int retries)
+    bool wproute(gameent *d, int node, int goal, vector<int> &route, const avoidset &obstacles, int retries)
     {
         if(waypoints.empty() || !iswaypoint(node) || !iswaypoint(goal) || goal == node || !waypoints[node].links[0])
         {

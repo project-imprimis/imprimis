@@ -1,4 +1,4 @@
-CXXFLAGS= -O3 -ffast-math -std=c++17 -march=x86-64 -Wall -fsigned-char -fno-rtti
+CXXFLAGS= -O3 -ffast-math -std=c++17 -march=x86-64 -Wall -fsigned-char
 
 #set appropriate library includes
 CLIENT_INCLUDES= -Igame -Ienet/include -I/usr/X11R6/include `sdl2-config --cflags`
@@ -19,6 +19,7 @@ CLIENT_OBJS= \
 	game/server.o \
 	game/serverbrowser.o \
 	game/waypoint.o \
+	game/waypointai.o \
 	game/weapon.o
 
 default: client
