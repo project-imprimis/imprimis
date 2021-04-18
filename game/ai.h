@@ -224,7 +224,6 @@ namespace ai
             int enemy, weappref, targnode, lastcheck;
             int prevnodes[numprevnodes];
             vector<aistate> state;
-            vector<int> route;
             vec spot;
             gameent * aiplayer;
             aiinfo() {};
@@ -243,6 +242,7 @@ namespace ai
     class waypointai : public aiinfo
     {
         public:
+            vector<int> route;
             waypointai()
             {
                 clearsetup();
@@ -280,6 +280,7 @@ namespace ai
             void damaged(gameent *e);
             void killed();
             void think(gameent *d, bool run);
+            void drawroute(float amt);
 
         private:
             int enemyseen, enemymillis,
@@ -360,6 +361,7 @@ namespace ai
             bool request(aistate &b);
             void timeouts(aistate &b);
             void logic(aistate &b, bool run);
+            bool checkroute(gameent *d, int n);
 
             bool makeroute(gameent *d, aistate &b, int node, bool changed = true, int retries = 0);
             bool makeroute(gameent *d, aistate &b, const vec &pos, bool changed = true, int retries = 0);

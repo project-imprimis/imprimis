@@ -1632,4 +1632,103 @@ namespace ai
         return makeroute(d, b, node, changed, retries);
     }
 
+    bool waypointai::checkroute(gameent *d, int n)
+    {
+        if(d->ai->route.empty() || !d->ai->route.inrange(n))
+        {
+            return false;
+        }
+        int last = d->ai->lastcheck ? lastmillis-d->ai->lastcheck : 0;
+        if(last < 500 || n < 3)
+        {
+            return false; // route length is too short
+        }
+        d->ai->lastcheck = lastmillis;
+        int w = iswaypoint(d->lastnode) ? d->lastnode : d->ai->route[n], c = min(n-1, numprevnodes);
+        // check ahead to see if we need to go around something
+        for(int j = 0; j < c; ++j)
+        {
+            int p = n-j-1,
+                v = d->ai->route[p];
+            if(d->ai->hasprevnode(v) || obstacles.find(v, d)) // something is in the way, try to remap around it
+            {
+                int m = p-1;
+                if(m < 3)
+                {
+                    return false; // route length is too short from this point
+                }
+                for(int i = m; --i >= 0;) //note reverse iteration
+                {
+                    int t = d->ai->route[i];
+                    if(!d->ai->hasprevnode(t) && !obstacles.find(t, d))
+                    {
+                        static vector<int> remap; remap.setsize(0);
+                        if(route(d, w, t, remap, obstacles))
+                        { // kill what we don't want and put the remap in
+                            while(d->ai->route.length() > i)
+                            {
+                                d->ai->route.pop();
+                            }
+                            for(int k = 0; k < remap.length(); k++)
+                            {
+                                d->ai->route.add(remap[k]);
+                            }
+                            return true;
+                        }
+                        return false; // we failed
+                    }
+                }
+                return false;
+            }
+        }
+        return false;
+    }
+
+    void waypointai::drawroute(float amt)
+    {
+        int last = -1;
+        for(int i = route.length(); --i >=0;) //note reverse iteration
+        {
+            if(route.inrange(last))
+            {
+                int index = route[i],
+                    prev = route[last];
+                if(iswaypoint(index) && iswaypoint(prev))
+                {
+                    waypoint &e = waypoints[index],
+                             &f = waypoints[prev];
+                    vec fr = f.o,
+                        dr = e.o;
+                    fr.z += amt;
+                    dr.z += amt;
+                    particle_flare(fr, dr, 1, Part_Streak, 0xFFFFFF);
+                }
+            }
+            last = i;
+        }
+        if(aidebug >= 5)
+        {
+            vec pos = d->feetpos();
+            if(spot != vec(0, 0, 0))
+            {
+                particle_flare(pos, spot, 1, Part_Streak, 0x00FFFF);
+            }
+            if(iswaypoint(targnode))
+            {
+                particle_flare(pos, waypoints[targnode].o, 1, Part_Streak, 0xFF00FF);
+            }
+            if(iswaypoint(d->lastnode))
+            {
+                particle_flare(pos, waypoints[d->lastnode].o, 1, Part_Streak, 0xFFFF00);
+            }
+            for(int i = 0; i < numprevnodes; ++i)
+            {
+                if(iswaypoint(prevnodes[i]))
+                {
+                    particle_flare(pos, waypoints[prevnodes[i]].o, 1, Part_Streak, 0x884400);
+                    pos = waypoints[prevnodes[i]].o;
+                }
+            }
+        }
+    }
 }
