@@ -1001,6 +1001,10 @@ namespace game
         if(!(d->physstate >= PhysEntState_Slope && d->crouching && d->crouched()))
         {
             vec kickback = vec(dir).mul(attacks[atk].kickamount*-2.5f);
+            if(lastmillis - d->parachutetime < parachutemaxtime)
+            {
+                kickback.mul(parachutekickfactor);
+            }
             d->vel.add(kickback);
         }
         float shorten = attacks[atk].range && dist > attacks[atk].range ? attacks[atk].range : 0,

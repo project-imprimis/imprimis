@@ -577,8 +577,9 @@ struct gamestate
     }
 };
 
-constexpr int parachutemaxtime = 8000, //time until parachute cancels after spawning
+constexpr int parachutemaxtime = 10000, //time until parachute cancels after spawning
               parachutespeed = 150, //max speed in cubits/s with parachute activated
+              parachutekickfactor = 0.25, //reduction in weapon knockback with chute dactivated
               defaultspeed = 35;  //default walk speed
 
 constexpr int clientlimit = 128;
