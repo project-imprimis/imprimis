@@ -539,6 +539,8 @@ namespace game
 
     void killed(gameent *d, gameent *actor)
     {
+        vec dloc = d->o; //need to make a local copy of d->o because sub() is a destructive operation
+        int fragdist = static_cast<int>(dloc.sub(actor->o).magnitude()/8);
         if(d->state==ClientState_Editing)
         {
             d->editstate = ClientState_Dead;
@@ -594,11 +596,11 @@ namespace game
         {
             if(d==player1)
             {
-                conoutf(contype, "\f2%s got fragged by %s", dname, aname);
+                conoutf(contype, "\f2%s got fragged by %s (%dm)", dname, aname, fragdist);
             }
             else
             {
-                conoutf(contype, "\f2%s fragged %s", aname, dname);
+                conoutf(contype, "\f2%s fragged %s (%dm)", aname, dname, fragdist);
             }
         }
         deathstate(d);
