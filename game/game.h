@@ -491,14 +491,14 @@ const int MAXRAYS = 1,
 const float EXP_SELFPUSH  = 2.5f,
             EXP_DISTSCALE = 0.5f;
 // this defines weapon properties
-//                            1    2       3     4         5        6      7         8            9       10      11      12         13          14     15    16       17           18   19     20
-const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudsound, attackdelay, damage, spread, margin, projspeed, kickamount, range, rays, hitpush, exprad, worldfx, use, water; } attacks[Attack_NumAttacks] =
-//    1            2          3           4               5             6                7               8    9   10  11   12   13  14   15  16    17 18 19 20
+//                            1    2       3     4         5        6      7         8            9       10      11      12         13          14     15    16       17      18       19   20     21
+const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudsound, attackdelay, damage, spread, margin, projspeed, kickamount, range, rays, hitpush, exprad, worldfx, use, water, heat;} attacks[Attack_NumAttacks] =
+//    1            2          3           4               5             6                7               8    9   10  11   12   13  14   15  16    17 18 19 20  21
 {
-    { Gun_Rail,    Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,    Sound_Rail2,    300,  5,  20, 0,    0, 10, 1200, 1,  200,  0, 0, 0, 1},
-    { Gun_Pulse,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1,   Sound_Pulse2,  3000, 15,  10, 1,  700, 50, 1024, 1, 2500, 50, 1, 0, 0},
-    { Gun_Eng,     Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,    Sound_Melee,    500,  0,   0, 1,    0,  0,   80, 1,   10, 20, 2, 0, 1},
-    { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1,  90,  2, 100, 0,    0,  2,  512, 1,   50,  0, 0, 0, 1},
+    { Gun_Rail,    Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,    Sound_Rail2,    300,  5,  20, 0,    0, 10, 1200, 1,  200,  0, 0, 0, 1,  50},
+    { Gun_Pulse,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1,   Sound_Pulse2,  3000, 15,  10, 1,  700, 50, 1024, 1, 2500, 50, 1, 0, 0, 100},
+    { Gun_Eng,     Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,    Sound_Melee,    500,  0,   0, 1,    0,  0,   80, 1,   10, 20, 2, 0, 1,  50},
+    { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1,  90,  2, 100, 0,    0,  2,  512, 1,   50,  0, 0, 0, 1,  20},
 };
 
 const struct guninfo { const char *name, *file, *vwep; int attacks[Act_NumActs]; } guns[Gun_NumGuns] =
@@ -516,11 +516,18 @@ struct gamestate
 {
     int health, maxhealth;
     int gunselect, gunwait;
-    int ammo[Gun_NumGuns];
+    int ammo[Gun_NumGuns], heat[Gun_NumGuns];
+
     int aitype, skill;
     int combatclass;
 
-    gamestate() : maxhealth(1), aitype(AI_None), skill(0) {}
+    gamestate() : maxhealth(1), aitype(AI_None), skill(0)
+    {
+        for(int i = 0; i < Gun_NumGuns; i++)
+        {
+            heat[i] = 0;
+        }
+    }
 
     //function neutered because no ents ingame atm
     bool canpickup(int)

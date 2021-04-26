@@ -982,6 +982,10 @@ namespace game
             atk = guns[gun].attacks[act];
         d->lastaction = lastmillis;
         d->lastattack = atk;
+        if(d->heat[gun] > 100)
+        {
+            return;
+        }
         if(!d->ammo[gun])
         {
             if(d==player1)
@@ -1063,6 +1067,7 @@ namespace game
         {
             d->gunwait += static_cast<int>(d->gunwait*(((101-d->skill)+randomint(111-d->skill))/100.f));
         }
+        d->heat[gun] += attacks[atk].heat;
         d->totalshots += attacks[atk].damage*attacks[atk].rays;
     }
 
@@ -1118,7 +1123,7 @@ namespace game
             rendermodel(mdl, Anim_Mapmodel | Anim_Loop, pos, yaw, pitch, 0, cull, nullptr, nullptr, 0, 0, fade);
         }
     }
-
+    VAR(player1heat, 0, 0, 0);
     void removeweapons(gameent *d)
     {
         removebouncers(d);
@@ -1131,6 +1136,21 @@ namespace game
         if(player1->clientnum>=0 && player1->state==ClientState_Alive)
         {
             shoot(player1, worldpos); // only shoot when connected to server
+        }
+        for(int i = 0; i<Gun_NumGuns; i++)
+        {
+            for(int j = 0; j < players.length(); j++)
+            {
+                if(players[j]->ai)
+                {
+                    players[j]->heat[i] -= 1;
+                }
+            }
+            if(player1->heat[i] > 0)
+            {
+                player1->heat[i] -= 1;
+            }
+            player1heat = player1->heat[i];
         }
         updatebouncers(curtime); // need to do this after the player shoots so bouncers don't end up inside player's BB next frame
     }
