@@ -746,14 +746,6 @@ namespace game
                             continue;
                         }
                     }
-                    switch(attacks[p.atk].worldfx)
-                    {
-                        case 1:
-                        {
-                            explodecubes(static_cast<ivec>(p.o), 4);
-                            break;
-                        }
-                    }
                     projsplash(p, v, nullptr);
                     exploded = true;
                 }
@@ -773,6 +765,14 @@ namespace game
             }
             if(exploded)
             {
+                switch(attacks[p.atk].worldfx)
+                {
+                    case 1:
+                    {
+                        explodecubes(static_cast<ivec>(p.o), 4);
+                        break;
+                    }
+                }
                 if(p.local)
                 {
                     addmsg(NetMsg_Explode, "rci3iv", p.owner, lastmillis-maptime, p.atk, p.id-maptime,
