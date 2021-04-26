@@ -553,7 +553,7 @@ namespace game
         playsound(Sound_PulseExplode, &v);
         particle_fireball(v, 1.15f*attacks[atk].exprad, Part_PulseBurst, static_cast<int>(attacks[atk].exprad*20), 0x50CFE5, 4.0f);
         vec debrisorigin = vec(v).sub(vec(vel).mul(5));
-        adddynlight(safe ? v : debrisorigin, 2*attacks[atk].exprad, vec(1.0f, 3.0f, 4.0f), 350, 40, 0, attacks[atk].exprad/2, vec(0.5f, 1.5f, 2.0f));
+        adddynlight(safe ? v : debrisorigin, 2*attacks[atk].exprad, vec(1.0f, 3.0f, 4.0f), 350, 40, 0, attacks[atk].exprad, vec(0.5f, 1.5f, 2.0f));
 
         if(!local)
         {
@@ -750,7 +750,7 @@ namespace game
                     {
                         case 1:
                         {
-                            explodecubes(static_cast<ivec>(p.o), 8);
+                            explodecubes(static_cast<ivec>(p.o), 4);
                             break;
                         }
                     }
