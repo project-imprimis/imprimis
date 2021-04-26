@@ -982,7 +982,7 @@ namespace game
             atk = guns[gun].attacks[act];
         d->lastaction = lastmillis;
         d->lastattack = atk;
-        if(d->heat[gun] > 100)
+        if(d->heat[gun] > attacks[atk].maxheat)
         {
             return;
         }
@@ -1123,11 +1123,34 @@ namespace game
             rendermodel(mdl, Anim_Mapmodel | Anim_Loop, pos, yaw, pitch, 0, cull, nullptr, nullptr, 0, 0, fade);
         }
     }
-    VAR(player1heat, 0, 0, 0);
     void removeweapons(gameent *d)
     {
         removebouncers(d);
         removeprojectiles(d);
+    }
+
+    void updateheat()
+    {
+        static int lasttime = 0;
+        int heatticktime = 50;
+        if(lastmillis - heatticktime >= lasttime)
+        {
+            lasttime = lastmillis;
+            for(int i = 0; i<Gun_NumGuns; i++)
+            {
+                for(int j = 0; j < players.length(); j++)
+                {
+                    if(players[j]->ai)
+                    {
+                        players[j]->heat[i] -= 5;
+                    }
+                }
+                if(player1->heat[i] > 0)
+                {
+                    player1->heat[i] -= 5;
+                }
+            }
+        }
     }
 
     void updateweapons(int curtime)
@@ -1137,21 +1160,7 @@ namespace game
         {
             shoot(player1, worldpos); // only shoot when connected to server
         }
-        for(int i = 0; i<Gun_NumGuns; i++)
-        {
-            for(int j = 0; j < players.length(); j++)
-            {
-                if(players[j]->ai)
-                {
-                    players[j]->heat[i] -= 1;
-                }
-            }
-            if(player1->heat[i] > 0)
-            {
-                player1->heat[i] -= 1;
-            }
-            player1heat = player1->heat[i];
-        }
+        updateheat();
         updatebouncers(curtime); // need to do this after the player shoots so bouncers don't end up inside player's BB next frame
     }
 
