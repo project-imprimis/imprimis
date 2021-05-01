@@ -23,8 +23,13 @@ CLIENT_OBJS= \
 
 default: client
 
+#cleanup build files and executable
 clean:
 	-$(RM) -r $(CLIENT_OBJS) tess_client
+
+#remove all of the assets required to build, just leaves what is needed to run program
+remove-build-files:
+	-$(RM) -r game/ vcpp/ bin64/ enet/ libprimis-headers/ .git/ .semaphore/ imprimis.bat .gitmodules Makefile
 
 $(CLIENT_OBJS): CXXFLAGS += $(CLIENT_INCLUDES)
 
