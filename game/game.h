@@ -174,7 +174,7 @@ const struct gamemodeinfo
 {
     { "demo", "Demo", Mode_Demo | Mode_LocalOnly, NULL},
     { "edit", "Edit", Mode_Edit | Mode_All, "Cooperative Editing:\nEdit maps with multiple players simultaneously." },
-    { "tdm", "TDM", Mode_Team | Mode_All, "Team Deathmatch: fight for the most kills" },
+    { "tdm", "TDM", Mode_Team | Mode_All, "Team Deathmatch: fight for control over the map" },
 };
 
 //these are the checks for particular mechanics in particular modes
