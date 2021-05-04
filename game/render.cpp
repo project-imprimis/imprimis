@@ -485,6 +485,95 @@ namespace game
         rendermodel(parachutemodel, Anim_Mapmodel | Anim_Loop, loc, atan2(d->vel.y,d->vel.x)/RAD, 0, 0);
     }
 
+    void renderengineercursor()
+    {
+        if(player1->gunselect != Gun_Eng)
+        {
+            return; //don't render block guide for non block placing weapons
+        }
+        int d   = DIMENSION(sel.orient),
+            od  = DIMENSION(orient);
+        bool hidecursor = UI::hascursor(),
+             hovering   = false;
+        hmapsel = false;
+
+        float sdist = 0,
+              wdist = 0,
+              t;
+        int entorient = 0,
+            ent = -1;
+
+        wdist = rayent(player->o, camdir, 1e16f,
+                       (editmode && showmat ? Ray_EditMat : 0)   // select cubes first
+                       | (!dragging && entediting ? Ray_Ents : 0)
+                       | Ray_SkipFirst
+                       | (passthroughcube==1 ? Ray_Pass : 0), gridsize, entorient, ent);
+
+        if(wdist >= attacks[Attack_EngShoot].range)
+        {
+            return; //upon checking range, if it is larger than the eng's max placement distance, don't bother rendering
+        }
+
+        vec w = vec(camdir).mul(wdist+0.05f).add(player->o);
+        cube *c = &lookupcube(ivec(w));
+        gridsize = 8;
+        normalizelookupcube(ivec(w));
+        if(sdist == 0 || sdist > wdist)
+        {
+            rayboxintersect(vec(lu), vec(gridsize), player->o, camdir, t=0, orient); // just getting orient
+        }
+        cur = lu;
+        cor = ivec(vec(w).mul(2).div(gridsize));
+        od = DIMENSION(orient);
+        d = DIMENSION(sel.orient);
+
+        sel.o = lu;
+        sel.s.x = sel.s.y = sel.s.z = 1;
+        sel.cx = sel.cy = 0;
+        sel.cxs = sel.cys = 2;
+        sel.grid = gridsize;
+        sel.orient = orient;
+        d = od;
+        sel.corner = (cor[R[d]]-(lu[R[d]]*2)/gridsize)+(cor[C[d]]-(lu[C[d]]*2)/gridsize)*2;
+        selchildcount = 0;
+        selchildmat = -1;
+        countselchild(worldroot, ivec(0, 0, 0), worldsize/2);
+
+
+        glDisable(GL_CULL_FACE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+
+        // cursors
+
+        ldrnotextureshader->set();
+
+        boxoutline = outline!=0;
+
+        enablepolygonoffset(GL_POLYGON_OFFSET_LINE);
+
+        if(!moving && !hovering && !hidecursor)
+        {
+            if(hmapedit==1)
+            {
+                gle::colorub(0, hmapsel ? 255 : 40, 0);
+            }
+            else
+            {
+                gle::colorub(120,120,120);
+            }
+            boxs(orient, vec(lu), vec(lusize));
+        }
+
+
+        disablepolygonoffset(GL_POLYGON_OFFSET_LINE);
+
+        boxoutline = false;
+
+        glDisable(GL_BLEND);
+        glEnable(GL_CULL_FACE);
+    }
+
     void rendergame()
     {
         ai::render();
@@ -556,6 +645,7 @@ namespace game
         {
             cmode->rendergame();
         }
+        renderengineercursor();
     }
 
     //============================================ hud player rendering ============================//
