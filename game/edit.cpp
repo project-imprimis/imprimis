@@ -1346,18 +1346,17 @@ inline void printfacelocations(cube c)
     conoutf(ConsoleMsg_GameInfo, "face 0: %X 1: %X 2: %X", (c).faces[0], (c).faces[1], c.faces[2]);
     getfacecorner(c.faces[0], 7);
     facearray a = facestoarray(c, 0);
-    //conoutf(ConsoleMsg_GameInfo, "1, %d %d %d %d %d %d %d %d", a.array[0], a.array[1], a.array[2], a.array[3], a.array[4], a.array[5], a.array[6], a.array[7]);
+    conoutf(ConsoleMsg_GameInfo, "1, %d %d %d %d %d %d %d %d", a.array[0], a.array[1], a.array[2], a.array[3], a.array[4], a.array[5], a.array[6], a.array[7]);
     a = facestoarray(c,1);
-    //conoutf(ConsoleMsg_GameInfo, "2, %d %d %d %d %d %d %d %d", a.array[0], a.array[1], a.array[2], a.array[3], a.array[4], a.array[5], a.array[6], a.array[7]);
+    conoutf(ConsoleMsg_GameInfo, "2, %d %d %d %d %d %d %d %d", a.array[0], a.array[1], a.array[2], a.array[3], a.array[4], a.array[5], a.array[6], a.array[7]);
     a = facestoarray(c,2);
-    //conoutf(ConsoleMsg_GameInfo, "3, %d %d %d %d %d %d %d %d", a.array[0], a.array[1], a.array[2], a.array[3], a.array[4], a.array[5], a.array[6], a.array[7]);
+    conoutf(ConsoleMsg_GameInfo, "3, %d %d %d %d %d %d %d %d", a.array[0], a.array[1], a.array[2], a.array[3], a.array[4], a.array[5], a.array[6], a.array[7]);
 }
 
 //crude heuristic to determine whether a cube should be placed above cursor (solid block below) or at cursor (incomplete block)
 //needed because iscubesolid() determines whether a whole cube is filled, which is often larger than the eng gun sel box, especially after mipping
 bool checkcubefill(cube c)
 {
-    printfacelocations(c);
     facearray a = facestoarray(c, 2);
     switch(selchildcount)
     {
