@@ -493,9 +493,6 @@ namespace game
         }
         int d   = DIMENSION(sel.orient),
             od  = DIMENSION(orient);
-        bool hidecursor = UI::hascursor(),
-             hovering   = false;
-        hmapsel = false;
 
         float sdist = 0,
               wdist = 0,
@@ -517,6 +514,7 @@ namespace game
         vec w = vec(camdir).mul(wdist+0.05f).add(player->o);
         cube *c = &lookupcube(ivec(w));
         gridsize = 8;
+        int mag = lusize / gridsize;
         normalizelookupcube(ivec(w));
         if(sdist == 0 || sdist > wdist)
         {
@@ -538,8 +536,14 @@ namespace game
         selchildcount = 0;
         selchildmat = -1;
         countselchild(worldroot, ivec(0, 0, 0), worldsize/2);
-
-
+        if(mag>=1 && selchildcount==1)
+        {
+            selchildmat = c->material;
+            if(mag>1)
+            {
+                selchildcount = -mag;
+            }
+        }
         glDisable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
@@ -552,19 +556,13 @@ namespace game
 
         enablepolygonoffset(GL_POLYGON_OFFSET_LINE);
 
-        if(!moving && !hovering && !hidecursor)
+        if(iscubesolid(*c) || checkcubefill(*c))
         {
-            if(hmapedit==1)
-            {
-                gle::colorub(0, hmapsel ? 255 : 40, 0);
-            }
-            else
-            {
-                gle::colorub(120,120,120);
-            }
-            boxs(orient, vec(lu), vec(lusize));
+            lu.add(ivec(0,0,8));
         }
+        gle::colorub(190,190,190);
 
+        boxs3D(vec(lu), vec(lusize), 1);
 
         disablepolygonoffset(GL_POLYGON_OFFSET_LINE);
 
