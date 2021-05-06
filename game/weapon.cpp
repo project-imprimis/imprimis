@@ -1042,6 +1042,11 @@ namespace game
                     ivec offsetloc = static_cast<ivec>(to) + ivec(0,0,8);
                     placecube(offsetloc,2);
                 }
+                else if(checkcubefill(lookupcube(static_cast<ivec>(to))))
+                {
+                    ivec offsetloc = static_cast<ivec>(to) + ivec(0,0,8);
+                    placecube(offsetloc,2);
+                }
                 else if (!iscubeempty(lookupcube(static_cast<ivec>(to))))
                 {
                     placecube(static_cast<ivec>(to),3);
