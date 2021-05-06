@@ -973,6 +973,16 @@ extern void mpremip(bool local);
 extern bool mpeditvslot(int delta, int allfaces, selinfo &sel, ucharbuf &buf);
 extern void mpcalclight(bool local);
 
+extern uint getfacecorner(uint face, int num);
+
+struct facearray
+{
+    int array[8];
+};
+
+extern facearray facestoarray(cube c, int num);
+extern bool checkcubefill(cube c);
+
 // ents
 
 extern undoblock *copyundoents(undoblock *u);
