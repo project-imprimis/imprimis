@@ -480,7 +480,8 @@ namespace ai
         }
         else
         {
-            weappref = randomint(Gun_NumGuns);
+            weappref = randomint(2); //do not allow eng/carbine preferences, they are suboptimal
+            aiplayer->combatclass = weappref;
         }
         vec dp = aiplayer->headpos();
         findorientation(dp, aiplayer->yaw, aiplayer->pitch, target);

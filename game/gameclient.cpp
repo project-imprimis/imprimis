@@ -559,6 +559,15 @@ namespace game
         }
     });
 
+    ICOMMAND(getclientcombatclass, "i", (int *cn),
+    {
+        gameent *d = getclient(*cn);
+        if(d)
+        {
+            intret(d->combatclass);
+        }
+    });
+
     bool ismaster(int cn)
     {
         gameent *d = getclient(cn);
@@ -1835,7 +1844,7 @@ namespace game
         {
             if(d==player1)
             {
-                getint(p);
+                getint(p); //just skip these bytes because we know the answer
             }
             else
             {
@@ -2166,6 +2175,7 @@ namespace game
                     {
                         lasthit = 0;
                     }
+                    d->combatclass = getint(p);
                     checkfollow();
                     break;
                 }
@@ -2215,7 +2225,7 @@ namespace game
                         s->ai->spawned(s);
                     }
                     checkfollow();
-                    addmsg(NetMsg_Spawn, "rcii", s, s->lifesequence, s->gunselect);
+                    addmsg(NetMsg_Spawn, "rciii", s, s->lifesequence, s->gunselect, s->combatclass);
                     break;
                 }
                 case NetMsg_ShotFX:
