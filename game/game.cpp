@@ -8,7 +8,7 @@
 
 void physicsframe();
 
-const float jumpvel = 50.0f; //impulse scale for player jump
+const float jumpvel = 56.0f; //impulse scale for player jump
 
 namespace game
 {
