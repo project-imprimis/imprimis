@@ -19,7 +19,7 @@ namespace game
     int lasthit = 0,
         lastspawnattempt = 0;
 
-    gameent *player1 = NULL;         // our client
+    gameent *player1 = nullptr;         // our client
     vector<gameent *> players;       // other clients
 
     int following = -1;
@@ -40,14 +40,14 @@ namespace game
     {
         if(player1->state!=ClientState_Spectator || following<0)
         {
-            return NULL;
+            return nullptr;
         }
         gameent *target = getclient(following);
         if(target && target->state!=ClientState_Spectator)
         {
             return target;
         }
-        return NULL;
+        return nullptr;
     }
 
     ICOMMAND(getfollow, "", (),
@@ -121,7 +121,7 @@ namespace game
         {
             if(following >= 0)
             {
-                gameent *d = clients.inrange(following) ? clients[following] : NULL;
+                gameent *d = clients.inrange(following) ? clients[following] : nullptr;
                 if(!d || d->state == ClientState_Spectator)
                 {
                     stopfollowing();
@@ -189,7 +189,7 @@ namespace game
                 return players[i];
             }
         }
-        return NULL;
+        return nullptr;
     }
 
 
@@ -240,7 +240,7 @@ namespace game
             }
             case ClientState_Spectator:
             {
-                return followingplayer()!=NULL;
+                return followingplayer()!=nullptr;
             }
         }
         return true;
@@ -574,8 +574,8 @@ namespace game
         }
         else
         {
-            dname = colorname(d, NULL, "you");
-            aname = colorname(actor, NULL, "you");
+            dname = colorname(d, nullptr, "you");
+            aname = colorname(actor, nullptr, "you");
         }
         if(d==actor)
         {
@@ -650,7 +650,7 @@ namespace game
         if(cn < 0 || cn > max(0xFF, clientlimit + maxbots))
         {
             neterr("clientnum", false);
-            return NULL;
+            return nullptr;
         }
         if(cn == player1->clientnum)
         {
@@ -658,7 +658,7 @@ namespace game
         }
         while(cn >= clients.length())
         {
-            clients.add(NULL);
+            clients.add(nullptr);
         }
         if(!clients[cn])
         {
@@ -676,7 +676,7 @@ namespace game
         {
             return player1;
         }
-        return clients.inrange(cn) ? clients[cn] : NULL;
+        return clients.inrange(cn) ? clients[cn] : nullptr;
     }
 
     void clientdisconnected(int cn, bool notify)
@@ -750,7 +750,7 @@ namespace game
         maptime = maprealtime = 0;
         maplimit = -1;
         conoutf(ConsoleMsg_GameInfo, "\f2game mode is %s", server::modeprettyname(gamemode));
-        const char *info = validmode(gamemode) ? gamemodes[gamemode - startgamemode].info : NULL;
+        const char *info = validmode(gamemode) ? gamemodes[gamemode - startgamemode].info : nullptr;
         if(showmodeinfo && info)
         {
             conoutf(ConsoleMsg_GameInfo, "\f0%s", info);
@@ -783,18 +783,18 @@ namespace game
 
     const char *getmapinfo()
     {
-        return showmodeinfo && validmode(gamemode) ? gamemodes[gamemode - startgamemode].info : NULL;
+        return showmodeinfo && validmode(gamemode) ? gamemodes[gamemode - startgamemode].info : nullptr;
     }
 
     void physicstrigger(physent *d, bool local, int floorlevel, int waterlevel, int material = 0)
     {
         if(waterlevel>0)
         {
-            playsound(Sound_SplashOut, d==player1 ? NULL : &d->o);
+            playsound(Sound_SplashOut, d==player1 ? nullptr : &d->o);
         }
         else if(waterlevel<0)
         {
-            playsound(Sound_SplashIn, d==player1 ? NULL : &d->o);
+            playsound(Sound_SplashIn, d==player1 ? nullptr : &d->o);
         }
         if(floorlevel>0)
         {
@@ -829,7 +829,7 @@ namespace game
         }
     }
 
-    bool duplicatename(gameent *d, const char *name = NULL, const char *alt = NULL)
+    bool duplicatename(gameent *d, const char *name = nullptr, const char *alt = nullptr)
     {
         if(!name)
         {
@@ -873,9 +873,9 @@ namespace game
     {
         if(!teamcolortext || modecheck(gamemode, Mode_Team) || !validteam(d->team) || d->state == ClientState_Spectator)
         {
-            return colorname(d, NULL, alt);
+            return colorname(d, nullptr, alt);
         }
-        return colorname(d, NULL, alt, teamtextcode[d->team]);
+        return colorname(d, nullptr, alt, teamtextcode[d->team]);
     }
 
     const char *teamcolor(const char *prefix, const char *suffix, int team, const char *alt)
@@ -891,7 +891,7 @@ namespace game
 
     void teamsound(bool sameteam, int n, const vec *loc)
     {
-        playsound(n, loc, NULL, teamsounds ? (Mode_Team && sameteam ? Music_UseAlt : Music_NoAlt) : 0);
+        playsound(n, loc, nullptr, teamsounds ? (Mode_Team && sameteam ? Music_UseAlt : Music_NoAlt) : 0);
     }
 
     void teamsound(gameent *d, int n, const vec *loc)
@@ -985,7 +985,7 @@ namespace game
     ICOMMAND(servinfomodename, "i", (int *i),
         GETSERVINFOATTR(*i, 0, mode,
         {
-            const char *name = server::modeprettyname(mode, NULL);
+            const char *name = server::modeprettyname(mode, nullptr);
             if(name)
             {
                 result(name);
@@ -995,7 +995,7 @@ namespace game
     ICOMMAND(servinfomastermodename, "i", (int *i),
         GETSERVINFOATTR(*i, 2, mm,
         {
-            const char *name = server::mastermodename(mm, NULL);
+            const char *name = server::mastermodename(mm, nullptr);
             if(name)
             {
                 stringret(newconcatstring(mastermodecolor(mm, ""), name));
@@ -1533,7 +1533,7 @@ bool bounce(physent *d, float secs, float elasticity, float waterfric, float gra
         }
         d->physstate = PhysEntState_Bounce;
     }
-    return collideplayer!=NULL;
+    return collideplayer!=nullptr;
 }
 
 static const int physframetimestd = 8;
@@ -1975,3 +1975,5 @@ void recomputecamera()
         }
     }
 }
+
+// engineer gun specific edit functions //
