@@ -22,6 +22,26 @@ namespace game
  */
     ICOMMAND(getweapon, "", (), intret(player1->gunselect));
 
+
+/*getweaponheat
+ * returns the heat amount of the weapon, between 0 and 1
+ *
+ */
+    void getweaponheat()
+    {
+        int gun = player1->gunselect,
+            atk = guns[gun].attacks[1];
+        if(player1->heat[gun] > attacks[atk].maxheat) // check if weapon has overheated
+        {
+            floatret(0.99f);
+        }
+        else
+        {
+            floatret(static_cast<float>(player1->heat[gun]) / attacks[atk].maxheat);
+        }
+    }
+    COMMAND(getweaponheat, "");
+
     VAR(spawncombatclass, 0, 0, 2);
 
 /*getcombatclass
@@ -982,7 +1002,7 @@ namespace game
             atk = guns[gun].attacks[act];
         d->lastaction = lastmillis;
         d->lastattack = atk;
-        if(d->heat[gun] > attacks[atk].maxheat)
+        if(d->heat[gun] > attacks[atk].maxheat) // check if weapon has overheated
         {
             return;
         }
