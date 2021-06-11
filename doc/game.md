@@ -13,7 +13,7 @@ underpinning the engine functions and does not recap functionality contained
 there; it is expected that the reader understand the engine functionality to
 fully understand the technical design of the game.
 
-This document also aims to provide the motavation and working principles of the
+This document also aims to provide the motivation and working principles of the
 game itself, including the way the gameplay meta is constructed. The goal is to
 make clear the design of the game such as to keep the game focused on a single
 set of working principles (and to avoid confused, scatterbrained work on
