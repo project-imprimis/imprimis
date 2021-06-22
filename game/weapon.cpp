@@ -277,7 +277,7 @@ namespace game
     {
         for(int i = 0; i < attacks[atk].rays; ++i)
         {
-            offsetray(from, to, attacks[atk].spread, attacks[atk].range, rays[i]);
+            offsetray(from, to, attacks[atk].spread, attacks[atk].time, rays[i]);
         }
     }
 
@@ -412,25 +412,27 @@ namespace game
 
     struct projectile
     {
-        vec dir, o, from, to, offset;
+        vec dir, o, from, offset;
         float speed;
         gameent *owner;
         int atk;
         bool local;
         int offsetmillis;
         int id;
+        int spawntime;
+        int deathtime;
+        int gravity;
     };
     vector<projectile> projs;
 
     void clearprojectiles() { projs.shrink(0); }
 
-    void newprojectile(const vec &from, const vec &to, float speed, bool local, int id, gameent *owner, int atk)
+    void newprojectile(const vec &from, const vec &to, float speed, bool local, int id, gameent *owner, int atk, int lifetime, int pgravity)
     {
         projectile &p = projs.add();
         p.dir = vec(to).sub(from).safenormalize();
         p.o = from;
         p.from = from;
-        p.to = to;
         p.offset = hudgunorigin(attacks[atk].gun, from, to, owner);
         p.offset.sub(from);
         p.speed = speed;
@@ -439,6 +441,9 @@ namespace game
         p.atk = atk;
         p.offsetmillis = offsetmillis;
         p.id = local ? lastmillis : id;
+        p.spawntime = lastmillis;
+        p.deathtime = lastmillis+lifetime;
+        p.gravity = pgravity;
     }
 
     void removeprojectiles(gameent *owner)
@@ -720,15 +725,15 @@ namespace game
         {
             projectile &p = projs[i];
             p.offsetmillis = max(p.offsetmillis-time, 0);
-            vec dv; //displacement vector
-            float dist = p.to.dist(p.o, dv);
-            dv.mul(time/max(dist*1000/p.speed, static_cast<float>(time)));
-            vec v = vec(p.o).add(dv); //set v as current particle location o plus dv
+            vec dv = p.dir; //displacement vector
+            dv.mul(p.speed);
+            vec v = vec(p.o).add(dv).sub(vec(0, 0, 0.001*(lastmillis-p.spawntime)*p.gravity)); //set v as current particle location o plus dv
             bool exploded = false;
             hits.setsize(0);
             if(p.local) //if projectile belongs to a local client
             {
-                vec halfdv = vec(dv).mul(0.5f), bo = vec(p.o).add(halfdv); //half the displacement vector halfdv; set bo like v except with halfdv
+                vec halfdv = vec(dv).mul(0.5f),
+                    bo     = vec(p.o).add(halfdv); //half the displacement vector halfdv; set bo like v except with halfdv
                 float br = max(fabs(halfdv.x), fabs(halfdv.y)) + 1 + attacks[p.atk].margin;
                 for(int j = 0; j < numdynents; ++j)
                 {
@@ -757,15 +762,9 @@ namespace game
             }
             if(!exploded) //if we haven't already hit somebody, start checking for collisions with cube geometry
             {
-                if(dist<projdepth*2) // dist is the distance to the `to` location, plus projdepth
+                vec loc = p.dir;
+                if(raycubepos(p.o, p.dir, loc.mul(p.speed*(p.deathtime-curtime)), 0, Ray_ClipMat|Ray_AlphaPoly) <= 4)
                 {
-                    if(p.o!=p.to) // if original target was moving, reevaluate endpoint
-                    {
-                        if(raycubepos(p.o, p.dir, p.to, 0, Ray_ClipMat|Ray_AlphaPoly)>=4)
-                        {
-                            continue;
-                        }
-                    }
                     projsplash(p, v, nullptr);
                     exploded = true;
                 }
@@ -837,7 +836,7 @@ namespace game
                 {
                     particle_flare(d->muzzle, d->muzzle, 140, Part_PulseMuzzleFlash, 0x50CFE5, 3.50f, d); //place a light that runs with the shot projectile
                 }
-                newprojectile(from, to, attacks[atk].projspeed, local, id, d, atk);
+                newprojectile(from, to, attacks[atk].projspeed, local, id, d, atk, attacks[atk].time, attacks[atk].gravity);
                 break;
             }
             case Attack_EngShoot:
@@ -1031,7 +1030,7 @@ namespace game
             }
             d->vel.add(kickback);
         }
-        float shorten = attacks[atk].range && dist > attacks[atk].range ? attacks[atk].range : 0,
+        float shorten = attacks[atk].time && dist > attacks[atk].time*attacks[atk].projspeed ? attacks[atk].projspeed*attacks[atk].time : 0,
               barrier = raycube(d->o, dir, dist, Ray_ClipMat|Ray_AlphaPoly);
         if(barrier > 0 && barrier < dist && (!shorten || barrier < shorten))
         {
@@ -1048,7 +1047,7 @@ namespace game
         }
         else if(attacks[atk].spread)
         {
-            offsetray(from, to, attacks[atk].spread, attacks[atk].range, to);
+            offsetray(from, to, attacks[atk].spread, attacks[atk].time, to);
         }
         hits.setsize(0);
 

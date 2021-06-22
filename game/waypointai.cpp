@@ -142,7 +142,7 @@ namespace ai
 
     float waypointai::attackmaxdist(int atk)
     {
-        return attacks[atk].range + 4;
+        return attacks[atk].time + 4;
     }
 
     bool waypointai::attackrange(int atk, float dist)
@@ -609,7 +609,7 @@ namespace ai
                     {
                         int atk = guns[aiplayer->gunselect].attacks[Act_Shoot];
                         float guard = sightmin,
-                              wander = attacks[atk].range;
+                              wander = attacks[atk].projspeed*attacks[atk].time;
                         return patrol(b, e->feetpos(), guard, wander) ? 1 : 0;
                     }
                     break;
