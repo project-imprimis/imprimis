@@ -506,7 +506,7 @@ namespace game
                        | Ray_SkipFirst
                        | (passthroughcube==1 ? Ray_Pass : 0), gridsize, entorient, ent);
 
-        if(wdist >= attacks[Attack_EngShoot].projspeed*attacks[Attack_EngShoot].time)
+        if(wdist >= attacks[Attack_EngShoot].time)
         {
             return; //upon checking range, if it is larger than the eng's max placement distance, don't bother rendering
         }
