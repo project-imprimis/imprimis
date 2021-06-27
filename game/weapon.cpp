@@ -1031,7 +1031,8 @@ namespace game
             }
             d->vel.add(kickback);
         }
-        float shorten = attacks[atk].time && dist > attacks[atk].time*attacks[atk].projspeed ? attacks[atk].projspeed*attacks[atk].time : 0,
+        int projdist = attacks[atk].projspeed ? attacks[atk].time*attacks[atk].projspeed : attacks[atk].time;
+        float shorten = attacks[atk].time && dist > projdist ? projdist : 0,
               barrier = raycube(d->o, dir, dist, Ray_ClipMat|Ray_AlphaPoly);
         if(barrier > 0 && barrier < dist && (!shorten || barrier < shorten))
         {
