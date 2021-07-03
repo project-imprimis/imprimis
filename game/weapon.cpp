@@ -697,12 +697,13 @@ namespace game
      * Arguments:
      *  loc: world vector to fill
      *  gridpower: size of cubes to place
+     *  tex: index of the texture to place
      *  offset: offset for origin of cube volume
      *  size: size in cubes for cube volume (goes +x,+y,+z from origin)
      * Returns:
      *  void
      */
-    void placecube(ivec loc, int gridpower, ivec offset = ivec(0,0,0), ivec size = ivec(1,1,1))
+    void placecube(ivec loc, int gridpower, int tex, ivec offset = ivec(0,0,0), ivec size = ivec(1,1,1))
     {
         int gridpow = static_cast<int>(pow(2,gridpower));
         ivec minloc( loc.x - loc.x % gridpow,
@@ -711,7 +712,7 @@ namespace game
         selinfo sel;
         sel.o = minloc + offset;
         sel.s = size;
-        mpplacecube(sel, 1, true);
+        mpplacecube(sel, tex, true);
     }
 
     void updateprojectiles(int time)
@@ -1053,6 +1054,8 @@ namespace game
         }
         hits.setsize(0);
 
+        int blocktex = d->team + 1; //2 and 3 are the indices for team blocks
+        conoutf(ConsoleMsg_GameInfo, "%d", blocktex);
         if(!attacks[atk].projspeed)
         {
             if(attacks[atk].worldfx == 2)
@@ -1061,16 +1064,16 @@ namespace game
                 {
                     //note: 8 and 3 are linked magic numbers (gridpower)
                     ivec offsetloc = static_cast<ivec>(to) + ivec(0,0,8);
-                    placecube(offsetloc,2);
+                    placecube(offsetloc, 2, blocktex);
                 }
                 else if(checkcubefill(lookupcube(static_cast<ivec>(to))))
                 {
                     ivec offsetloc = static_cast<ivec>(to) + ivec(0,0,8);
-                    placecube(offsetloc,2);
+                    placecube(offsetloc, 2, blocktex);
                 }
                 else if (!iscubeempty(lookupcube(static_cast<ivec>(to))))
                 {
-                    placecube(static_cast<ivec>(to),3);
+                    placecube(static_cast<ivec>(to), 3, blocktex);
                 }
             }
             else

@@ -244,8 +244,10 @@ VAR(invalidcubeguard, 0, 1, 1);
  * Returns:
  *  void
  */
+
 void mpplacecube(selinfo &sel, int tex, bool local)
 {
+    bool repsel = true;
     if(local)
     {
         game::edittrigger(sel, Edit_AddCube);
@@ -253,6 +255,10 @@ void mpplacecube(selinfo &sel, int tex, bool local)
     LOOP_SEL_XYZ(
         discardchildren(c, true);
         setcubefaces(c, facesolid);
+        for(int i = 0; i < 6; i++)
+        {
+            edittexcube(c, tex, i, repsel);
+        }
     );
 }
 
