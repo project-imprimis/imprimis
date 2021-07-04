@@ -1055,7 +1055,6 @@ namespace game
         hits.setsize(0);
 
         int blocktex = d->team + 1; //2 and 3 are the indices for team blocks
-        conoutf(ConsoleMsg_GameInfo, "%d", blocktex);
         if(!attacks[atk].projspeed)
         {
             if(attacks[atk].worldfx == 2)
