@@ -295,8 +295,10 @@ int main(int argc, char **argv)
         void (*gamefxn)() = &game::rendergame;
         void (*hudfxn)() = &game::renderavatar;
         void (*editfxn)() = &game::rendereditcursor;
-        gl_drawframe(crosshairindex, gamefxn, hudfxn, editfxn); //rendering magic
+        void (*hud2dfxn)() = &game::renderhud;
+        gl_drawframe(crosshairindex, gamefxn, hudfxn, editfxn, hud2dfxn); //rendering magic
         swapbuffers();
+        game::updateminimap();
         renderedframe = inbetweenframes = true; //done!
     }
     return EXIT_FAILURE;

@@ -830,6 +830,14 @@ namespace game
     extern void suicide(physent *d);
     extern void bounced(physent *d, const vec &surface);
     extern void vartrigger(ident *id);
+
+    //minimap
+    extern void drawminimap(gameent *d, float x, float y, float s);
+    extern void drawteammates(gameent *d, float x, float y, float s);
+    extern void drawplayerblip(gameent *d, float x, float y, float s, float blipsize = 1);
+    extern void setradartex();
+    extern void updateminimap();
+
     // client
     extern bool connected, remote, demoplayback;
     extern string servdesc;
@@ -900,6 +908,7 @@ namespace game
     extern void rendergame();
     extern void renderavatar();
     extern void rendereditcursor();
+    extern void renderhud();
 
     // additional fxns needed by server/main code
 

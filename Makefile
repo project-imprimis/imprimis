@@ -14,6 +14,7 @@ CLIENT_OBJS= \
 	game/game.o \
 	game/gameclient.o \
 	game/main.o \
+	game/minimap.o \
 	game/render.o \
 	game/scoreboard.o \
 	game/server.o \
