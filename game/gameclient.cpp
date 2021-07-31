@@ -1386,7 +1386,7 @@ namespace game
             q.put((vel>>8)&0xFF);
         }
         float velyaw, velpitch;
-        vectoyawpitch(d->vel, velyaw, velpitch);
+        vectoryawpitch(d->vel, velyaw, velpitch);
         uint veldir = (velyaw < 0 ? 360 + static_cast<int>(velyaw)%360 : static_cast<int>(velyaw)%360) + std::clamp(static_cast<int>(velpitch+90), 0, 180)*360;
         q.put(veldir&0xFF);
         q.put((veldir>>8)&0xFF);
@@ -1400,7 +1400,7 @@ namespace game
             if(d->falling.x || d->falling.y || d->falling.z > 0)
             {
                 float fallyaw, fallpitch;
-                vectoyawpitch(d->falling, fallyaw, fallpitch);
+                vectoryawpitch(d->falling, fallyaw, fallpitch);
                 uint falldir = (fallyaw < 0 ? 360 + static_cast<int>(fallyaw)%360 : static_cast<int>(fallyaw)%360) + std::clamp(static_cast<int>(fallpitch+90), 0, 180)*360;
                 q.put(falldir&0xFF);
                 q.put((falldir>>8)&0xFF);

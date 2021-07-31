@@ -1239,7 +1239,7 @@ namespace ai
         if(becareful && aiplayer->physstate == PhysEntState_Fall)
         {
             float offyaw, offpitch;
-            vectoyawpitch(aiplayer->vel, offyaw, offpitch);
+            vectoryawpitch(aiplayer->vel, offyaw, offpitch);
             offyaw -= aiplayer->yaw;
             offpitch -= aiplayer->pitch;
             if(fabs(offyaw)+fabs(offpitch) >= 135)

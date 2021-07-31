@@ -1129,7 +1129,7 @@ namespace game
             }
             else
             {
-                vectoyawpitch(vel, yaw, pitch);
+                vectoryawpitch(vel, yaw, pitch);
                 yaw += 90;
                 bnc.lastyaw = yaw;
             }
