@@ -1001,12 +1001,12 @@ namespace game
         int gun = d->gunselect,
             act = d->attacking,
             atk = guns[gun].attacks[act];
-        d->lastaction = lastmillis;
-        d->lastattack = atk;
         if(d->heat[gun] > attacks[atk].maxheat) // check if weapon has overheated
         {
             return;
         }
+        d->lastaction = lastmillis;
+        d->lastattack = atk;
         if(!d->ammo[gun])
         {
             if(d==player1)
