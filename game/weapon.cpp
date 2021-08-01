@@ -243,7 +243,7 @@ namespace game
             if(name[0])
             {
                 int gun = getweapon(name);
-                if(validgun(gun) && gun != player1->gunselect && player1->ammo[gun])
+                if(validgun(gun) && gun != player1->gunselect && player1->ammo[gun] && weaponallowed(gun))
                 {
                     gunselect(gun, player1);
                     return;
@@ -251,11 +251,11 @@ namespace game
             }
             else
             {
-                weaponswitch(player1);
                 return;
             }
         }
     });
+
 
     void offsetray(const vec &from, const vec &to, int spread, float range, vec &dest)
     {
