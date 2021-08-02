@@ -872,13 +872,13 @@ namespace game
                         }
                         break;
                 }
-                addmsg(NetMsg_EditFace + op, "ri9i4",
+                addmsg(NetMsg_EditFace + op, "ri9i5",
                    sel.o.x, sel.o.y, sel.o.z, //1-3
                    sel.s.x, sel.s.y, sel.s.z, //4-6
                    sel.grid, sel.orient,      //7,8
                    sel.cx, sel.cxs,           //9,10
                    sel.cy, sel.cys,           //11,12
-                   sel.corner);               //13
+                   sel.corner, arg1);         //13,14
                 break;
             }
             case Edit_Rotate:
@@ -1003,13 +1003,13 @@ namespace game
                 case Edit_AddCube:
                 case Edit_DelCube:
                 {
-                    addmsg(NetMsg_EditFace + op, "ri9i4",
+                    addmsg(NetMsg_EditFace + op, "ri9i5",
                        sel.o.x, sel.o.y, sel.o.z, //1-3
                        sel.s.x, sel.s.y, sel.s.z, //4-6
                        sel.grid, sel.orient,      //7,8
                        sel.cx, sel.cxs,           //9,10
                        sel.cy, sel.cys,           //11,12
-                       sel.corner);               //13
+                       sel.corner, arg1);         //13, 14
                     break;
             }
         }
@@ -1222,7 +1222,8 @@ namespace game
             }
             va_end(args);
         }
-        int num = nums || numf ? 0 : numi, msgsize = server::msgsizelookup(type);
+        int num = nums || numf ? 0 : numi,
+            msgsize = server::msgsizelookup(type);
         if(msgsize && num!=msgsize)
         {
             fatal("inconsistent msg size for %d (%d != %d)", type, num, msgsize);
@@ -2400,6 +2401,7 @@ namespace game
                         }
                         case NetMsg_DelCube:
                         {
+                            getint(p); //throw away this unneeded arg
                             if(sel.validate())
                             {
                                 mpdelcube(sel, false);
@@ -2408,9 +2410,10 @@ namespace game
                         }
                         case NetMsg_AddCube:
                         {
+                            int tex = getint(p);
                             if(sel.validate())
                             {
-                                mpplacecube(sel, 1, false);
+                                mpplacecube(sel, tex, false);
                             }
                             break;
                         }

@@ -250,7 +250,7 @@ void mpplacecube(selinfo &sel, int tex, bool local)
     bool repsel = true;
     if(local)
     {
-        game::edittrigger(sel, Edit_AddCube);
+        game::edittrigger(sel, Edit_AddCube, tex);
     }
     LOOP_SEL_XYZ(
         discardchildren(c, true);
