@@ -31,7 +31,7 @@ has been compiled (as it cannot find the needed shared library).
 
 Once libprimis is installed, Imprimis can be successfully installed. The project
 can be downloaded by running the following command at the desired install location:
-`git clone https://github.com/project-imprimis/libprimis.git --recurse-submodules`
+`git clone https://github.com/project-imprimis/imprimis.git --recurse-submodules`
 
 Once the game has been downloaded, access the game directory with `cd imprimis`.
 The game can now be compiled with `make` (or `make -jN` for N threaded compilation).
