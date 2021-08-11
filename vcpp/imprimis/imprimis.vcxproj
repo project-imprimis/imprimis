@@ -83,11 +83,13 @@
     <ClCompile Include="..\..\game\game.cpp" />
     <ClCompile Include="..\..\game\gameclient.cpp" />
     <ClCompile Include="..\..\game\main.cpp" />
+    <ClCompile Include="..\..\game\minimap.cpp" />
     <ClCompile Include="..\..\game\render.cpp" />
     <ClCompile Include="..\..\game\scoreboard.cpp" />
     <ClCompile Include="..\..\game\server.cpp" />
     <ClCompile Include="..\..\game\serverbrowser.cpp" />
     <ClCompile Include="..\..\game\waypoint.cpp" />
+    <ClCompile Include="..\..\game\waypointai.cpp" />
     <ClCompile Include="..\..\game\weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
