@@ -21,6 +21,15 @@ jobs:
       with:
         submodules: true
 
+    - name: Download libprimis.lib artifact
+      uses: dawidd6/action-download-artifact@v2.14.1
+        workflow: msbuild.yml
+        branch: master
+        name: libprimis-windows
+        path: ./
+        repo: TheEgghead27/libprimis
+        branch: build-ci
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
