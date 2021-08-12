@@ -28,7 +28,7 @@ jobs:
         name: libprimis-windows
         path: ./
         repo: project-imprimis/libprimis
-        branch: master
+        branch: main
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
