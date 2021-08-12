@@ -27,7 +27,7 @@ jobs:
         workflow: msbuild.yml
         name: libprimis-windows
         path: ./
-        repo: TheEgghead27/libprimis
+        repo: project-imprimis/libprimis
         branch: build-ci
 
     - name: Add MSBuild to PATH
