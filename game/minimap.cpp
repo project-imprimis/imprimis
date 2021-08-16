@@ -178,9 +178,9 @@ namespace game
 
     void renderhud()
     {
-        int size         = mmaps*scr_h/100,
-            widthoffset  = mmapw*(scr_w-size)/100,
-            heightoffset = scr_h*mmaph/100;
+        int size         = mmaps*desktoph/100, // mmaps % of total screen size
+            widthoffset  = mmapw*(desktopw-size)/100,
+            heightoffset = desktoph*mmaph/100;
         drawhud(hudplayer(), widthoffset, heightoffset, size);
     }
     
