@@ -1716,8 +1716,13 @@ void modifygravity(gameent *pl, bool water, int curtime)
     vec g(0, 0, 0);
     if(pl->physstate == PhysEntState_Fall)
     {
+        //freeze newly spawned players until they move
+        if(pl->spawnprotect)
+        {
+            g.z -= 0.0f;
+        }
         //parachute
-        if(lastmillis - pl->parachutetime < parachutemaxtime)
+        else if(lastmillis - pl->parachutetime < parachutemaxtime)
         {
             g.z -= 0.05;
         }
@@ -1874,8 +1879,9 @@ void updatephysstate(physent *d)
 
 #define DIR(name,v,d,s,os) ICOMMAND(name, "D", (int *down), \
 { \
-    player->s = *down!=0; \
-    player->v = player->s ? d : (player->os ? -(d) : 0); \
+    game::player1->s = *down!=0; \
+    game::player1->v = player->s ? d : (player->os ? -(d) : 0); \
+    game::player1->spawnprotect = false; \
 }); \
 
 DIR(backward, move,   -1, k_down,  k_up);

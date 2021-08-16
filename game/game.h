@@ -636,7 +636,7 @@ struct gameent : dynent, gamestate
     int smoothmillis;
     int combatclass;
     int parachutetime; //time when parachute spawned
-
+    bool spawnprotect; //if the player has not yet moved
     string name, info;
     int team, playermodel, playercolor;
     ai::aiinfo *ai;
@@ -686,6 +686,7 @@ struct gameent : dynent, gamestate
         parachutetime = lastmillis;
         flagpickup = 0;
         lastnode = -1;
+        spawnprotect = true;
     }
 
     void startgame()
