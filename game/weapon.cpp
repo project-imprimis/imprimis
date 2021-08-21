@@ -177,6 +177,31 @@ namespace game
     }
     ICOMMAND(setweapon, "si", (char *name, int *force), setweapon(name, *force!=0));
 
+    void primaryweapon()
+    {
+        if(weaponallowed(Gun_Rail))
+        {
+            gunselect(Gun_Rail, player1);
+        }
+        else if(weaponallowed(Gun_Pulse))
+        {
+            gunselect(Gun_Pulse, player1);
+        }
+        else
+        {
+            gunselect(Gun_Eng, player1);
+        }
+    }
+    COMMAND(primaryweapon, "");
+
+    //selects for player1 the secondary weapon for their class, which is currently
+    //always carbine
+    void secondaryweapon()
+    {
+        gunselect(Gun_Carbine, player1);
+    }
+    COMMAND(secondaryweapon, "");
+
     void cycleweapon(int numguns, int *guns, bool force = false)
     {
         if(numguns<=0 || player1->state!=ClientState_Alive)
