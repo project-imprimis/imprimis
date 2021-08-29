@@ -1474,6 +1474,7 @@ namespace ai
     void waypointai::logic(aistate &b, bool run)
     {
         bool allowmove = canmove() && b.type != AIState_Wait;
+        aiplayer->spawnprotect = false;
         if(aiplayer->state != ClientState_Alive || !allowmove)
         {
             aiplayer->stopmoving();
