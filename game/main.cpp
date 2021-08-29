@@ -167,6 +167,7 @@ int main(int argc, char **argv)
     SDL_StopTextInput(); // workaround for spurious text-input events getting sent on first text input toggle?
     logoutf("init: gl");
     conoutf(Console_Init, "Version: %s built %s", versionstring, __DATE__);
+    conoutf(Console_Init, "Engine: %s built %s", enginestr().c_str(), enginebuilddate().c_str());
     gl_checkextensions();
     gl_init();
     notexture = textureload("media/texture/game/notexture.png");
