@@ -1892,19 +1892,24 @@ void updatephysstate(physent *d)
  * d: direction: positive (forward, left) or negative (backwards, right) along axes
  * s: movement key
  * os: opposite movement key (can't do both of these @ same time)
+ * sprint: allows sprinting in this direction
  */
 
-#define DIR(name,v,d,s,os) ICOMMAND(name, "D", (int *down), \
+#define DIR(name,v,d,s,os, sprint) ICOMMAND(name, "D", (int *down), \
 { \
     game::player1->s = *down!=0; \
     game::player1->v = player->s ? d : (player->os ? -(d) : 0); \
     game::player1->spawnprotect = false; \
+    if(!sprint) \
+    { \
+        game::player1->sprinting = 1; \
+    } \
 }); \
 
-DIR(backward, move,   -1, k_down,  k_up);
-DIR(forward,  move,    1, k_up,    k_down);
-DIR(left,     strafe,  1, k_left,  k_right);
-DIR(right,    strafe, -1, k_right, k_left);
+DIR(backward, move,   -1, k_down,  k_up,   false);
+DIR(forward,  move,    1, k_up,    k_down, true);
+DIR(left,     strafe,  1, k_left,  k_right,false);
+DIR(right,    strafe, -1, k_right, k_left, false);
 
 #undef DIR
 

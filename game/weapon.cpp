@@ -1012,6 +1012,12 @@ namespace game
 
     void shoot(gameent *d, const vec &targ)
     {
+        //disallow shooting while sprinting
+        if(d->sprinting == -1)
+        {
+            return;
+        }
+
         int prevaction = d->lastaction,
             attacktime = lastmillis-prevaction;
         if(attacktime<d->gunwait)
