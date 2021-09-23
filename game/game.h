@@ -641,6 +641,7 @@ struct gameent : dynent, gamestate
     int team, playermodel, playercolor;
     ai::aiinfo *ai;
     int ownernum, lastnode;
+    int sprinting;
 
     vec muzzle;
 
@@ -648,7 +649,8 @@ struct gameent : dynent, gamestate
                 plag(0), ping(0), lifesequence(0), respawned(-1), suicided(-1),
                 lastpain(0), frags(0), deaths(0), totaldamage(0),
                 totalshots(0), edit(NULL), smoothmillis(-1), team(0),
-                playermodel(-1), playercolor(0), ai(NULL), ownernum(-1), muzzle(-1, -1, -1)
+                playermodel(-1), playercolor(0), ai(NULL), ownernum(-1),
+                sprinting(1), muzzle(-1, -1, -1)
     {
         name[0] = info[0] = 0;
         respawn();

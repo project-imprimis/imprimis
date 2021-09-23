@@ -463,6 +463,15 @@ namespace game
         return player1->state!=ClientState_Dead;
     }
 
+    bool cansprint()
+    {
+        if(!connected || intermission)
+        {
+            return false;
+        }
+        return player1->state!=ClientState_Dead;
+    }
+
     VARP(hitsound, 0, 0, 1);
 
     void damaged(int damage, gameent *d, gameent *actor, bool local)
@@ -1553,7 +1562,14 @@ static void handleparachute(gameent *pl)
     else
     {
         pl->parachutetime -= parachutemaxtime; //immediately cancel parachute
-        pl->maxspeed = defaultspeed;
+        if(pl->sprinting == 1)
+        {
+            pl->maxspeed = defaultspeed;
+        }
+        else
+        {
+            pl->maxspeed = 70;
+        }
     }
 }
 
@@ -1582,6 +1598,7 @@ bool moveplayer(gameent *pl, int moveres, bool local, int curtime)
 
     pl->blocked = false;
     handleparachute(pl);
+
     if(floating)                // just apply velocity
     {
         if(pl->physstate != PhysEntState_Float)
@@ -1894,7 +1911,16 @@ DIR(right,    strafe, -1, k_right, k_left);
 //special movement actions
 ICOMMAND(jump,   "D", (int *down), { if(!*down || game::canjump()) player->jumping = *down!=0; });
 ICOMMAND(crouch, "D", (int *down), { if(!*down) player->crouching = abs(player->crouching); else if(game::cancrouch()) player->crouching = -1; });
-
+ICOMMAND(sprint, "D", (int *down), {
+    if(!*down)
+    {
+        game::player1->sprinting = abs(game::player1->sprinting);
+    }
+    else if(game::cansprint())
+    {
+        game::player1->sprinting = -1;
+    }
+});
 ////////////////////////// camera /////////////////////////
 
 
