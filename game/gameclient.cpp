@@ -778,13 +778,13 @@ namespace game
     });
     ICOMMAND(intermission, "", (), intret(intermission ? 1 : 0));
 
-    ICOMMANDS("MODE_TEAMMODE", "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Team)); });
-    ICOMMANDS("MODE_RAIL", "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Rail)); });
-    ICOMMANDS("MODE_PULSE", "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Pulse)); });
-    ICOMMANDS("MODE_DEMO", "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Demo)); });
-    ICOMMANDS("MODE_EDIT", "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Edit)); });
-    ICOMMANDS("MODE_LOBBY", "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Lobby)); });
-    ICOMMANDS("MODE_TIMED", "i", (int *mode), { int gamemode = *mode; intret(!modecheck(gamemode, Mode_Edit)); });
+    ICOMMAND(MODE_TEAMMODE, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Team)); });
+    ICOMMAND(MODE_RAIL, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Rail)); });
+    ICOMMAND(MODE_PULSE, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Pulse)); });
+    ICOMMAND(MODE_DEMO, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Demo)); });
+    ICOMMAND(MODE_EDIT, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Edit)); });
+    ICOMMAND(MODE_LOBBY, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Lobby)); });
+    ICOMMAND(MODE_TIMED, "i", (int *mode), { int gamemode = *mode; intret(!modecheck(gamemode, Mode_Edit)); });
 
     void changemap(const char *name, int mode) // request map change, server may ignore
     {
