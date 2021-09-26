@@ -23,6 +23,9 @@ jobs:
         path: ./
         repo: TheEgghead27/libprimis
         branch: build-ci
+
+    - name: Install libprimis
+      run: sudo cp ./libprimis.so /usr/lib/libprimis.so
       
     - name: Build
       run: make -j4
