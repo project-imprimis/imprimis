@@ -23,7 +23,6 @@ jobs:
         path: ./
         repo: project-imprimis/libprimis
         branch: main
-        branch: build-ci
 
     - name: Install libprimis
       run: sudo cp ./libprimis.so /usr/lib/libprimis.so
