@@ -1555,6 +1555,10 @@ static const int inairsounddelay = 800; //time before midair players are allowed
 
 static void handleparachute(gameent *pl)
 {
+    if(pl->spawnprotect)
+    {
+        pl->parachutetime = lastmillis;
+    }
     if(lastmillis - pl->parachutetime < parachutemaxtime && pl->timeinair > 0 && !modecheck(game::gamemode, Mode_Edit))
     {
         pl->maxspeed = parachutespeed;
