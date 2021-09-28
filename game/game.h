@@ -214,6 +214,18 @@ enum
     MasterMode_Invalid = MasterMode_Start - 1
 };
 
+struct servinfo
+{
+    string name, map, desc;
+    int protocol, numplayers, maxplayers, ping;
+    vector<int> attr;
+
+    servinfo() : protocol(INT_MIN), numplayers(0), maxplayers(0)
+    {
+        name[0] = map[0] = desc[0] = '\0';
+    }
+};
+
 const char * const mastermodenames[] =  { "auth",   "open",   "veto",       "locked",     "private",    "password" };
 const char * const mastermodecolors[] = { "",       "\f0",    "\f2",        "\f2",        "\f3",        "\f3" };
 const char * const mastermodeicons[] =  { "server", "server", "serverlock", "serverlock", "serverpriv", "serverpriv" };
