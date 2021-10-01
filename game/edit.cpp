@@ -880,7 +880,7 @@ void getseltex()
         return;
     }
     cube &c = lookupcube(sel.o, -sel.grid);
-    if(c.children || iscubeempty(c))
+    if(c.children || c.isempty())
     {
         return;
     }

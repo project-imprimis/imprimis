@@ -765,7 +765,7 @@ namespace game
                 {
                     cube projcube = lookupcube(static_cast<ivec>(p.o)); //cube located at projectile loc
                     if(getmaterial(projcube) == Mat_Water &&
-                       iscubeempty(projcube) )
+                       projcube.isempty() )
                     {
                         projsplash(p, v, nullptr);
                         exploded = true;
@@ -1101,7 +1101,7 @@ namespace game
                     ivec offsetloc = static_cast<ivec>(to) + ivec(0,0,8);
                     placecube(offsetloc, 2, blocktex);
                 }
-                else if (!iscubeempty(lookupcube(static_cast<ivec>(to))))
+                else if (!(lookupcube(static_cast<ivec>(to)).isempty()))
                 {
                     placecube(static_cast<ivec>(to), 3, blocktex);
                 }
