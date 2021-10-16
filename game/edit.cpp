@@ -253,7 +253,7 @@ void mpplacecube(selinfo &sel, int tex, bool local)
         game::edittrigger(sel, Edit_AddCube, tex);
     }
     LOOP_SEL_XYZ(
-        discardchildren(c, true);
+        c.discardchildren(true);
         setcubefaces(c, facesolid);
         for(int i = 0; i < 6; i++)
         {
@@ -334,7 +334,7 @@ void mpeditface(int dir, int mode, selinfo &sel, bool local)
             setcubefaces(c, facesolid);
         }
         ushort mat = getmaterial(c);
-        discardchildren(c, true);
+        c.discardchildren(true);
         c.material = mat;
         if(mode==1) // fill command
         {
@@ -391,7 +391,7 @@ void mpeditface(int dir, int mode, selinfo &sel, bool local)
                 }
             }
             optiface(p, c);
-            if(invalidcubeguard==1 && !isvalidcube(c))
+            if(invalidcubeguard==1 && !c.isvalidcube())
             {
                 uint newbak = c.faces[d];
                 uchar *m = reinterpret_cast<uchar *>(&bak);
@@ -402,7 +402,7 @@ void mpeditface(int dir, int mode, selinfo &sel, bool local)
                     {
                         c.faces[d] = bak;
                         c.edges[d*4+k] = n[k];
-                        if(isvalidcube(c))
+                        if(c.isvalidcube())
                         {
                             m[k] = n[k];
                         }
@@ -460,7 +460,7 @@ void mpdelcube(selinfo &sel, bool local)
     {
         game::edittrigger(sel, Edit_DelCube);
     }
-    LOOP_SEL_XYZ(discardchildren(c, true); setcubefaces(c, faceempty));
+    LOOP_SEL_XYZ(c.discardchildren(true); setcubefaces(c, faceempty));
 }
 
 void delcube()
@@ -1270,7 +1270,7 @@ void mpeditmat(int matid, int filter, selinfo &sel, bool local)
             matid |= Mat_Clip;
         }
     }
-    LOOP_SEL_XYZ(setmat(c, matid, matmask, filtermat, filtermask, filtergeom));
+    LOOP_SEL_XYZ(c.setmat(matid, matmask, filtermat, filtermask, filtergeom));
 }
 
 /*editmat: takes the globally defined selection and fills it with a material
@@ -1360,14 +1360,14 @@ inline void printfacelocations(cube c)
 }
 
 //crude heuristic to determine whether a cube should be placed above cursor (solid block below) or at cursor (incomplete block)
-//needed because iscubesolid() determines whether a whole cube is filled, which is often larger than the eng gun sel box, especially after mipping
+//needed because issolid() determines whether a whole cube is filled, which is often larger than the eng gun sel box, especially after mipping
 bool checkcubefill(cube c)
 {
     facearray a = facestoarray(c, 2);
     switch(selchildcount)
     {
         case 1:
-            if(iscubesolid(c)) //should always be false, since this gets checked in weapon.cpp
+            if(c.issolid()) //should always be false, since this gets checked in weapon.cpp
             {
                 return true;
             }

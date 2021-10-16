@@ -1090,7 +1090,7 @@ namespace game
         {
             if(attacks[atk].worldfx == 2)
             {
-                if(iscubesolid(lookupcube(static_cast<ivec>(to))))
+                if(lookupcube(static_cast<ivec>(to)).issolid())
                 {
                     //note: 8 and 3 are linked magic numbers (gridpower)
                     ivec offsetloc = static_cast<ivec>(to) + ivec(0,0,8);

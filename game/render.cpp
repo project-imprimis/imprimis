@@ -556,7 +556,7 @@ namespace game
 
         enablepolygonoffset(GL_POLYGON_OFFSET_LINE);
 
-        if(iscubesolid(*c) || checkcubefill(*c))
+        if(c->issolid() || checkcubefill(*c))
         {
             lu.add(ivec(0,0,8));
         }
