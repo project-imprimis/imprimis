@@ -976,7 +976,7 @@ void writeservercfg()
     {
         return;
     }
-    stream *f = openutf8file(path(game::savedservers()), "w");
+    stream *f = openutf8file(copypath(game::savedservers()), "w");
     if(!f)
     {
         return;
