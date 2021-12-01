@@ -20,6 +20,8 @@ namespace game
     VARP(forceplayermodels, 0, 0, 1);       //force default player model
     VARP(showdead, 0, 1, 1);                //show dead bodies
 
+    VAR(passthroughcube, 0, 1, 1);
+    VAR(gridlookup, 0, 0, 1);
     extern int playermodel;
 
     vector<gameent *> ragdolls;
