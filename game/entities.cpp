@@ -444,39 +444,6 @@ void findplayerspawn(dynent *d, int forceent, int tag) // place at random spawn
     }
 }
 
-static inline void findents(octaentities &oe, int low, int high, bool notspawned, const vec &pos, const vec &invradius, vector<int> &found)
-{
-    vector<extentity *> &ents = entities::getents();
-    for(int i = 0; i < oe.other.length(); i++)
-    {
-        int id = oe.other[i];
-        extentity &e = *ents[id];
-        if(  e.type >= low
-          && e.type <= high
-          && (e.spawned() || notspawned)
-          && vec(e.o).sub(pos).mul(invradius).squaredlen() <= 1)
-        {
-            found.add(id);
-        }
-    }
-}
-
-static inline void findents(cube *c, const ivec &o, int size, const ivec &bo, const ivec &br, int low, int high, bool notspawned, const vec &pos, const vec &invradius, vector<int> &found)
-{
-    LOOP_OCTA_BOX(o, size, bo, br)
-    {
-        if(c[i].ext && c[i].ext->ents)
-        {
-            findents(*c[i].ext->ents, low, high, notspawned, pos, invradius, found);
-        }
-        if(c[i].children && size > octaentsize)
-        {
-            ivec co(i, o, size);
-            findents(c[i].children, co, size>>1, bo, br, low, high, notspawned, pos, invradius, found);
-        }
-    }
-}
-
 //returns origin "o" of selected region
 vec getselpos()
 {
