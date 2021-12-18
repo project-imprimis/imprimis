@@ -56,9 +56,9 @@ namespace server
         }
     }
 
-    const char *defaultmaster(const char *name) 
+    const char *defaultmaster(const char *name = "") 
     {
-        if(name == nullptr)
+        if(name == "")
         {
             return "project-imprimis.org";
         }
