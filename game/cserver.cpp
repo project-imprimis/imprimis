@@ -56,7 +56,7 @@ namespace server
         }
     }
 
-    const char *defaultmaster(const char *name = "") 
+    const char *defaultmaster(const char *name) 
     {
         if(name && !name[0])
         {
