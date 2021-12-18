@@ -58,7 +58,7 @@ namespace server
 
     const char *defaultmaster(const char *name = "") 
     {
-        if(name == "")
+        if(name && !name[0])
         {
             return "project-imprimis.org";
         }
