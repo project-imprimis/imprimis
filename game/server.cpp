@@ -155,7 +155,7 @@ ENetAddress masteraddress = { ENET_HOST_ANY, ENET_PORT_ANY },
             serveraddress = { ENET_HOST_ANY, ENET_PORT_ANY };
 VARN(updatemaster, allowupdatemaster, 0, 1, 1);
 
-SVAR(mastername, server::defaultmaster());
+SVAR(mastername, server::defaultmaster(nullptr));
 VAR(masterport, 1, Port_Master, 0xFFFF);
 
 ENetSocket connectmaster(bool wait)

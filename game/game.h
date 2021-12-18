@@ -1053,7 +1053,7 @@ namespace server
 
     extern int numchannels();
     extern void recordpacket(int chan, void *data, int len);
-    extern const char *defaultmaster();
+    extern const char *defaultmaster(const char *);
 }
 
 #endif
