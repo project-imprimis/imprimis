@@ -158,6 +158,7 @@ VARN(updatemaster, allowupdatemaster, 0, 1, 1);
 SVAR(mastername, server::defaultmaster());
 VAR(masterport, 1, Port_Master, 0xFFFF);
 
+
 ENetSocket connectmaster(bool wait)
 {
     if(!mastername[0])

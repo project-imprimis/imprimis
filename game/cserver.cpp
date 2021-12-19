@@ -56,9 +56,16 @@ namespace server
         }
     }
 
-    const char *defaultmaster()
+    const char *defaultmaster(const char *name) 
     {
-        return "project-imprimis.org";
+        if(name && !name[0])
+        {
+            return "project-imprimis.org";
+        }
+        else
+        {
+            return name;
+        }
     }
 
     int numchannels()
