@@ -158,8 +158,6 @@ VARN(updatemaster, allowupdatemaster, 0, 1, 1);
 SVAR(mastername, server::defaultmaster());
 VAR(masterport, 1, Port_Master, 0xFFFF);
 
-//this is ugly af, from the macro to the const_cast<char *>
-ICOMMAND(setmastername, "s", (const char *newname), mastername = const_cast<char *>(server::defaultmaster(newname)));
 
 ENetSocket connectmaster(bool wait)
 {
