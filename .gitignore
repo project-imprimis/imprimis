@@ -1,0 +1,8 @@
+# Ignore the compiled executable/library.
+*.so
+# Ignore VSCode-auto-generated files.
+.vscode/*
+# Ignore the object files produced during compilation.
+game/*.o
+# The logs produced while playing the game.
+log.txt
