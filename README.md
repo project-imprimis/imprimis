@@ -25,7 +25,7 @@ Imprimis requires the `libprimis` shared library, which can be created by buildi
 the libprimis engine located at https://github.com/project-imprimis/libprimis.
 
 Imprimis requires the library built by libprimis (`libprimis.so`) to be located in
-one of the standard Linux library directories (typically `/usr/local/lib`). If the
+one of the standard Linux library directories (typically `/usr/lib/`). If the
 `libprimis.so` file has not been places there, Imprimis will fail to run once it
 has been compiled (as it cannot find the needed shared library).
 
