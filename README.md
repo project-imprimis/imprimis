@@ -13,7 +13,7 @@ to create the game are likewise open sourced.
 ## Program Scope
 
 The Imprimis repository contains the game implementation as well as the necessary
-enet networking library, the headers required to build against the engine, and the
+ENet networking library, the headers required to build against the engine, and the
 game assets (all located in submodules).
 
 The Imprimis game requires a separate server in order to play locally. For the
@@ -36,5 +36,5 @@ can be downloaded by running the following command at the desired install locati
 Once the game has been downloaded, access the game directory with `cd imprimis`.
 The game can now be compiled with `make` (or `make -jN` for N threaded compilation).
 
-Imprimis can then be run by executing the `imprimis_unix` script, located in the
-root Imprimis directory.
+Imprimis can then be run by executing the `python imprimis.py` script, located
+in the root Imprimis directory.
