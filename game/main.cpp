@@ -114,17 +114,28 @@ void startupconstants()
     entnames = std::vector<std::string>(std::begin(entnamelist), std::end(entnamelist));
 }
 
+/**
+ * @brief Runs the game. Also, sets the home directory and log file.
+ * @param argc The number of arguments. This is equal or greater than 1, because
+ *             the executable counts as one argument.
+ * @param argv The list or arguments. The 0th argument is the executable name,
+ *             and the 1st, 2nd, 3rd, etc are arguments for the executable.
+ * @return int Returns 0 if the program exited normally.
+ */
 int main(int argc, char **argv)
 {
     initidents();
     setlogfile(nullptr);
     startupconstants();
     initing = Init_Reset;
+
     // set home dir first
     for(int i = 1; i<argc; i++)
     {
+        // If the argument starts with -u
         if(argv[i][0]=='-' && argv[i][1] == 'u')
         {
+            // Set the home directory.
             sethomedir(&argv[i][2]);
             break;
         }
@@ -132,8 +143,14 @@ int main(int argc, char **argv)
     // set log after home dir, but before anything else
     for(int i = 1; i < argc; i++)
     {
+        // If the argument starts with -g
         if(argv[i][0]=='-' && argv[i][1] == 'g')
         {
+            // Skip the -g flag and use the rest of the argument as the file
+            // name if possible. Examples:
+            // -g         -> log.txt
+            // -ggame.txt -> game.txt
+            // -glog.txt  -> log.txt
             const char *file = argv[i][2] ? &argv[i][2] : "log.txt";
             setlogfile(file);
             logoutf("Setting log file: %s", file);
