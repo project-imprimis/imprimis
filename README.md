@@ -34,7 +34,11 @@ can be downloaded by running the following command at the desired install locati
 `git clone https://github.com/project-imprimis/imprimis.git --recurse-submodules`
 
 Once the game has been downloaded, access the game directory with `cd imprimis`.
-The game can now be compiled with `make` (or `make -jN` for N threaded compilation).
-
 Imprimis can then be run by executing the `python imprimis.py` script, located
 in the root Imprimis directory.
+
+Note that `python imprimis.py` will download some dependencies and compile the
+game the first time it is executed, so it may take a while.
+
+The game can also be manually compiled with `make` (or `make -jN` for N threaded
+compilation).
