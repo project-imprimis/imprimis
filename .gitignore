@@ -6,3 +6,5 @@
 game/*.o
 # The logs produced while playing the game.
 log.txt
+# The cached functions produced by Numba's JIT.
+__pycache__/*
