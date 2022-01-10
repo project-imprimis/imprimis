@@ -505,10 +505,10 @@ const float EXP_SELFPUSH  = 2.5f,
 // this defines weapon properties
 //                            1    2       3     4         5        6      7         8            9       10      11      12         13          14    15    16       17      18       19   20     21    22       23
 const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudsound, attackdelay, damage, spread, margin, projspeed, kickamount, time, rays, hitpush, exprad, worldfx, use, water, heat, maxheat, gravity;} attacks[Attack_NumAttacks] =
-//    1            2          3           4               5             6                7               8    9   10  11   12   13  14   15  16    17 18 19 20  21   22
+//    1            2          3           4               5             6                7               8    9   10  11   12   13  14   15  16    17 18 19 20  21   22   23
 {
     { Gun_Rail,    Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,    Sound_Rail2,    300,  5,  20, 0,    0, 10, 1200, 1,  200,  0, 0, 0, 1,  60, 100, 0},
-    { Gun_Pulse,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1,   Sound_Pulse2,   700, 15,  10, 1,    6, 50, 9000, 1, 2500, 50, 1, 0, 0, 300, 300, 5},
+    { Gun_Pulse,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1,   Sound_Pulse2,   700,  8,  10, 1,    6, 50, 9000, 1, 2500, 50, 1, 0, 0, 300, 300, 5},
     { Gun_Eng,     Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,    Sound_Melee,    250,  0,   0, 1,    0,  0,   80, 1,   10, 20, 2, 0, 1,   1, 100, 0},
     { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1,  90,  2, 100, 0,    0,  2,  512, 1,   50,  0, 0, 0, 1,  25, 125, 0},
 };
