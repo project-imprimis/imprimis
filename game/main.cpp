@@ -143,7 +143,7 @@ int main(int argc, char **argv)
     execfile("config/init.cfg", false);
     //init SDL display/input library
     logoutf("init: sdl");
-    if(SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO|SDL_INIT_AUDIO)<0)
+    if(!initsdl()) //initalize sdl from engine library
     {
         fatal("Unable to initialize SDL: %s", SDL_GetError());
     }
