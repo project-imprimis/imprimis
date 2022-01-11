@@ -736,7 +736,7 @@ namespace game
         }
         if((modecheck(gamemode, Mode_Edit) && !name[0]) || !load_world(name, game::gameident(), game::getmapinfo()))
         {
-            emptymap(0, true, name);
+            emptymap(0, true);
             startmap(name);
             senditemstoserver = false;
         }

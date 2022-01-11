@@ -196,7 +196,7 @@ int main(int argc, char **argv)
     logoutf("init: world");
     updateenginevalues();
     camera1 = player = iterdynents(0);
-    emptymap(0, true, nullptr, false);
+    emptymap(0, true, false);
     game::startmap(nullptr);
     logoutf("init: sound");
     initsound();
