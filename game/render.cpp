@@ -552,7 +552,7 @@ namespace game
 
         // cursors
 
-        ldrnotextureshader->set();
+        setldrnotexture();
 
         boxoutline = outline!=0;
 
@@ -994,7 +994,7 @@ namespace game
 
         // cursors
 
-        ldrnotextureshader->set();
+        setldrnotexture();
 
         renderentselection(player->o, camdir, entmoving!=0);
 

@@ -5,7 +5,7 @@
 #include "../libprimis-headers/cube.h"
 #include "../libprimis-headers/iengine.h"
 #include "../libprimis-headers/consts.h"
-#include "../libprimis-headers/texture.h"
+
 #include <enet/enet.h>
 
 #include "nettools.h"
