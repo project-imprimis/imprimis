@@ -227,16 +227,6 @@ namespace game
             }
         }
     }
-    ICOMMAND(cycleweapon, "V", (tagval *args, int numargs),
-    {
-         int numguns = min(numargs, 3);
-         int guns[3];
-         for(int i = 0; i < numguns; ++i)
-         {
-             guns[i] = getweapon(args[i].getstr());
-         }
-         cycleweapon(numguns, guns);
-    });
 
     void weaponswitch(gameent *d)
     {
@@ -255,32 +245,6 @@ namespace game
         }
         gunselect(s, d);
     }
-
-    ICOMMAND(weapon, "V", (tagval *args, int numargs),
-    {
-        if(player1->state!=ClientState_Alive)
-        {
-            return;
-        }
-        for(int i = 0; i < 3; ++i)
-        {
-            const char *name = i < numargs ? args[i].getstr() : "";
-            if(name[0])
-            {
-                int gun = getweapon(name);
-                if(validgun(gun) && gun != player1->gunselect && player1->ammo[gun] && weaponallowed(gun))
-                {
-                    gunselect(gun, player1);
-                    return;
-                }
-            }
-            else
-            {
-                return;
-            }
-        }
-    });
-
 
     void offsetray(const vec &from, const vec &to, int spread, float range, vec &dest)
     {
