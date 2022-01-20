@@ -813,22 +813,22 @@ static void renderentbox(const vec &eo, vec es)
     es.add(eo);
 
     // bottom quad
-    gle::attrib(eo.x, eo.y, eo.z); gle::attrib(es.x, eo.y, eo.z);
-    gle::attrib(es.x, eo.y, eo.z); gle::attrib(es.x, es.y, eo.z);
-    gle::attrib(es.x, es.y, eo.z); gle::attrib(eo.x, es.y, eo.z);
-    gle::attrib(eo.x, es.y, eo.z); gle::attrib(eo.x, eo.y, eo.z);
+    gle::attrib(vec(eo.x, eo.y, eo.z)); gle::attrib(vec(es.x, eo.y, eo.z));
+    gle::attrib(vec(es.x, eo.y, eo.z)); gle::attrib(vec(es.x, es.y, eo.z));
+    gle::attrib(vec(es.x, es.y, eo.z)); gle::attrib(vec(eo.x, es.y, eo.z));
+    gle::attrib(vec(eo.x, es.y, eo.z)); gle::attrib(vec(eo.x, eo.y, eo.z));
 
     // top quad
-    gle::attrib(eo.x, eo.y, es.z); gle::attrib(es.x, eo.y, es.z);
-    gle::attrib(es.x, eo.y, es.z); gle::attrib(es.x, es.y, es.z);
-    gle::attrib(es.x, es.y, es.z); gle::attrib(eo.x, es.y, es.z);
-    gle::attrib(eo.x, es.y, es.z); gle::attrib(eo.x, eo.y, es.z);
+    gle::attrib(vec(eo.x, eo.y, es.z)); gle::attrib(vec(es.x, eo.y, es.z));
+    gle::attrib(vec(es.x, eo.y, es.z)); gle::attrib(vec(es.x, es.y, es.z));
+    gle::attrib(vec(es.x, es.y, es.z)); gle::attrib(vec(eo.x, es.y, es.z));
+    gle::attrib(vec(eo.x, es.y, es.z)); gle::attrib(vec(eo.x, eo.y, es.z));
 
     // sides
-    gle::attrib(eo.x, eo.y, eo.z); gle::attrib(eo.x, eo.y, es.z);
-    gle::attrib(es.x, eo.y, eo.z); gle::attrib(es.x, eo.y, es.z);
-    gle::attrib(es.x, es.y, eo.z); gle::attrib(es.x, es.y, es.z);
-    gle::attrib(eo.x, es.y, eo.z); gle::attrib(eo.x, es.y, es.z);
+    gle::attrib(vec(eo.x, eo.y, eo.z)); gle::attrib(vec(eo.x, eo.y, es.z));
+    gle::attrib(vec(es.x, eo.y, eo.z)); gle::attrib(vec(es.x, eo.y, es.z));
+    gle::attrib(vec(es.x, es.y, eo.z)); gle::attrib(vec(es.x, es.y, es.z));
+    gle::attrib(vec(eo.x, es.y, eo.z)); gle::attrib(vec(eo.x, es.y, es.z));
 }
 
 void renderentselection(const vec &o, const vec &ray, bool entmoving)
