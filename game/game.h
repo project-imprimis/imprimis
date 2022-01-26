@@ -773,6 +773,10 @@ extern void modifygravity(gameent *pl, bool water, int curtime);
 extern void moveplayer(gameent *pl, int moveres, bool local);
 extern bool moveplayer(gameent *pl, int moveres, bool local, int curtime);
 
+extern vec getselpos();
+extern void recomputecamera();
+extern void findplayerspawn(dynent *d, int forceent, int tag);
+
 namespace game
 {
     extern int gamemode;
