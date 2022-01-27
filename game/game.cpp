@@ -148,12 +148,12 @@ namespace game
 
     void savecurrentmap()
     {
-        save_world(game::getclientmap(), game::gameident());
+        rootworld.save_world(game::getclientmap(), game::gameident());
     }
 
     void savemap(char *mname)
     {
-        save_world(mname, game::gameident());
+        rootworld.save_world(mname, game::gameident());
     }
 
     COMMAND(savemap, "s");
@@ -1496,7 +1496,7 @@ bool bounce(physent *d, float secs, float elasticity, float waterfric, float gra
     {
         return true;
     }
-    int mat = lookupmaterial(vec(d->o.x, d->o.y, d->o.z + (d->aboveeye - d->eyeheight)/2));
+    int mat = rootworld.lookupmaterial(vec(d->o.x, d->o.y, d->o.z + (d->aboveeye - d->eyeheight)/2));
     bool water = IS_LIQUID(mat);
     if(water)
     {
@@ -1575,7 +1575,7 @@ static void handleparachute(gameent *pl)
 
 bool moveplayer(gameent *pl, int moveres, bool local, int curtime)
 {
-    int material = lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (3*pl->aboveeye - pl->eyeheight)/4));
+    int material = rootworld.lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (3*pl->aboveeye - pl->eyeheight)/4));
     bool water = IS_LIQUID(material&MatFlag_Volume);
     bool floating = pl->type==PhysEnt_Player && (pl->state==ClientState_Editing || pl->state==ClientState_Spectator);
     float secs = curtime/1000.f;
@@ -1635,7 +1635,7 @@ bool moveplayer(gameent *pl, int moveres, bool local, int curtime)
     // play sounds on water transitions
     if(pl->inwater && !water)
     {
-        material = lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (pl->aboveeye - pl->eyeheight)/2));
+        material = rootworld.lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (pl->aboveeye - pl->eyeheight)/2));
         water = IS_LIQUID(material&MatFlag_Volume);
     }
     if(!pl->inwater && water)

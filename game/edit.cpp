@@ -18,7 +18,7 @@ void mpcalclight(bool local)
     {
         game::edittrigger(sel, Edit_CalcLight);
     }
-    calclight();
+    rootworld.calclight();
 }
 
 ICOMMAND(calclight, "", (), mpcalclight(true));
@@ -30,8 +30,8 @@ void mpremip(bool local)
     {
         game::edittrigger(sel, Edit_Remip);
     }
-    remip();
-    allchanged();
+    rootworld.remip();
+    rootworld.allchanged();
 }
 
 ICOMMAND(remip, "", (), mpremip(true));
@@ -111,7 +111,7 @@ void swapundo(undolist &a, undolist &b, int op)
         pasteundo(u);
         if(!u->numents)
         {
-            changed(*u->block(), false);
+            rootworld.changed(*u->block(), false);
         }
         freeundo(u);
     }
@@ -143,7 +143,7 @@ void mpcopy(editinfo *&e, selinfo &sel, bool local)
     }
     e->copy = NULL;
     PROTECT_SEL(e->copy = blockcopy(block3(sel), sel.grid));
-    changed(sel);
+    rootworld.changed(sel);
 }
 
 void mppaste(editinfo *&e, selinfo &sel, bool local)
@@ -879,7 +879,7 @@ void getseltex()
     {
         return;
     }
-    cube &c = lookupcube(sel.o, -sel.grid);
+    cube &c = rootworld.lookupcube(sel.o, -sel.grid);
     if(c.children || c.isempty())
     {
         return;
@@ -988,10 +988,10 @@ void mpreplacetex(int oldtex, int newtex, bool insel, selinfo &sel, bool local)
     {
         for(int i = 0; i < 8; ++i)
         {
-            replacetexcube(worldroot[i], oldtex, newtex);
+            replacetexcube(rootworld.worldroot[i], oldtex, newtex);
         }
     }
-    allchanged();
+    rootworld.allchanged();
 }
 
 bool mpreplacetex(int oldtex, int newtex, bool insel, selinfo &sel, ucharbuf &buf)
@@ -1156,7 +1156,7 @@ void mpflip(selinfo &sel, bool local)
             swap(a, b);
         }
     }
-    changed(sel);
+    rootworld.changed(sel);
 }
 
 void flip()
@@ -1208,7 +1208,7 @@ void mprotate(int cw, selinfo &sel, bool local)
             }
         }
     }
-    changed(sel);
+    rootworld.changed(sel);
 }
 
 void rotate(int *cw)

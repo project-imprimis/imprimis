@@ -734,9 +734,9 @@ namespace game
             entities::resetspawns();
             return;
         }
-        if((modecheck(gamemode, Mode_Edit) && !name[0]) || !load_world(name, game::gameident(), game::getmapinfo()))
+        if((modecheck(gamemode, Mode_Edit) && !name[0]) || !rootworld.load_world(name, game::gameident(), game::getmapinfo()))
         {
-            emptymap(0, true);
+            rootworld.emptymap(0, true);
             startmap(name);
             senditemstoserver = false;
         }
@@ -810,7 +810,7 @@ namespace game
 
     void mapenlarge()
     {
-        if(enlargemap(false))
+        if(rootworld.enlargemap(false))
         {
             newmap(-1);
         }
@@ -1359,7 +1359,7 @@ namespace game
                 flags |= 1<<6;
             }
         }
-        if((lookupmaterial(d->feetpos())&MatFlag_Clip) == Mat_GameClip)
+        if((rootworld.lookupmaterial(d->feetpos())&MatFlag_Clip) == Mat_GameClip)
         {
             flags |= 1<<7;
         }
@@ -1690,6 +1690,7 @@ namespace game
                 default:
                 {
                     neterr("type");
+                    conoutf("%d", type);
                     return;
                 }
             }
@@ -2934,7 +2935,7 @@ namespace game
         }
         conoutf("sending map...");
         DEF_FORMAT_STRING(mname, "sendmap_%d", lastmillis);
-        save_world(mname, game::gameident());
+        rootworld.save_world(mname, game::gameident());
         DEF_FORMAT_STRING(fname, "media/map/%s.ogz", mname);
         stream *map = openrawfile(path(fname), "rb");
         if(map)

@@ -183,11 +183,11 @@ namespace game
             heightoffset = desktoph*mmaph/100;
         drawhud(hudplayer(), widthoffset, heightoffset, size);
     }
-    
+
     void updateminimap()
     {
         vec cameraoffset = vec(0,00,200);//.rotate_around_z(M_PI*game::player1->yaw/180);
         cameraoffset = cameraoffset.add(game::player1->o);
-        drawminimap(game::player1->yaw, -40, cameraoffset);
+        drawminimap(game::player1->yaw, -40, cameraoffset, rootworld);
     }
 }

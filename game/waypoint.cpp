@@ -11,7 +11,7 @@ namespace ai
     //bad kinds of materials for bots to path into: clipping, instadeath
     bool clipped(const vec &o)
     {
-        int material = lookupmaterial(o),
+        int material = rootworld.lookupmaterial(o),
             clipmat = material&MatFlag_Clip;
         return clipmat == Mat_Clip || material&Mat_Death;
     }
@@ -27,8 +27,8 @@ namespace ai
         {
             return -2;
         }
-        float dist = raycube(pos, vec(0, 0, -1), 0, Ray_ClipMat);
-        int posmat = lookupmaterial(pos),
+        float dist = rootworld.raycube(pos, vec(0, 0, -1), 0, Ray_ClipMat);
+        int posmat = rootworld.lookupmaterial(pos),
             weight = 1;
         if(IS_LIQUID(posmat&MatFlag_Volume))
         {
@@ -38,7 +38,7 @@ namespace ai
         {
             weight = static_cast<int>(dist/ai::jumpmin);
             pos.z -= std::clamp(dist-8.0f, 0.0f, pos.z);
-            int trgmat = lookupmaterial(pos);
+            int trgmat = rootworld.lookupmaterial(pos);
             if(trgmat&Mat_Death)
             {
                 weight *= 10;
@@ -872,7 +872,7 @@ namespace ai
             return;
         }
         bool dropping = shoulddrop(d);
-        int mat = lookupmaterial(v);
+        int mat = rootworld.lookupmaterial(v);
         if((mat&MatFlag_Clip) == Mat_Clip || mat&Mat_Death)
         {
             dropping = false;

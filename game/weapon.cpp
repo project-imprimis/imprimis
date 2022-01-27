@@ -727,7 +727,7 @@ namespace game
                 float br = max(fabs(halfdv.x), fabs(halfdv.y)) + 1 + attacks[p.atk].margin;
                 if(!attacks[p.atk].water)
                 {
-                    cube projcube = lookupcube(static_cast<ivec>(p.o)); //cube located at projectile loc
+                    cube projcube = rootworld.lookupcube(static_cast<ivec>(p.o)); //cube located at projectile loc
                     if(getmaterial(projcube) == Mat_Water &&
                        projcube.isempty() )
                     {
@@ -1029,7 +1029,7 @@ namespace game
         }
         int projdist = attacks[atk].projspeed ? attacks[atk].time*attacks[atk].projspeed : attacks[atk].time;
         float shorten = attacks[atk].time && dist > projdist ? projdist : 0,
-              barrier = raycube(d->o, dir, dist, Ray_ClipMat|Ray_AlphaPoly);
+              barrier = rootworld.raycube(d->o, dir, dist, Ray_ClipMat|Ray_AlphaPoly);
         if(barrier > 0 && barrier < dist && (!shorten || barrier < shorten))
         {
             shorten = barrier;
@@ -1054,18 +1054,18 @@ namespace game
         {
             if(attacks[atk].worldfx == 2)
             {
-                if(lookupcube(static_cast<ivec>(to)).issolid())
+                if(rootworld.lookupcube(static_cast<ivec>(to)).issolid())
                 {
                     //note: 8 and 3 are linked magic numbers (gridpower)
                     ivec offsetloc = static_cast<ivec>(to) + ivec(0,0,8);
                     placecube(offsetloc, 2, blocktex);
                 }
-                else if(checkcubefill(lookupcube(static_cast<ivec>(to))))
+                else if(checkcubefill(rootworld.lookupcube(static_cast<ivec>(to))))
                 {
                     ivec offsetloc = static_cast<ivec>(to) + ivec(0,0,8);
                     placecube(offsetloc, 2, blocktex);
                 }
-                else if (!(lookupcube(static_cast<ivec>(to)).isempty()))
+                else if (!(rootworld.lookupcube(static_cast<ivec>(to)).isempty()))
                 {
                     placecube(static_cast<ivec>(to), 3, blocktex);
                 }
