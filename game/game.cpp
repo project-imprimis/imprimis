@@ -1580,7 +1580,7 @@ static void handleparachute(gameent *pl, bool water)
     }
 }
 
-bool moveplayer(gameent *pl, int moveres, bool local, int curtime)
+bool moveplayer(gameent *pl, int moveres, bool local, int curtime) //always returns true
 {
     int material = rootworld.lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (3*pl->aboveeye - pl->eyeheight)/4));
     bool water = IS_LIQUID(material&MatFlag_Volume);
@@ -1628,12 +1628,17 @@ bool moveplayer(gameent *pl, int moveres, bool local, int curtime)
             if(!move(pl, d) && ++collisions<5)
             {
                 i--; // discrete steps collision detection & sliding
+                pl->sprinting = 1; //if collided, turn off sprint
             }
         }
         if(timeinair > inairsounddelay && !pl->timeinair && !water) // if we land after long time must have been a high jump, make thud sound
         {
             game::physicstrigger(pl, local, -1, 0);
         }
+    }
+    if(std::abs(pl->vel.x) < 1 && std::abs(pl->vel.y) < 1 && std::abs(pl->vel.z) < 1)
+    {
+        pl->sprinting = 1;
     }
     if(pl->state==ClientState_Alive)
     {
@@ -1915,8 +1920,8 @@ void updatephysstate(physent *d)
 
 DIR(backward, move,   -1, k_down,  k_up,   false);
 DIR(forward,  move,    1, k_up,    k_down, true);
-DIR(left,     strafe,  1, k_left,  k_right,false);
-DIR(right,    strafe, -1, k_right, k_left, false);
+DIR(left,     strafe,  1, k_left,  k_right,true);
+DIR(right,    strafe, -1, k_right, k_left, true);
 
 #undef DIR
 
@@ -1924,11 +1929,7 @@ DIR(right,    strafe, -1, k_right, k_left, false);
 ICOMMAND(jump,   "D", (int *down), { if(!*down || game::canjump()) player->jumping = *down!=0; });
 ICOMMAND(crouch, "D", (int *down), { if(!*down) player->crouching = abs(player->crouching); else if(game::cancrouch()) player->crouching = -1; });
 ICOMMAND(sprint, "D", (int *down), {
-    if(!*down)
-    {
-        game::player1->sprinting = abs(game::player1->sprinting);
-    }
-    else if(game::cansprint())
+    if(game::cansprint() && *down)
     {
         game::player1->sprinting = -1;
     }

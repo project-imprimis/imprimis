@@ -976,12 +976,6 @@ namespace game
 
     void shoot(gameent *d, const vec &targ)
     {
-        //disallow shooting while sprinting
-        if(d->sprinting == -1)
-        {
-            return;
-        }
-
         int prevaction = d->lastaction,
             attacktime = lastmillis-prevaction;
         if(attacktime<d->gunwait)
@@ -1079,6 +1073,10 @@ namespace game
 
         if(d==player1 || d->ai)
         {
+            if(d->sprinting == -1)
+            {
+                d->sprinting = 1;
+            }
             addmsg(NetMsg_Shoot, "rci2i6iv", d, lastmillis-maptime, atk,
                    static_cast<int>(from.x*DMF), static_cast<int>(from.y*DMF), static_cast<int>(from.z*DMF),
                    static_cast<int>(to.x*DMF),   static_cast<int>(to.y*DMF),   static_cast<int>(to.z*DMF),
