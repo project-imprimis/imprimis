@@ -1553,9 +1553,16 @@ static const int physframetimestd = 8;
 
 static const int inairsounddelay = 800; //time before midair players are allowed to land with a "thud"
 
-static void handleparachute(gameent *pl)
+static void handleparachute(gameent *pl, bool water)
 {
-    if(lastmillis - pl->parachutetime < parachutemaxtime && pl->timeinair > 0 && !modecheck(game::gamemode, Mode_Edit))
+    if(pl->spawnprotect)
+    {
+        pl->parachutetime = lastmillis;
+    }
+    if(lastmillis - pl->parachutetime < parachutemaxtime
+        && pl->timeinair > 0
+        && !modecheck(game::gamemode, Mode_Edit)
+        && !water)
     {
         pl->maxspeed = parachutespeed;
     }
@@ -1597,7 +1604,7 @@ bool moveplayer(gameent *pl, int moveres, bool local, int curtime)
     d.mul(secs);
 
     pl->blocked = false;
-    handleparachute(pl);
+    handleparachute(pl, water);
 
     if(floating)                // just apply velocity
     {
