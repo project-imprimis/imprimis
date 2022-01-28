@@ -472,7 +472,7 @@ namespace game
             flags &= ~(Model_FullBright | Model_CullVFC | Model_CullOccluded | Model_CullQuery | Model_CullDist);
         }
         float trans = d->state == ClientState_Lagged ? 0.5f : 1.0f;
-        rendermodel(mdlname, anim, o, yaw, pitch, 0, flags, d, a[0].tag ? a : NULL, basetime, 0, fade, vec4(vec::hexcolor(color), trans));
+        rendermodel(mdlname, anim, o, yaw, pitch, 0, flags, d, a[0].tag ? a : NULL, basetime, 0, fade, vec4<float>(vec::hexcolor(color), trans));
     }
 
     static inline void renderplayer(gameent *d, float fade = 1, int flags = 0)
@@ -718,7 +718,7 @@ namespace game
         modelattach a[2];
         d->muzzle = vec(-1, -1, -1);
         a[0] = modelattach("tag_muzzle", &d->muzzle);
-        rendermodel(gunname, anim, sway, d->yaw, d->pitch, 0, Model_NoBatch, NULL, a, basetime, 0, 1, vec4(vec::hexcolor(color), 1));
+        rendermodel(gunname, anim, sway, d->yaw, d->pitch, 0, Model_NoBatch, NULL, a, basetime, 0, 1, vec4<float>(vec::hexcolor(color), 1));
         if(d->muzzle.x >= 0)
         {
             d->muzzle = calcavatarpos(d->muzzle, 12);
