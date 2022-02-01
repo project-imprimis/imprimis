@@ -598,8 +598,9 @@ struct gamestate
 
 constexpr int parachutemaxtime = 10000, //time until parachute cancels after spawning
               parachutespeed = 150, //max speed in cubits/s with parachute activated
-              parachutekickfactor = 0.25, //reduction in weapon knockback with chute dactivated
               defaultspeed = 35;  //default walk speed
+
+constexpr float parachutekickfactor = 0.25; //reduction in weapon knockback with chute dactivated
 
 constexpr int clientlimit = 128;
 constexpr int maxtrans = 5000;
