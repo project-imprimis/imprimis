@@ -77,6 +77,9 @@
     <ClCompile Include="..\..\game\client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\crypto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\cserver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
