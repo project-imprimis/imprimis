@@ -9,6 +9,7 @@ CLIENT_OBJS= \
 	game/ai.o \
 	game/client.o \
 	game/cserver.o \
+	game/crypto.o \
 	game/edit.o \
 	game/entities.o \
 	game/game.o \
