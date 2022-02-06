@@ -1555,7 +1555,7 @@ static const int inairsounddelay = 800; //time before midair players are allowed
 
 static void handleparachute(gameent *pl, bool water)
 {
-    if(pl->spawnprotect)
+    if(pl->spawnprotect && game::player1 == pl)
     {
         pl->parachutetime = lastmillis;
     }
