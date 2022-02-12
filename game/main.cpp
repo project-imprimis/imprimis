@@ -232,6 +232,9 @@ int main(int argc, char **argv)
     initparticles();
     initstains();
     identflags |= Idf_Persist;
+
+    logoutf("init: ui");
+    UI::inituicmds();
     logoutf("init: mainloop");
     resetfpshistory();
     inputgrab(grabinput = true);
