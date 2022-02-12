@@ -561,7 +561,7 @@ struct gamestate
     int aitype, skill;
     int combatclass;
 
-    gamestate() : maxhealth(1), aitype(AI_None), skill(0)
+    gamestate() : maxhealth(10), aitype(AI_None), skill(0)
     {
         for(int i = 0; i < Gun_NumGuns; i++)
         {
