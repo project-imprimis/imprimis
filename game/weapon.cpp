@@ -706,6 +706,7 @@ namespace game
 
     void updateprojectiles(int time)
     {
+        float timefactor = elapsedtime/16.7f; //normalize physics to 60 fps
         if(projs.empty())
         {
             return;
@@ -716,8 +717,8 @@ namespace game
             projectile &p = projs[i];
             p.offsetmillis = max(p.offsetmillis-time, 0);
             vec dv = p.dir; //displacement vector
-            dv.mul(p.speed);
-            vec v = vec(p.o).add(dv).sub(vec(0, 0, 0.001*(lastmillis-p.spawntime)*p.gravity)); //set v as current particle location o plus dv
+            dv.mul(p.speed*timefactor);
+            vec v = vec(p.o).add(dv).sub(vec(0, 0, timefactor*0.001*(lastmillis-p.spawntime)*p.gravity)); //set v as current particle location o plus dv
             bool exploded = false;
             hits.setsize(0);
             if(p.local) //if projectile belongs to a local client
