@@ -1,3 +1,6 @@
+
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/imprimis-game)
+
 # Imprimis
 
 *the destroyable world 3D shooter*
@@ -19,7 +22,13 @@ game assets (all located in submodules).
 The Imprimis game requires a separate server in order to play locally. For the
 game server, see https://github.com/project-imprimis/imprimis-gameserver.
 
-## Linux Installation Instructions
+## Linux Install Instructions
+
+The easiest way to install Imprimis is to get it from the Snap store using
+`snap install imprimis-game`. You may need to install snap from your package manager;
+however, all modern Ubuntu installations will have `snap` already.
+
+## Linux Build Instructions
 
 Imprimis requires the `libprimis` shared library, which can be created by building
 the libprimis engine located at https://github.com/project-imprimis/libprimis.
