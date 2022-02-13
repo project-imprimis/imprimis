@@ -130,5 +130,6 @@
     <Library Include="..\..\libprimis-headers\3rdparty\bin\SDL2_mixer.lib" />
     <Library Include="..\..\libprimis-headers\3rdparty\bin\zdll.lib" />
     <Library Include="..\..\libprimis.lib" />
+    <Library Include="..\..\libprimis-headers\3rdparty\bin\glew32.lib" />
   </ItemGroup>
 </Project>
