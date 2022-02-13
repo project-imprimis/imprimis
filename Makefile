@@ -2,7 +2,7 @@ CXXFLAGS= -O3 -ffast-math -std=c++17 -march=x86-64 -Wall -fsigned-char
 
 #set appropriate library includes
 CLIENT_INCLUDES= -Igame -Ienet/include -I/usr/X11R6/include `sdl2-config --cflags`
-CLIENT_LIBS= -lprimis -Lenet -lenet -L/usr/X11R6/lib -lX11 `sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lz -lGL -lGLEW
+CLIENT_LIBS= -lprimis -Lenet -lenet -L. -L/usr/X11R6/lib -lX11 `sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lz -lGL -lGLEW
 
 #list of source code files to be compiled
 CLIENT_OBJS= \
