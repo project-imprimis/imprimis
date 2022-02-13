@@ -1,0 +1,77 @@
+name: imprimis-game
+base: core18
+architectures:
+  - build-on: amd64
+version: '14a-Northstar'
+summary: Imprims, the destroyable world FPS
+description: |
+  A multiplayer 3D first person shooter built on the Libprimis engine.
+grade: stable
+confinement: strict
+
+apps:
+  imprimis-game:
+    command: desktop-launch $SNAP/imprimis/native_client -u$SNAP/imprimis
+    plugs:
+      - network
+      - opengl
+      - audio-playback
+      - x11
+      - wayland
+      - desktop
+      - desktop-legacy
+parts:
+  imprimis-game:
+    plugin: make
+    override-pull: |
+      git clone https://github.com/project-imprimis/libprimis.git --recurse-submodules
+      git clone https://github.com/project-imprimis/imprimis.git --recurse-submodules
+    build-packages:
+      - g++
+      - make
+      - git
+      - libsdl2-dev
+      - libsdl2-image-dev
+      - libsdl2-mixer-dev
+      - libsdl2-ttf-dev
+      - libglew-dev
+      - libstdc++-8-dev
+    stage-packages:
+      - libsdl2-2.0-0
+      - libsdl2-image-2.0-0
+      - libsdl2-mixer-2.0-0
+      - libsdl2-ttf-2.0-0
+      - libglu1-mesa
+      - libgl1-mesa-dri
+      - libglew2.0
+      - pulseaudio
+      - libpulse0
+      - libselinux1
+      - libz3-4
+      - liblzma5
+      - libapparmor1
+      - libstdc++-8-dev
+    override-build: |
+      cd libprimis
+      cd src
+      make -j8
+      cd ../..
+      cd imprimis
+      cp ../libprimis/src/libprimis.so ./libprimis.so
+      make -j8
+      chmod 777 imprimis_unix
+      cd ..
+      cp imprimis -r ../install
+      cp imprimis/libprimis.so ../install/lib/x86_64-linux-gnu/libprimis.so
+      cp ../install/usr/lib/x86_64-linux-gnu/pulseaudio/*.so ../install/usr/lib/x86_64-linux-gnu/
+      chmod 777 ../install/imprimis/imprimis_unix
+    after:
+      - desktop-glib-only
+  desktop-glib-only:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: glib-only
+    plugin: make
+    build-packages:
+      - libglib2.0-dev
+    stage-packages:
+      - libglib2.0-bin
