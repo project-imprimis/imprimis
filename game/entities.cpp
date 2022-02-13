@@ -861,7 +861,7 @@ void renderentselection(const vec &o, const vec &ray, bool entmoving)
         boxs3D(eo, es, 1);
         gle::colorub(200,0,0);
         boxs(entorient, eo, es);
-        boxs(entorient, eo, es, std::clamp(0.015f*camera1->o.dist(eo)*tan(fovy*0.5f*RAD), 0.1f, 1.0f));
+        boxs(entorient, eo, es, std::clamp(static_cast<float>(0.015f*camera1->o.dist(eo)*tan(fovy*0.5f*RAD)), 0.1f, 1.0f));
     }
 
     if(showentradius)
