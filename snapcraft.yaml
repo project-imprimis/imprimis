@@ -22,7 +22,7 @@ apps:
       - desktop-legacy
 parts:
   imprimis-game:
-    plugin: make
+    plugin: nil
     override-pull: |
       git clone https://github.com/project-imprimis/libprimis.git --recurse-submodules
       git clone https://github.com/project-imprimis/imprimis.git --recurse-submodules
