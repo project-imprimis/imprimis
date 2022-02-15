@@ -2,12 +2,12 @@ name: imprimis-game
 base: core18
 architectures:
   - build-on: amd64
-version: '14a-Northstar'
 summary: Imprims, the destroyable world FPS
 description: |
   A multiplayer 3D first person shooter built on the Libprimis engine.
 grade: stable
 confinement: strict
+adopt-info: imprimis-game
 
 apps:
   imprimis-game:
@@ -26,6 +26,7 @@ parts:
     override-pull: |
       git clone https://github.com/project-imprimis/libprimis.git --recurse-submodules
       git clone https://github.com/project-imprimis/imprimis.git --recurse-submodules
+      snapcraftctl set-version $(git describe --tags --always | sed 's/[^a-zA-Z0-9\.\:\+\~\-]/_/g')
     build-packages:
       - g++
       - make
