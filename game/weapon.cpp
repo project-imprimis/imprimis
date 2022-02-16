@@ -729,8 +729,7 @@ namespace game
                 if(!attacks[p.atk].water)
                 {
                     cube projcube = rootworld.lookupcube(static_cast<ivec>(p.o)); //cube located at projectile loc
-                    if(getmaterial(projcube) == Mat_Water &&
-                       projcube.isempty() )
+                    if(getmaterial(projcube) == Mat_Water)
                     {
                         projsplash(p, v, nullptr);
                         exploded = true;
