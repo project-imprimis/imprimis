@@ -133,7 +133,7 @@ void mpcopy(editinfo *&e, selinfo &sel, bool local)
     {
         game::edittrigger(sel, Edit_Copy);
     }
-    if(e==NULL)
+    if(e==nullptr)
     {
         e = editinfos.emplace_back(new editinfo());
     }
@@ -141,14 +141,14 @@ void mpcopy(editinfo *&e, selinfo &sel, bool local)
     {
         freeblock(e->copy);
     }
-    e->copy = NULL;
+    e->copy = nullptr;
     PROTECT_SEL(e->copy = blockcopy(block3(sel), sel.grid));
     rootworld.changed(sel);
 }
 
 void mppaste(editinfo *&e, selinfo &sel, bool local)
 {
-    if(e==NULL)
+    if(e==nullptr)
     {
         return;
     }
@@ -199,7 +199,7 @@ COMMANDN(redo, editredo, "");
 
 bool unpackundo(const uchar *inbuf, int inlen, int outlen)
 {
-    uchar *outbuf = NULL;
+    uchar *outbuf = nullptr;
     if(!uncompresseditinfo(inbuf, inlen, outbuf, outlen)) return false;
     ucharbuf buf(outbuf, outlen);
     if(buf.remaining() < 2)
@@ -523,7 +523,7 @@ void mpeditvslot(int delta, VSlot &ds, int allfaces, selinfo &sel, bool local)
         repsel = sel;
     }
     bool findrep = local && !allfaces && reptex < 0;
-    VSlot *findedit = NULL;
+    VSlot *findedit = nullptr;
     LOOP_SEL_XYZ(remapvslots(c, delta != 0, ds, allfaces ? -1 : sel.orient, findrep, findedit));
     remappedvslots.clear();
     if(local && findedit)
