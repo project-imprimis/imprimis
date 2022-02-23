@@ -1483,10 +1483,11 @@ namespace ai
         {
             if(allowmove)
             {
-                if(!request(b)) istarget(b, 0, b.idle ? true : false);
+                if(!request(b))
                 {
-                    shoot(aiplayer, target);
+                    istarget(b, 0, b.idle ? true : false);
                 }
+                shoot(aiplayer, target);
             }
             if(!intermission)
             {
