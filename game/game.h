@@ -797,6 +797,7 @@ namespace entities
     extern void setspawn(int i, bool on);
 }
 extern void mpeditent(int i, const vec &o, int type, int attr1, int attr2, int attr3, int attr4, int attr5, bool local);
+extern void entdrag(const vec &ray);
 
 extern void modifygravity(gameent *pl, bool water, int curtime);
 extern void moveplayer(gameent *pl, int moveres, bool local);

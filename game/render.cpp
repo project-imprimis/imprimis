@@ -861,6 +861,10 @@ namespace game
                 sel.o[C[od]] = o[C[od]];
             }
         }
+        else if(entmoving)
+        {
+            entdrag(camdir);
+        }
         else
         {
             ivec w;
