@@ -8,7 +8,7 @@ void closelogfile()
     if(logfile)
     {
         fclose(logfile);
-        logfile = NULL;
+        logfile = nullptr;
     }
 }
 
@@ -26,7 +26,7 @@ void setlogfile(const char *fname)
     FILE *f = getlogfile();
     if(f)
     {
-        setvbuf(f, NULL, _IOLBF, BUFSIZ);
+        setvbuf(f, nullptr, _IOLBF, BUFSIZ);
     }
 }
 
@@ -48,12 +48,12 @@ ENetPacket *sendfile(int cn, int chan, stream *file, const char *format, ...)
     }
     else if(!clients.inrange(cn))
     {
-        return NULL;
+        return nullptr;
     }
     int len = static_cast<int>(min(file->size(), stream::offset(INT_MAX)));
     if(len <= 0 || len > 16<<20)
     {
-        return NULL;
+        return nullptr;
     }
     packetbuf p(maxtrans+len, ENET_PACKET_FLAG_RELIABLE);
     va_list args;
@@ -96,7 +96,7 @@ ENetPacket *sendfile(int cn, int chan, stream *file, const char *format, ...)
     {
         sendclientpacket(packet, chan);
     }
-    return packet->referenceCount > 0 ? packet : NULL;
+    return packet->referenceCount > 0 ? packet : nullptr;
 }
 
 //takes an int representing a value from the Discon enum and returns a drop message
@@ -146,7 +146,7 @@ const char *disconnectreason(int reason)
         }
         default:
         {
-            return NULL;
+            return nullptr;
         }
     }
 }
