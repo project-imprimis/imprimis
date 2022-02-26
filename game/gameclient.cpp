@@ -986,7 +986,9 @@ namespace game
             {
                 uchar *outbuf = nullptr;
                 int inlen = 0, outlen = 0;
-                if(packundo(op, inlen, outbuf, outlen))
+                bool isundo = op == Edit_Undo ? true : false;
+
+                if(packundo(isundo, inlen, outbuf, outlen))
                 {
                     if(addmsg(NetMsg_EditFace + op, "ri2", inlen, outlen))
                     {

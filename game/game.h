@@ -796,6 +796,26 @@ namespace entities
     extern void putitems(packetbuf &p);
     extern void setspawn(int i, bool on);
 }
+
+enum
+{
+    Edit_Face = 0,
+    Edit_Tex,
+    Edit_Mat,
+    Edit_Flip,
+    Edit_Copy,
+    Edit_Paste,
+    Edit_Rotate,
+    Edit_Replace,
+    Edit_DelCube,
+    Edit_AddCube,
+    Edit_CalcLight,
+    Edit_Remip,
+    Edit_VSlot,
+    Edit_Undo,
+    Edit_Redo
+};
+
 extern void mpeditent(int i, const vec &o, int type, int attr1, int attr2, int attr3, int attr4, int attr5, bool local);
 extern void entdrag(const vec &ray);
 
