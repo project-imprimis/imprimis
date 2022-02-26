@@ -872,13 +872,13 @@ namespace game
                         }
                         break;
                 }
-                addmsg(NetMsg_EditFace + op, "ri9i5",
+                addmsg(NetMsg_EditFace + op, "ri9i4",
                    sel.o.x, sel.o.y, sel.o.z, //1-3
                    sel.s.x, sel.s.y, sel.s.z, //4-6
                    sel.grid, sel.orient,      //7,8
                    sel.cx, sel.cxs,           //9,10
                    sel.cy, sel.cys,           //11,12
-                   sel.corner, arg1);         //13,14
+                   sel.corner);               //13
                 break;
             }
             case Edit_Rotate:
