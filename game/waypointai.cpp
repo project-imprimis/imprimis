@@ -284,7 +284,8 @@ namespace ai
     {
         if(aiplayer->ai)
         {
-            DELETEP(aiplayer->ai);
+            delete aiplayer->ai;
+            aiplayer->ai = nullptr;
         }
     }
 

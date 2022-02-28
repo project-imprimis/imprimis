@@ -707,7 +707,8 @@ namespace game
             removetrackeddynlights(d);
             removegroupedplayer(d);
             players.removeobj(d);
-            DELETEP(clients[cn]);
+            delete clients[cn];
+            clients[cn] = nullptr;
             cleardynentcache();
         }
         if(following == cn)
