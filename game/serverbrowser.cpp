@@ -349,7 +349,7 @@ struct serverinfo : servinfo, pingattempts
 
     ~serverinfo()
     {
-        DELETEA(password);
+        delete[] password;
     }
 
     void clearpings()
@@ -533,7 +533,7 @@ void addserver(const char *name, int port, const char *password, bool keep)
         }
         if(password && (!s->password || strcmp(s->password, password)))
         {
-            DELETEA(s->password);
+            delete[] s->password;
             s->password = newstring(password);
         }
         if(keep && !s->keep)

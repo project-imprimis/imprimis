@@ -185,9 +185,9 @@ namespace game
 
         ~authkey()
         {
-            DELETEA(name);
-            DELETEA(key);
-            DELETEA(desc);
+            delete[] name;
+            delete[] key;
+            delete[] desc;
         }
     };
     vector<authkey *> authkeys;
