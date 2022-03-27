@@ -826,6 +826,8 @@ extern bool moveplayer(gameent *pl, int moveres, bool local, int curtime);
 extern vec getselpos();
 extern void recomputecamera();
 extern void findplayerspawn(dynent *d, int forceent, int tag);
+extern void crouchplayer(physent *pl, int moveres, bool local);
+extern bool bounce(physent *d, float secs, float elasticity, float waterfric, float grav);
 
 namespace game
 {
