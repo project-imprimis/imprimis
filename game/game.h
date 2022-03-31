@@ -980,6 +980,7 @@ namespace game
     extern void renderavatar();
     extern void rendereditcursor();
     extern void renderhud();
+    extern void renderclient(dynent *d, const char *mdlname, modelattach *attachments, int hold, int attack, int attackdelay, int lastaction, int lastpain, float scale = 1, bool ragdoll = false, float trans = 1);
 
     // additional fxns needed by server/main code
 
