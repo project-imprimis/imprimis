@@ -70,7 +70,7 @@ void toggleedit(bool force = true)
     }
     execident("resethud");
 }
-ICOMMAND(edittoggle, "", (), toggleedit(false));
+bool _icmd_edittoggle = addcommand("edittoggle", reinterpret_cast<identfun>(+[] () { toggleedit(false); }), "", Id_Command);
 
 namespace game
 {
@@ -110,22 +110,8 @@ namespace game
     {
         conoutf("your name is: %s", colorname(player1));
     }
-    ICOMMAND(name, "sN", (char *s, int *numargs),
-    {
-        if(*numargs > 0)
-        {
-            switchname(s);
-        }
-        else if(!*numargs)
-        {
-            printname();
-        }
-        else
-        {
-            result(colorname(player1));
-        }
-    });
-    ICOMMAND(getname, "", (), result(player1->name));
+    bool _icmd_name = addcommand("name", reinterpret_cast<identfun>(+[] (char *s, int *numargs) { { if(*numargs > 0) { switchname(s); } else if(!*numargs) { printname(); } else { result(colorname(player1)); } }; }), "sN", Id_Command);
+    bool _icmd_getname = addcommand("getname", reinterpret_cast<identfun>(+[] () { result(player1->name); }), "", Id_Command);
 
     void switchteam(const char *team)
     {
@@ -154,23 +140,9 @@ namespace game
             conoutf("your team is: \fs%s%s\fr", teamtextcode[player1->team], teamnames[player1->team]);
         }
     }
-    ICOMMAND(team, "sN", (char *s, int *numargs),
-    {
-        if(*numargs > 0)
-        {
-            switchteam(s);
-        }
-        else if(!*numargs)
-        {
-            printteam();
-        }
-        else if((player1->clientnum < 0 || modecheck(gamemode, Mode_Team)) && validteam(player1->team))
-        {
-            result(tempformatstring("\fs%s%s\fr", teamtextcode[player1->team], teamnames[player1->team]));
-        }
-    });
-    ICOMMAND(getteam, "", (), intret((player1->clientnum < 0 || modecheck(gamemode, Mode_Team)) && validteam(player1->team) ? player1->team : 0));
-    ICOMMAND(getteamname, "i", (int *num), result(teamname(*num)));
+    bool _icmd_team = addcommand("team", reinterpret_cast<identfun>(+[] (char *s, int *numargs) { { if(*numargs > 0) { switchteam(s); } else if(!*numargs) { printteam(); } else if((player1->clientnum < 0 || modecheck(gamemode, Mode_Team)) && validteam(player1->team)) { result(tempformatstring("\fs%s%s\fr", teamtextcode[player1->team], teamnames[player1->team])); } }; }), "sN", Id_Command);
+    bool _icmd_getteam = addcommand("getteam", reinterpret_cast<identfun>(+[] () { intret((player1->clientnum < 0 || modecheck(gamemode, Mode_Team)) && validteam(player1->team) ? player1->team : 0); }), "", Id_Command);
+    bool _icmd_getteamname = addcommand("getteamname", reinterpret_cast<identfun>(+[] (int *num) { result(teamname(*num)); }), "i", Id_Command);
 
     struct authkey
     {
@@ -227,7 +199,7 @@ namespace game
             authkeys.add(new authkey(name, key, desc));
         }
     }
-    ICOMMAND(authkey, "sss", (char *name, char *key, char *desc), addauthkey(name, key, desc));
+    bool _icmd_authkey = addcommand("authkey", reinterpret_cast<identfun>(+[] (char *name, char *key, char *desc) { addauthkey(name, key, desc); }), "sss", Id_Command);
 
     bool hasauthkey(const char *name, const char *desc)
     {
@@ -245,7 +217,7 @@ namespace game
         return false;
     }
 
-    ICOMMAND(hasauthkey, "ss", (char *name, char *desc), intret(hasauthkey(name, desc) ? 1 : 0));
+    bool _icmd_hasauthkey = addcommand("hasauthkey", reinterpret_cast<identfun>(+[] (char *name, char *desc) { intret(hasauthkey(name, desc) ? 1 : 0); }), "ss", Id_Command);
 
     void genauthkey(const char *secret)
     {
@@ -260,7 +232,7 @@ namespace game
         conoutf("public key: %s", pubkey.getbuf());
         result(privkey.getbuf());
     }
-    COMMAND(genauthkey, "s");
+    static bool dummy_genauthkey = addcommand("genauthkey", (identfun)genauthkey, "s", Id_Command);
 
     void getpubkey(const char *desc)
     {
@@ -285,7 +257,7 @@ namespace game
         }
         result(pubkey.getbuf());
     }
-    COMMAND(getpubkey, "s");
+    static bool dummy_getpubkey = addcommand("getpubkey", (identfun)getpubkey, "s", Id_Command);
 
     void saveauthkeys()
     {
@@ -304,7 +276,7 @@ namespace game
         conoutf("saved authkeys to %s", fname);
         delete f;
     }
-    COMMAND(saveauthkeys, "");
+    static bool dummy_saveauthkeys = addcommand("saveauthkeys", (identfun)saveauthkeys, "", Id_Command);
 
     void sendmapinfo()
     {
@@ -340,7 +312,7 @@ namespace game
         gameent *d = getclient(cn);
         return d ? d->name : "";
     }
-    ICOMMAND(getclientname, "i", (int *cn), result(getclientname(*cn)));
+    bool _icmd_getclientname = addcommand("getclientname", reinterpret_cast<identfun>(+[] (int *cn) { result(getclientname(*cn)); }), "i", Id_Command);
 
     void getclientcolorname(int *cn)
     {
@@ -350,21 +322,21 @@ namespace game
             result(colorname(d));
         }
     }
-    COMMAND(getclientcolorname, "i");
+    static bool dummy_getclientcolorname = addcommand("getclientcolorname", (identfun)getclientcolorname, "i", Id_Command);
 
     int getclientteam(int cn)
     {
         gameent *d = getclient(cn);
         return modecheck(gamemode, Mode_Team) && d && validteam(d->team) ? d->team : 0;
     }
-    ICOMMAND(getclientteam, "i", (int *cn), intret(getclientteam(*cn)));
+    bool _icmd_getclientteam = addcommand("getclientteam", reinterpret_cast<identfun>(+[] (int *cn) { intret(getclientteam(*cn)); }), "i", Id_Command);
 
     int getclientmodel(int cn)
     {
         gameent *d = getclient(cn);
         return d ? d->playermodel : -1;
     }
-    ICOMMAND(getclientmodel, "i", (int *cn), intret(getclientmodel(*cn)));
+    bool _icmd_getclientmodel = addcommand("getclientmodel", reinterpret_cast<identfun>(+[] (int *cn) { intret(getclientmodel(*cn)); }), "i", Id_Command);
 
     const char *getclienticon(int cn)
     {
@@ -376,108 +348,108 @@ namespace game
         const playermodelinfo &mdl = getplayermodelinfo(d);
         return modecheck(gamemode, Mode_Team) && validteam(d->team) ? mdl.icon[d->team] : mdl.icon[0];
     }
-    ICOMMAND(getclienticon, "i", (int *cn), result(getclienticon(*cn)));
+    bool _icmd_getclienticon = addcommand("getclienticon", reinterpret_cast<identfun>(+[] (int *cn) { result(getclienticon(*cn)); }), "i", Id_Command);
 
     int getclientcolor(int cn)
     {
         gameent *d = getclient(cn);
         return d && d->state!=ClientState_Spectator ? getplayercolor(d, modecheck(gamemode, Mode_Team) && validteam(d->team) ? d->team : 0) : 0xFFFFFF;
     }
-    ICOMMAND(getclientcolor, "i", (int *cn), intret(getclientcolor(*cn)));
+    bool _icmd_getclientcolor = addcommand("getclientcolor", reinterpret_cast<identfun>(+[] (int *cn) { intret(getclientcolor(*cn)); }), "i", Id_Command);
 
-    ICOMMAND(getclientfrags, "i", (int *cn),
-    {
-        gameent *d = getclient(*cn);
-        if(d)
-        {
-            intret(d->frags);
-        }
-    });
+    bool _icmd_getclientfrags = addcommand("getclientfrags", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->frags); } }; }), "i", Id_Command);
 
-    ICOMMAND(getclientscore, "i", (int *cn),
-    {
-        gameent *d = getclient(*cn);
-        if(d)
-        {
-            intret(d->score);
-        }
-    });
 
-    ICOMMAND(getclientdeaths, "i", (int *cn),
-    {
-        gameent *d = getclient(*cn);
-        if(d)
-        {
-            intret(d->deaths);
-        }
-    });
 
-    ICOMMAND(getclienthealth, "i", (int *cn),
-    {
-        gameent *d = getclient(*cn);
-        if(d)
-        {
-            intret(d->health);
-        }
-    });
 
-    ICOMMAND(getclientcombatclass, "i", (int *cn),
-    {
-        gameent *d = getclient(*cn);
-        if(d)
-        {
-            intret(d->combatclass);
-        }
-    });
+
+
+      ;
+
+    bool _icmd_getclientscore = addcommand("getclientscore", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->score); } }; }), "i", Id_Command);
+
+
+
+
+
+
+      ;
+
+    bool _icmd_getclientdeaths = addcommand("getclientdeaths", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->deaths); } }; }), "i", Id_Command);
+
+
+
+
+
+
+      ;
+
+    bool _icmd_getclienthealth = addcommand("getclienthealth", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->health); } }; }), "i", Id_Command);
+
+
+
+
+
+
+      ;
+
+    bool _icmd_getclientcombatclass = addcommand("getclientcombatclass", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->combatclass); } }; }), "i", Id_Command);
+
+
+
+
+
+
+      ;
 
     bool ismaster(int cn)
     {
         gameent *d = getclient(cn);
         return d && d->privilege >= Priv_Master;
     }
-    ICOMMAND(ismaster, "i", (int *cn), intret(ismaster(*cn) ? 1 : 0));
+    bool _icmd_ismaster = addcommand("ismaster", reinterpret_cast<identfun>(+[] (int *cn) { intret(ismaster(*cn) ? 1 : 0); }), "i", Id_Command);
 
     bool isauth(int cn)
     {
         gameent *d = getclient(cn);
         return d && d->privilege >= Priv_Auth;
     }
-    ICOMMAND(isauth, "i", (int *cn), intret(isauth(*cn) ? 1 : 0));
+    bool _icmd_isauth = addcommand("isauth", reinterpret_cast<identfun>(+[] (int *cn) { intret(isauth(*cn) ? 1 : 0); }), "i", Id_Command);
 
     bool isadmin(int cn)
     {
         gameent *d = getclient(cn);
         return d && d->privilege >= Priv_Admin;
     }
-    ICOMMAND(isadmin, "i", (int *cn), intret(isadmin(*cn) ? 1 : 0));
+    bool _icmd_isadmin = addcommand("isadmin", reinterpret_cast<identfun>(+[] (int *cn) { intret(isadmin(*cn) ? 1 : 0); }), "i", Id_Command);
 
-    ICOMMAND(getmastermode, "", (), intret(mastermode));
-    ICOMMAND(getmastermodename, "i", (int *mm), result(server::mastermodename(*mm, "")));
+    bool _icmd_getmastermode = addcommand("getmastermode", reinterpret_cast<identfun>(+[] () { intret(mastermode); }), "", Id_Command);
+    bool _icmd_getmastermodename = addcommand("getmastermodename", reinterpret_cast<identfun>(+[] (int *mm) { result(server::mastermodename(*mm, "")); }), "i", Id_Command);
 
     bool isspectator(int cn)
     {
         gameent *d = getclient(cn);
         return d && d->state==ClientState_Spectator;
     }
-    ICOMMAND(isspectator, "i", (int *cn), intret(isspectator(*cn) ? 1 : 0));
+    bool _icmd_isspectator = addcommand("isspectator", reinterpret_cast<identfun>(+[] (int *cn) { intret(isspectator(*cn) ? 1 : 0); }), "i", Id_Command);
 
-    ICOMMAND(islagged, "i", (int *cn),
-    {
-        gameent *d = getclient(*cn);
-        if(d)
-        {
-            intret(d->state==ClientState_Lagged ? 1 : 0);
-        }
-    });
+    bool _icmd_islagged = addcommand("islagged", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->state==ClientState_Lagged ? 1 : 0); } }; }), "i", Id_Command);
 
-    ICOMMAND(isdead, "i", (int *cn),
-    {
-        gameent *d = getclient(*cn);
-        if(d)
-        {
-            intret(d->state==ClientState_Dead ? 1 : 0);
-        }
-    });
+
+
+
+
+
+      ;
+
+    bool _icmd_isdead = addcommand("isdead", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->state==ClientState_Dead ? 1 : 0); } }; }), "i", Id_Command);
+
+
+
+
+
+
+      ;
 
     bool isai(int cn, int type)
     {
@@ -485,7 +457,7 @@ namespace game
         int aitype = type > 0 && type < AI_Max ? type : AI_Bot;
         return d && d->aitype==aitype;
     }
-    ICOMMAND(isai, "ii", (int *cn, int *type), intret(isai(*cn, *type) ? 1 : 0));
+    bool _icmd_isai = addcommand("isai", reinterpret_cast<identfun>(+[] (int *cn, int *type) { intret(isai(*cn, *type) ? 1 : 0); }), "ii", Id_Command);
 
     int parseplayer(const char *arg)
     {
@@ -519,7 +491,7 @@ namespace game
         }
         return -1;
     }
-    ICOMMAND(getclientnum, "s", (char *name), intret(name[0] ? parseplayer(name) : player1->clientnum));
+    bool _icmd_getclientnum = addcommand("getclientnum", reinterpret_cast<identfun>(+[] (char *name) { intret(name[0] ? parseplayer(name) : player1->clientnum); }), "s", Id_Command);
 
     void listclients(bool local, bool bots)
     {
@@ -547,13 +519,13 @@ namespace game
         buf.add('\0');
         result(buf.getbuf());
     }
-    ICOMMAND(listclients, "bb", (int *local, int *bots), listclients(*local>0, *bots!=0));
+    bool _icmd_listclients = addcommand("listclients", reinterpret_cast<identfun>(+[] (int *local, int *bots) { listclients(*local>0, *bots!=0); }), "bb", Id_Command);
 
     void clearbans()
     {
         addmsg(NetMsg_ClearBans, "r");
     }
-    COMMAND(clearbans, "");
+    static bool dummy_clearbans = addcommand("clearbans", (identfun)clearbans, "", Id_Command);
 
     void kick(const char *victim, const char *reason)
     {
@@ -563,7 +535,7 @@ namespace game
             addmsg(NetMsg_Kick, "ris", vn, reason);
         }
     }
-    COMMAND(kick, "ss");
+    static bool dummy_kick = addcommand("kick", (identfun)kick, "ss", Id_Command);
 
     void authkick(const char *desc, const char *victim, const char *reason)
     {
@@ -575,9 +547,9 @@ namespace game
             addmsg(NetMsg_AuthKick, "rssis", a->desc, a->name, vn, reason);
         }
     }
-    ICOMMAND(authkick, "ss", (const char *victim, const char *reason), authkick("", victim, reason));
-    ICOMMAND(sauthkick, "ss", (const char *victim, const char *reason), if(servauth[0]) authkick(servauth, victim, reason));
-    ICOMMAND(dauthkick, "sss", (const char *desc, const char *victim, const char *reason), if(desc[0]) authkick(desc, victim, reason));
+    bool _icmd_authkick = addcommand("authkick", reinterpret_cast<identfun>(+[] (const char *victim, const char *reason) { authkick("", victim, reason); }), "ss", Id_Command);
+    bool _icmd_sauthkick = addcommand("sauthkick", reinterpret_cast<identfun>(+[] (const char *victim, const char *reason) { if(servauth[0]) authkick(servauth, victim, reason); }), "ss", Id_Command);
+    bool _icmd_dauthkick = addcommand("dauthkick", reinterpret_cast<identfun>(+[] (const char *desc, const char *victim, const char *reason) { if(desc[0]) authkick(desc, victim, reason); }), "sss", Id_Command);
 
     vector<int> ignores;
 
@@ -611,9 +583,9 @@ namespace game
 
     bool isignored(int cn) { return ignores.find(cn) >= 0; }
 
-    ICOMMAND(ignore, "s", (char *arg), ignore(parseplayer(arg)));
-    ICOMMAND(unignore, "s", (char *arg), unignore(parseplayer(arg)));
-    ICOMMAND(isignored, "s", (char *arg), intret(isignored(parseplayer(arg)) ? 1 : 0));
+    bool _icmd_ignore = addcommand("ignore", reinterpret_cast<identfun>(+[] (char *arg) { ignore(parseplayer(arg)); }), "s", Id_Command);
+    bool _icmd_unignore = addcommand("unignore", reinterpret_cast<identfun>(+[] (char *arg) { unignore(parseplayer(arg)); }), "s", Id_Command);
+    bool _icmd_isignored = addcommand("isignored", reinterpret_cast<identfun>(+[] (char *arg) { intret(isignored(parseplayer(arg)) ? 1 : 0); }), "s", Id_Command);
 
     void setteam(const char *who, const char *team)
     {
@@ -629,7 +601,7 @@ namespace game
         }
         addmsg(NetMsg_SetTeam, "rii", i, num);
     }
-    COMMAND(setteam, "ss");
+    static bool dummy_setteam = addcommand("setteam", (identfun)setteam, "ss", Id_Command);
 
     void hashpwd(const char *pwd)
     {
@@ -641,7 +613,7 @@ namespace game
         server::hashpassword(player1->clientnum, sessionid, pwd, hash);
         result(hash);
     }
-    COMMAND(hashpwd, "s");
+    static bool dummy_hashpwd = addcommand("hashpwd", (identfun)hashpwd, "s", Id_Command);
 
     void setmaster(const char *arg, const char *who)
     {
@@ -674,8 +646,8 @@ namespace game
         }
         addmsg(NetMsg_SetMaster, "riis", cn, val, hash);
     }
-    COMMAND(setmaster, "ss");
-    ICOMMAND(mastermode, "i", (int *val), addmsg(NetMsg_MasterMode, "ri", *val));
+    static bool dummy_setmaster = addcommand("setmaster", (identfun)setmaster, "ss", Id_Command);
+    bool _icmd_mastermode = addcommand("mastermode", reinterpret_cast<identfun>(+[] (int *val) { addmsg(NetMsg_MasterMode, "ri", *val); }), "i", Id_Command);
 
     bool tryauth(const char *desc)
     {
@@ -688,11 +660,11 @@ namespace game
         addmsg(NetMsg_AuthTry, "rss", a->desc, a->name);
         return true;
     }
-    ICOMMAND(auth, "s", (char *desc), tryauth(desc));
-    ICOMMAND(sauth, "", (), if(servauth[0]) tryauth(servauth));
-    ICOMMAND(dauth, "s", (char *desc), if(desc[0]) tryauth(desc));
+    bool _icmd_auth = addcommand("auth", reinterpret_cast<identfun>(+[] (char *desc) { tryauth(desc); }), "s", Id_Command);
+    bool _icmd_sauth = addcommand("sauth", reinterpret_cast<identfun>(+[] () { if(servauth[0]) tryauth(servauth); }), "", Id_Command);
+    bool _icmd_dauth = addcommand("dauth", reinterpret_cast<identfun>(+[] (char *desc) { if(desc[0]) tryauth(desc); }), "s", Id_Command);
 
-    ICOMMAND(getservauth, "", (), result(servauth));
+    bool _icmd_getservauth = addcommand("getservauth", reinterpret_cast<identfun>(+[] () { result(servauth); }), "", Id_Command);
 
     void togglespectator(int val, const char *who)
     {
@@ -702,9 +674,9 @@ namespace game
             addmsg(NetMsg_Spectator, "rii", i, val);
         }
     }
-    ICOMMAND(spectator, "is", (int *val, char *who), togglespectator(*val, who));
+    bool _icmd_spectator = addcommand("spectator", reinterpret_cast<identfun>(+[] (int *val, char *who) { togglespectator(*val, who); }), "is", Id_Command);
 
-    ICOMMAND(checkmaps, "", (), addmsg(NetMsg_CheckMaps, "r"));
+    bool _icmd_checkmaps = addcommand("checkmaps", reinterpret_cast<identfun>(+[] () { addmsg(NetMsg_CheckMaps, "r"); }), "", Id_Command);
 
     int gamemode = INT_MAX, nextmode = INT_MAX;
 
@@ -752,41 +724,30 @@ namespace game
     {
         if(multiplayer && modecheck(mode, Mode_LocalOnly))
         {
-            conoutf(Console_Error, "mode %s (%d) not supported in multiplayer",  server::modeprettyname(mode), mode);
+            conoutf(Console_Error, "mode %s (%d) not supported in multiplayer", server::modeprettyname(mode), mode);
             intret(0);
             return;
         }
         nextmode = mode;
         intret(1);
     }
-    ICOMMAND(mode, "i", (int *val), setmode(*val));
-    ICOMMAND(getmode, "", (), intret(gamemode));
-    ICOMMAND(getnextmode, "", (), intret(validmode(nextmode) ? nextmode : (remote ? 1 : 0)));
-    ICOMMAND(getmodename, "i", (int *mode), result(server::modename(*mode, "")));
-    ICOMMAND(getmodeprettyname, "i", (int *mode), result(server::modeprettyname(*mode, "")));
-    ICOMMAND(timeremaining, "i", (int *formatted),
-    {
-        int val = max(maplimit - lastmillis, 0)/1000;
-        if(*formatted)
-        {
-            result(tempformatstring("%d:%02d", val/60, val%60));
-        }
-        else
-        {
-            intret(val);
-        }
-    });
-    ICOMMAND(intermission, "", (), intret(intermission ? 1 : 0));
+    bool _icmd_mode = addcommand("mode", reinterpret_cast<identfun>(+[] (int *val) { setmode(*val); }), "i", Id_Command);
+    bool _icmd_getmode = addcommand("getmode", reinterpret_cast<identfun>(+[] () { intret(gamemode); }), "", Id_Command);
+    bool _icmd_getnextmode = addcommand("getnextmode", reinterpret_cast<identfun>(+[] () { intret(validmode(nextmode) ? nextmode : (remote ? 1 : 0)); }), "", Id_Command);
+    bool _icmd_getmodename = addcommand("getmodename", reinterpret_cast<identfun>(+[] (int *mode) { result(server::modename(*mode, "")); }), "i", Id_Command);
+    bool _icmd_getmodeprettyname = addcommand("getmodeprettyname", reinterpret_cast<identfun>(+[] (int *mode) { result(server::modeprettyname(*mode, "")); }), "i", Id_Command);
+    bool _icmd_timeremaining = addcommand("timeremaining", reinterpret_cast<identfun>(+[] (int *formatted) { { int val = max(maplimit - lastmillis, 0)/1000; if(*formatted) { result(tempformatstring("%d:%02d", val/60, val%60)); } else { intret(val); } }; }), "i", Id_Command);
+    bool _icmd_intermission = addcommand("intermission", reinterpret_cast<identfun>(+[] () { intret(intermission ? 1 : 0); }), "", Id_Command);
 
-    ICOMMAND(MODE_TEAMMODE, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Team)); });
-    ICOMMAND(MODE_RAIL, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Rail)); });
-    ICOMMAND(MODE_PULSE, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Pulse)); });
-    ICOMMAND(MODE_DEMO, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Demo)); });
-    ICOMMAND(MODE_EDIT, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Edit)); });
-    ICOMMAND(MODE_LOBBY, "i", (int *mode), { int gamemode = *mode; intret(modecheck(gamemode, Mode_Lobby)); });
-    ICOMMAND(MODE_TIMED, "i", (int *mode), { int gamemode = *mode; intret(!modecheck(gamemode, Mode_Edit)); });
+    bool _icmd_MODE_TEAMMODE = addcommand("MODE_TEAMMODE", reinterpret_cast<identfun>(+[] (int *mode) { { int gamemode = *mode; intret(modecheck(gamemode, Mode_Team)); }; }), "i", Id_Command);
+    bool _icmd_MODE_RAIL = addcommand("MODE_RAIL", reinterpret_cast<identfun>(+[] (int *mode) { { int gamemode = *mode; intret(modecheck(gamemode, Mode_Rail)); }; }), "i", Id_Command);
+    bool _icmd_MODE_PULSE = addcommand("MODE_PULSE", reinterpret_cast<identfun>(+[] (int *mode) { { int gamemode = *mode; intret(modecheck(gamemode, Mode_Pulse)); }; }), "i", Id_Command);
+    bool _icmd_MODE_DEMO = addcommand("MODE_DEMO", reinterpret_cast<identfun>(+[] (int *mode) { { int gamemode = *mode; intret(modecheck(gamemode, Mode_Demo)); }; }), "i", Id_Command);
+    bool _icmd_MODE_EDIT = addcommand("MODE_EDIT", reinterpret_cast<identfun>(+[] (int *mode) { { int gamemode = *mode; intret(modecheck(gamemode, Mode_Edit)); }; }), "i", Id_Command);
+    bool _icmd_MODE_LOBBY = addcommand("MODE_LOBBY", reinterpret_cast<identfun>(+[] (int *mode) { { int gamemode = *mode; intret(modecheck(gamemode, Mode_Lobby)); }; }), "i", Id_Command);
+    bool _icmd_MODE_TIMED = addcommand("MODE_TIMED", reinterpret_cast<identfun>(+[] (int *mode) { { int gamemode = *mode; intret(!modecheck(gamemode, Mode_Edit)); }; }), "i", Id_Command);
 
-    void changemap(const char *name, int mode) // request map change, server may ignore
+    void changemap(const char *name, int mode)
     {
         if(player1->state!=ClientState_Spectator || player1->privilege)
         {
@@ -801,7 +762,7 @@ namespace game
         }
         changemap(name, validmode(nextmode) ? nextmode : (remote ? 1 : 0));
     }
-    ICOMMAND(map, "s", (char *name), changemap(name));
+    bool _icmd_map = addcommand("map", reinterpret_cast<identfun>(+[] (char *name) { changemap(name); }), "s", Id_Command);
 
     void newmap(int size)
     {
@@ -816,8 +777,8 @@ namespace game
         }
     }
 
-    COMMAND(newmap, "i");
-    COMMAND(mapenlarge, "");
+    static bool dummy_newmap = addcommand("newmap", (identfun)newmap, "i", Id_Command);
+    static bool dummy_mapenlarge = addcommand("mapenlarge", (identfun)mapenlarge, "", Id_Command);
 
     int needclipboard = -1;
 
@@ -1098,22 +1059,8 @@ namespace game
             addmsg(NetMsg_PauseGame, "ri", val ? 1 : 0);
         }
     }
-    ICOMMAND(pausegame, "i", (int *val), pausegame(*val > 0));
-    ICOMMAND(paused, "iN$", (int *val, int *numargs, ident *id),
-    {
-        if(*numargs > 0)
-        {
-            pausegame(clampvar(id, *val, 0, 1) > 0);
-        }
-        else if(*numargs < 0)
-        {
-            intret(gamepaused ? 1 : 0);
-        }
-        else
-        {
-            printvar(id, gamepaused ? 1 : 0);
-        }
-    });
+    bool _icmd_pausegame = addcommand("pausegame", reinterpret_cast<identfun>(+[] (int *val) { pausegame(*val > 0); }), "i", Id_Command);
+    bool _icmd_paused = addcommand("paused", reinterpret_cast<identfun>(+[] (int *val, int *numargs, ident *id) { { if(*numargs > 0) { pausegame(clampvar(id, *val, 0, 1) > 0); } else if(*numargs < 0) { intret(gamepaused ? 1 : 0); } else { printvar(id, gamepaused ? 1 : 0); } }; }), "iN$", Id_Command);
 
     bool ispaused() { return gamepaused; }
 
@@ -1306,7 +1253,7 @@ namespace game
         conoutf(ConsoleMsg_Chat, "%s:%s %s", chatcolorname(player1), teamtextcode[0], text);
         addmsg(NetMsg_Text, "rcs", player1, text);
     }
-    COMMANDN(say, toserver, "C");
+    static bool dummy_toserver = addcommand("say", (identfun)toserver, "C", Id_Command);
 
     void sayteam(char *text)
     {
@@ -2872,7 +2819,7 @@ namespace game
         conoutf("getting map...");
         addmsg(NetMsg_GetMap, "r");
     }
-    COMMAND(getmap, "");
+    static bool dummy_getmap = addcommand("getmap", (identfun)getmap, "", Id_Command);
 
     void stopdemo()
     {
@@ -2885,7 +2832,7 @@ namespace game
             addmsg(NetMsg_StopDemo, "r");
         }
     }
-    COMMAND(stopdemo, "");
+    static bool dummy_stopdemo = addcommand("stopdemo", (identfun)stopdemo, "", Id_Command);
 
     void recorddemo(int val)
     {
@@ -2895,7 +2842,7 @@ namespace game
         }
         addmsg(NetMsg_RecordDemo, "ri", val);
     }
-    ICOMMAND(recorddemo, "i", (int *val), recorddemo(*val));
+    bool _icmd_recorddemo = addcommand("recorddemo", reinterpret_cast<identfun>(+[] (int *val) { recorddemo(*val); }), "i", Id_Command);
 
     void cleardemos(int val)
     {
@@ -2905,7 +2852,7 @@ namespace game
         }
         addmsg(NetMsg_ClearDemos, "ri", val);
     }
-    ICOMMAND(cleardemos, "i", (int *val), cleardemos(*val));
+    bool _icmd_cleardemos = addcommand("cleardemos", reinterpret_cast<identfun>(+[] (int *val) { cleardemos(*val); }), "i", Id_Command);
 
     void getdemo(int i)
     {
@@ -2919,14 +2866,14 @@ namespace game
         }
         addmsg(NetMsg_GetDemo, "ri", i);
     }
-    ICOMMAND(getdemo, "i", (int *val), getdemo(*val));
+    bool _icmd_getdemo = addcommand("getdemo", reinterpret_cast<identfun>(+[] (int *val) { getdemo(*val); }), "i", Id_Command);
 
     void listdemos()
     {
         conoutf("listing demos...");
         addmsg(NetMsg_ListDemos, "r");
     }
-    COMMAND(listdemos, "");
+    static bool dummy_listdemos = addcommand("listdemos", (identfun)listdemos, "", Id_Command);
 
     void sendmap()
     {
@@ -2967,7 +2914,7 @@ namespace game
         }
         remove(findfile(fname, "rb"));
     }
-    COMMAND(sendmap, "");
+    static bool dummy_sendmap = addcommand("sendmap", (identfun)sendmap, "", Id_Command);
 
     void gotoplayer(const char *arg)
     {
@@ -2990,7 +2937,7 @@ namespace game
             player1->resetinterp();
         }
     }
-    COMMANDN(goto, gotoplayer, "s");
+    static bool dummy_gotoplayer = addcommand("goto", (identfun)gotoplayer, "s", Id_Command);
 
     void gotosel()
     {
@@ -3004,5 +2951,7 @@ namespace game
         player1->o.add(dir.mul(-32));
         player1->resetinterp();
     }
-    COMMAND(gotosel, "");
+    static bool dummy_gotosel = addcommand("gotosel", (identfun)gotosel, "", Id_Command);
 }
+
+
