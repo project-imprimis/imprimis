@@ -200,7 +200,8 @@ int main(int argc, char **argv)
     game::startmap(nullptr);
     logoutf("init: sound");
     initsound();
-
+    logoutf("init: ui");
+    UI::inituicmds();
     logoutf("init: cfg");
     initing = Init_Load;
     //run startup scripts
@@ -233,8 +234,6 @@ int main(int argc, char **argv)
     initstains();
     identflags |= Idf_Persist;
 
-    logoutf("init: ui");
-    UI::inituicmds();
     logoutf("init: mainloop");
     resetfpshistory();
     inputgrab(grabinput = true);
