@@ -17,7 +17,7 @@
     bool cmdname = addcommand(name, reinterpret_cast<identfun>(+[] proto { b; }), nargs, type); \
 
 #define ICOMMANDKN(name, type, cmdname, nargs, proto, b) ICOMMANDKNS(#name, type, cmdname, nargs, proto, b)
-#define ICOMMANDK(name, type, nargs, proto, b) ICOMMANDKN(name, type, ICOMMANDNAME(name), nargs, proto, b)
+#define ICOMMANDK(name, type, nargs, proto, b) ICOMMANDKN(name, type,_icmd_##name, nargs, proto, b)
 #define ICOMMANDNS(name, cmdname, nargs, proto, b) ICOMMANDKNS(name, Id_Command, cmdname, nargs, proto, b)
 #define ICOMMANDN(name, cmdname, nargs, proto, b) ICOMMANDNS(#name, cmdname, nargs, proto, b)
 
@@ -34,7 +34,8 @@
  * @param b the body of the function to call
  *
  */
-#define ICOMMAND(name, nargs, proto, b) ICOMMANDN(name, ICOMMANDNAME(name), nargs, proto, b)
+#define ICOMMAND(name, nargs, proto, b) ICOMMANDN(name, _icmd_##name, nargs, proto, b)
+
 
 struct VSlot;
 
