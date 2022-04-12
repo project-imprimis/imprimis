@@ -156,9 +156,13 @@ int main(int argc, char **argv)
     atexit(enet_deinitialize);
     enet_time_set(0);
     logoutf("init: cubescript");
+    initcscmds();
     initmathcmds();
     initcontrolcmds();
     initstrcmds();
+    inittextcmds();
+    initconsolecmds();
+
     logoutf("init: game");
     game::initclient();
     logoutf("init: video");
