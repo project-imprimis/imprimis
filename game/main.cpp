@@ -240,6 +240,7 @@ int main(int argc, char **argv)
     loadshaders();
     initparticles();
     initstains();
+    initoctaeditcmds();
     identflags |= Idf_Persist;
 
     logoutf("init: mainloop");
