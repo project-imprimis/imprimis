@@ -855,6 +855,7 @@ extern void recomputecamera();
 extern void findplayerspawn(dynent *d, int forceent, int tag);
 extern void crouchplayer(physent *pl, int moveres, bool local);
 extern bool bounce(physent *d, float secs, float elasticity, float waterfric, float grav);
+extern void updatephysstate(physent *d);
 
 namespace game
 {
