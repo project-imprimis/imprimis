@@ -208,6 +208,7 @@ int main(int argc, char **argv)
     game::startmap(nullptr);
     logoutf("init: sound");
     initsound();
+    initsoundcmds();
     logoutf("init: ui");
     UI::inituicmds();
     logoutf("init: cfg");
