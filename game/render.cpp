@@ -493,6 +493,10 @@ namespace game
         {
             return; //don't render block guide for non block placing weapons
         }
+        if(player1->state!=ClientState_Alive)
+        {
+            return; //don't render block guide for dead players
+        }
         int d   = DIMENSION(sel.orient),
             od  = DIMENSION(orient);
 
