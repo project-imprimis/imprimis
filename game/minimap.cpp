@@ -2,8 +2,8 @@
 
 namespace game
 {
-    VARP(minimapminscale, 0, 384, 10000);
-    VARP(minimapmaxscale, 1, 1024, 10000);
+    VARP(minimapminscale, 0, 256, 10000);
+    VARP(minimapmaxscale, 1, 256, 10000);
     VARP(minimapshowteammates, 0, 1, 1);
 
     float calcradarscale()
@@ -18,7 +18,7 @@ namespace game
         vec cameraoffset = vec(0,0,0).rotate_around_z(M_PI*game::player1->yaw/180);
         cameraoffset.x = -cameraoffset.x;
         cameraoffset = cameraoffset.add(game::player1->o);
-        vec pos = cameraoffset.sub(minimapcenter).mul(minimapscale).add(0.5f),
+        vec pos = cameraoffset.sub(minimapcenter).mul(minimapscale).add(vec(0.5f, 0.48f, 0.5f)),
             dir;
         vecfromyawpitch(0, 0, 1, 0, dir);
         float scale = calcradarscale();
