@@ -36,6 +36,7 @@
  */
 #define ICOMMAND(name, nargs, proto, b) ICOMMANDN(name, _icmd_##name, nargs, proto, b)
 
+#define LOOP_START(id, stack) if((id)->type != Id_Alias) return; identstack stack;
 
 struct VSlot;
 
