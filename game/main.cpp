@@ -162,6 +162,21 @@ int main(int argc, char **argv)
     initstrcmds();
     inittextcmds();
     initconsolecmds();
+    initoctaeditcmds();
+    initoctaworldcmds();
+    initoctaworldcmds();
+    initrendermodelcmds();
+    initrenderglcmds();
+    initrenderlightscmds();
+    initrendertextcmds();
+    initrenderwindowcmds();
+    initshadercmds();
+    inittexturecmds();
+    inithudcmds();
+    initsoundcmds();
+    initheightmapcmds();
+    initmenuscmds();
+    initzipcmds();
 
     logoutf("init: game");
     game::initclient();
