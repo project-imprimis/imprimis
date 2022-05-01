@@ -42,7 +42,7 @@ namespace game
     }
     COMMAND(getweaponheat, "");
 
-    VAR(spawncombatclass, 0, 0, 2);
+    VAR(spawncombatclass, 0, 0, 3);
 
 /*getcombatclass
  * returns the combat class the player currently has (may be different than
@@ -108,6 +108,18 @@ namespace game
                     return false;
             }
         }
+        //shotgun
+        else if(player1->combatclass == 3)
+        {
+            switch(weapon)
+            {
+                case Gun_Shotgun:
+                case Gun_Carbine:
+                    return true;
+                default:
+                    return false;
+            }
+        }
         else
         {
             return false;
@@ -129,7 +141,7 @@ namespace game
         {
             return;
         }
-        dir = dir ? -1 : 1;
+        dir = dir ? 1 : -1;
         for(uint i = 1; i < Gun_NumGuns; ++i)
         {
             int gun = (player1->gunselect + dir*i)%Gun_NumGuns;
@@ -187,9 +199,17 @@ namespace game
         {
             gunselect(Gun_Pulse, player1);
         }
-        else
+        else if(weaponallowed(Gun_Eng))
         {
             gunselect(Gun_Eng, player1);
+        }
+        else if(weaponallowed(Gun_Shotgun))
+        {
+            gunselect(Gun_Shotgun, player1);
+        }
+        else
+        {
+            gunselect(Gun_Shotgun, player1);
         }
     }
     COMMAND(primaryweapon, "");
@@ -854,6 +874,7 @@ namespace game
                 break;
             }
             case Attack_CarbineShoot:
+            {
                 particle_splash(Part_Spark, 200, 250, to, 0x50CFE5, 0.45f);
                 particle_flare(hudgunorigin(gun, from, to, d), to, 500, Part_RailTrail, 0x50CFE5, 0.5f);
                 if(d->muzzle.x >= 0)
@@ -866,6 +887,25 @@ namespace game
                     railhit(from, to);
                 }
                 break;
+            }
+            case Attack_ShotgunShoot:
+            {
+                particle_splash(Part_Spark, 200, 250, to, 0xFFCFE5, 0.45f);
+                for(int i = 0; i < attacks[atk].rays; ++i)
+                {
+                    particle_flare(hudgunorigin(gun, from, to, d), rays[i], 500, Part_RailTrail, 0x50CFE5, 0.5f);
+                }
+                if(d->muzzle.x >= 0)
+                {
+                    particle_flare(d->muzzle, d->muzzle, 140, Part_RailMuzzleFlash, 0x50CFE5, 2.75f, d);
+                }
+                adddynlight(hudgunorigin(gun, d->o, to, d), 35, vec(0.25f, 0.75f, 1.0f), 75, 75, DynLight_Flash, 0, vec(0, 0, 0), d); //place a light for the muzzle flash
+                if(!local)
+                {
+                    railhit(from, to);
+                }
+                break;
+            }
             default:
             {
                 break;
@@ -928,41 +968,7 @@ namespace game
         float dist;
         int maxrays = attacks[atk].rays,
             margin = attacks[atk].margin;
-        if(attacks[atk].rays > 1)
-        {
-            dynent *hits[MAXRAYS];
-            for(int i = 0; i < maxrays; ++i)
-            {
-                if((hits[i] = intersectclosest(from, rays[i], d, margin, dist)))
-                {
-                    shorten(from, rays[i], dist);
-                    railhit(from, rays[i], false);
-                }
-                else
-                {
-                    railhit(from, rays[i]);
-                }
-            }
-            for(int i = 0; i < maxrays; ++i)
-            {
-                if(hits[i])
-                {
-                    o = hits[i];
-                    hits[i] = nullptr;
-                    int numhits = 1;
-                    for(int j = i+1; j < maxrays; j++)
-                    {
-                        if(hits[j] == o)
-                        {
-                            hits[j] = nullptr;
-                            numhits++;
-                        }
-                    }
-                    hitpush(numhits*attacks[atk].damage, o, d, from, to, atk, numhits);
-                }
-            }
-        }
-        else if((o = intersectclosest(from, to, d, margin, dist)))
+        if((o = intersectclosest(from, to, d, margin, dist)))
         {
             shorten(from, to, dist);
             railhit(from, to, false);
@@ -1066,7 +1072,17 @@ namespace game
             }
             else
             {
-                raydamage(from, to, d, atk);
+                if(attacks[atk].rays > 1)
+                {
+                    for(int i = 0; i < attacks[atk].rays; ++i)
+                    {
+                        raydamage(from, rays[i], d, atk);
+                    }
+                }
+                else
+                {
+                    raydamage(from, to, d, atk);
+                }
             }
         }
         shoteffects(atk, from, to, d, true, 0, prevaction);
@@ -1077,10 +1093,23 @@ namespace game
             {
                 d->sprinting = 1;
             }
-            addmsg(NetMsg_Shoot, "rci2i6iv", d, lastmillis-maptime, atk,
-                   static_cast<int>(from.x*DMF), static_cast<int>(from.y*DMF), static_cast<int>(from.z*DMF),
-                   static_cast<int>(to.x*DMF),   static_cast<int>(to.y*DMF),   static_cast<int>(to.z*DMF),
-                   hits.length(), hits.length()*sizeof(hitmsg)/sizeof(int), hits.getbuf()); //sizeof int should always equal 4 (bytes) = 32b
+            if(attacks[atk].rays > 1)
+            {
+                for(int i = 0; i < attacks[atk].rays; ++i)
+                {
+                    addmsg(NetMsg_Shoot, "rci2i6iv", d, lastmillis-maptime, atk,
+                           static_cast<int>(from.x*DMF), static_cast<int>(from.y*DMF), static_cast<int>(from.z*DMF),
+                           static_cast<int>(rays[i].x*DMF),   static_cast<int>(rays[i].y*DMF),   static_cast<int>(rays[i].z*DMF),
+                           hits.length(), hits.length()*sizeof(hitmsg)/sizeof(int), hits.getbuf()); //sizeof int should always equal 4 (bytes) = 32b
+                }
+            }
+            else
+            {
+                    addmsg(NetMsg_Shoot, "rci2i6iv", d, lastmillis-maptime, atk,
+                           static_cast<int>(from.x*DMF), static_cast<int>(from.y*DMF), static_cast<int>(from.z*DMF),
+                           static_cast<int>(to.x*DMF),   static_cast<int>(to.y*DMF),   static_cast<int>(to.z*DMF),
+                           hits.length(), hits.length()*sizeof(hitmsg)/sizeof(int), hits.getbuf()); //sizeof int should always equal 4 (bytes) = 32b
+            }
         }
 
         d->gunwait = attacks[atk].attackdelay;

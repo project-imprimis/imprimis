@@ -2067,6 +2067,10 @@ namespace game
                     int prevaction = s->lastaction;
                     s->lastaction = lastmillis;
                     s->lastattack = atk;
+                    if(attacks[atk].rays > 1)
+                    {
+                        createrays(atk, from, to);
+                    }
                     shoteffects(atk, from, to, s, false, id, prevaction);
                     break;
                 }
