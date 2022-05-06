@@ -36,6 +36,12 @@
  */
 #define ICOMMAND(name, nargs, proto, b) ICOMMANDN(name, _icmd_##name, nargs, proto, b)
 
+//command macros
+#define COMMANDKN(name, type, fun, nargs) static bool dummy_##fun = addcommand(#name, (identfun)fun, nargs, type)
+#define COMMANDK(name, type, nargs) COMMANDKN(name, type, name, nargs)
+#define COMMANDN(name, fun, nargs) COMMANDKN(name, Id_Command, fun, nargs)
+#define COMMAND(name, nargs) COMMANDN(name, name, nargs)
+
 #define LOOP_START(id, stack) if((id)->type != Id_Alias) return; identstack stack;
 
 struct VSlot;
