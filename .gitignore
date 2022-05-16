@@ -1,0 +1,8 @@
+# C/C++ language server cache.
+.ccls-cache
+# Compiled .cpp objects.
+*.o
+# Ignore compiled Imprimis binary.
+native_client
+# Ignore html folder produced by Doxygen/Doxywizard.
+html/
