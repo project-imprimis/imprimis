@@ -724,7 +724,12 @@ struct gameent : dynent, gamestate
     int team, playermodel, playercolor;
     ai::aiinfo *ai;
     int ownernum, lastnode;
-    int sprinting;
+
+    /**
+     * @brief Allows sprinting in a direction. Assign `true` for sprinting and
+     * assign `false` for not sprinting.
+     */
+    bool is_sprinting;
 
     vec muzzle;
 
@@ -733,7 +738,7 @@ struct gameent : dynent, gamestate
                 lastpain(0), frags(0), deaths(0), totaldamage(0),
                 totalshots(0), edit(nullptr), smoothmillis(-1), team(0),
                 playermodel(-1), playercolor(0), ai(nullptr), ownernum(-1),
-                sprinting(1), muzzle(-1, -1, -1)
+                is_sprinting(false), muzzle(-1, -1, -1)
     {
         name[0] = info[0] = 0;
         respawn();
@@ -773,6 +778,75 @@ struct gameent : dynent, gamestate
         lastnode = -1;
         spawnprotect = true;
     }
+
+   /**
+     * @brief The possible movement directions. Positive values represent
+     * `FORWARD` and `LEFTWARD` movement while negative values represnet
+     * `BACKWARD` and `RIGHTWARD` movement along the axes. See @ref
+     * move_forward, @ref move_backward, @ref move_leftward, and @ref
+     * move_rightward.
+     */
+    enum Direction
+    {
+        RIGHTWARD = -2,
+        BACKWARD = -1,
+        NONE = 0,
+        FORWARD = 1,
+        LEFTWARD = 2,
+    };
+
+    /**
+     * @brief Make the player move forward thru the map. The function uses the
+     * @ref Direction enum to specify the movement direction.
+     * @param down whether the assigned keyboard key or mouse button is being
+     * pressed down (either 0 or any other value).
+     */
+    void move_forward(int *down);
+
+    /**
+     * @brief Make the player move backward thru the map. The function uses the
+     * @ref Direction enum to specify the movement direction.
+     * @param down whether the assigned keyboard key or mouse button is being
+     * pressed down (either 0 or any other value).
+     */
+    void move_backward(int *down);
+
+    /**
+     * @brief Make the player move right thru the map. The function uses the
+     * @ref Direction enum to specify the movement direction.
+     * @param down whether the assigned keyboard key or mouse button is being
+     * pressed down (either 0 or any other value).
+     */
+    void move_rightward(int *down);
+
+    /**
+     * @brief Make the player move left thru the map. The function uses the
+     * @ref Direction enum to specify the movement direction.
+     * @param down whether the assigned keyboard key or mouse button is being
+     * pressed down (either 0 or any other value).
+     */
+    void move_leftward(int *down);
+
+    /**
+     * @brief Make the player crouch.
+     * @param down whether the assigned keyboard key or mouse button is being
+     * pressed down (either 0 or any other value).
+     */
+    void crouch(int *down);
+
+    /**
+     * @brief Make the player jump.
+     * @param down whether the assigned keyboard key or mouse button is being
+     * pressed down (either 0 or any other value).
+     */
+    void jump(int *down);
+
+    /**
+     * @brief Make the player sprint.
+     * @param down whether the assigned keyboard key or mouse button is being
+     * pressed down (either 0 or any other value).
+     */
+    void sprint(int *down);
 
     void startgame()
     {
