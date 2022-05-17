@@ -153,7 +153,7 @@ const char *disconnectreason(int reason)
 
 ENetAddress masteraddress = { ENET_HOST_ANY, ENET_PORT_ANY },
             serveraddress = { ENET_HOST_ANY, ENET_PORT_ANY };
-VARN(updatemaster, allowupdatemaster, 0, 1, 1);
+int allowupdatemaster = variable("updatemaster", 0, 1, 1, &allowupdatemaster, nullptr, 0);
 
 SVAR(mastername, server::defaultmaster());
 VAR(masterport, 1, Port_Master, 0xFFFF);

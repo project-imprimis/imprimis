@@ -1,0 +1,8 @@
+{
+  "ccls.clang.extraArgs": [
+    "-Igame",
+    "-Ienet/include",
+    "-I/usr/X11R6/include",
+    "`sdl2-config --cflags`"
+  ]
+}

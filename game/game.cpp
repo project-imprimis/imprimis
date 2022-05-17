@@ -50,11 +50,12 @@ namespace game
         return nullptr;
     }
 
-    ICOMMAND(getfollow, "", (),
-    {
-        gameent *f = followingplayer();
-        intret(f ? f->clientnum : -1);
-    });
+    bool _icmd_getfollow = addcommand("getfollow", reinterpret_cast<identfun>(+[]()
+        {
+            gameent *f = followingplayer();
+            intret(f ? f->clientnum : -1);
+        })
+    );
 
     void stopfollowing()
     {
@@ -106,7 +107,13 @@ namespace game
         }
         stopfollowing();
     }
-    ICOMMAND(nextfollow, "i", (int *dir), nextfollow(*dir < 0 ? -1 : 1));
+
+    bool _icmd_nextfollow = addcommand("nextfollow", reinterpret_cast<identfun>(+[](int *dir)
+        {
+            nextfollow(*dir < 0 ? -1 : 1);
+        }),
+        "i"
+    );
 
     void checkfollow()
     {
@@ -437,7 +444,12 @@ namespace game
         }
     }
 
-    ICOMMAND(shoot, "D", (int *down), doaction(*down ? Act_Shoot : Act_Idle));
+    bool _icmd_shoot = addcommand("shoot", reinterpret_cast<identfun>(+[](int *down)
+        {
+            doaction(*down ? Act_Shoot : Act_Idle);
+        }),
+        "D"
+    );
 
     VARP(jumpspawn, 0, 1, 1);
 
@@ -645,12 +657,36 @@ namespace game
         }
     }
 
-    ICOMMAND(getfrags, "", (), intret(player1->frags));
-    ICOMMAND(getscore, "", (), intret(player1->score));
-    ICOMMAND(getdeaths, "", (), intret(player1->deaths));
-    ICOMMAND(getaccuracy, "", (), intret((player1->totaldamage*100)/max(player1->totalshots, 1)));
-    ICOMMAND(gettotaldamage, "", (), intret(player1->totaldamage));
-    ICOMMAND(gettotalshots, "", (), intret(player1->totalshots));
+    bool _icmd_getfrags = addcommand("getfrags", reinterpret_cast<identfun>(+[]()
+        {
+            intret(player1->frags);
+        })
+    );
+    bool _icmd_getscore = addcommand("getscore", reinterpret_cast<identfun>(+[]()
+        {
+            intret(player1->score);
+        })
+    );
+    bool _icmd_getdeaths = addcommand("getdeaths", reinterpret_cast<identfun>(+[]()
+        {
+            intret(player1->deaths);
+        })
+    );
+    bool _icmd_getaccuracy = addcommand("getaccuracy", reinterpret_cast<identfun>(+[]()
+        {
+            intret((player1->totaldamage * 100) / max(player1->totalshots, 1));
+        })
+    );
+    bool _icmd_gettotaldamage = addcommand("gettotaldamage", reinterpret_cast<identfun>(+[]()
+        {
+            intret(player1->totaldamage);
+        })
+    );
+    bool _icmd_gettotalshots = addcommand("gettotalshots", reinterpret_cast<identfun>(+[]()
+        {
+            intret(player1->totalshots);
+        })
+    );
 
     vector<gameent *> clients;
 
@@ -933,7 +969,12 @@ namespace game
             }
         }
     }
-    ICOMMAND(suicide, "", (), suicide(player1));
+
+    bool _icmd_suicide = addcommand("suicide", reinterpret_cast<identfun>(+[]()
+        {
+            suicide(player1);
+        })
+    );
 
     void drawicon(int icon, float x, float y, float sz)
     {
@@ -991,47 +1032,71 @@ namespace game
         return (n>=MasterMode_Start && size_t(n-MasterMode_Start)<sizeof(mastermodeicons)/sizeof(mastermodeicons[0])) ? mastermodeicons[n-MasterMode_Start] : unknown;
     }
 
-    ICOMMAND(servinfomode, "i", (int *i), GETSERVINFOATTR(*i, 0, mode, intret(mode)));
-    ICOMMAND(servinfomodename, "i", (int *i),
-        GETSERVINFOATTR(*i, 0, mode,
+    bool _icmd_servinfomode = addcommand("servinfomode", reinterpret_cast<identfun>(+[](int *i)
         {
-            const char *name = server::modeprettyname(mode, nullptr);
-            if(name)
-            {
-                result(name);
-            }
-        }));
-    ICOMMAND(servinfomastermode, "i", (int *i), GETSERVINFOATTR(*i, 2, mm, intret(mm)));
-    ICOMMAND(servinfomastermodename, "i", (int *i),
-        GETSERVINFOATTR(*i, 2, mm,
+            GETSERVINFOATTR(*i, 0, mode, intret(mode));
+        }),
+        "i"
+    );
+    bool _icmd_servinfomodename = addcommand("servinfomodename", reinterpret_cast<identfun>(+[](int *i)
         {
-            const char *name = server::mastermodename(mm, nullptr);
-            if(name)
-            {
-                stringret(newconcatstring(mastermodecolor(mm, ""), name));
-            }
-        }));
-    ICOMMAND(servinfotime, "ii", (int *i, int *raw),
-        GETSERVINFOATTR(*i, 1, secs,
+            GETSERVINFOATTR(*i, 0, mode,
+                const char *name = server::modeprettyname(mode, nullptr);
+                if(name)
+                {
+                    result(name);
+                }
+            );
+        }),
+        "i"
+    );
+
+    bool _icmd_servinfomastermode = addcommand("servinfomastermode", reinterpret_cast<identfun>(+[](int *i)
         {
-            secs = std::clamp(secs, 0, 59*60+59);
-            if(*raw)
-            {
-                intret(secs);
-            }
-            else
-            {
-                int mins = secs/60;
-                secs %= 60;
-                result(tempformatstring("%d:%02d", mins, secs));
-            }
-        }));
-    ICOMMAND(servinfoicon, "i", (int *i),
-        GETSERVINFO(*i, si,
+            GETSERVINFOATTR(*i, 2, mm, intret(mm));
+        }),
+        "i"
+    );
+
+    bool _icmd_servinfomastermodename = addcommand("servinfomastermodename", reinterpret_cast<identfun>(+[](int *i)
         {
-            int mm = si->attr.inrange(2) ? si->attr[2] : MasterMode_Invalid;
-            result(si->maxplayers > 0 && si->numplayers >= si->maxplayers ? "serverfull" : mastermodeicon(mm, "serverunk"));
-        })
+            GETSERVINFOATTR(*i, 2, mm,
+                const char *name = server::mastermodename(mm, nullptr);
+                if(name)
+                {
+                    stringret(newconcatstring(mastermodecolor(mm, ""), name));
+                }
+            );
+        }),
+        "i"
+    );
+
+    bool _icmd_servinfotime = addcommand("servinfotime", reinterpret_cast<identfun>(+[](int *i, int *raw)
+        {
+            GETSERVINFOATTR(*i, 1, secs,
+                secs = std::clamp(secs, 0, 59*60+59);
+                if(*raw)
+                {
+                    intret(secs);
+                }
+                else
+                {
+                    int mins = secs/60;
+                    secs %= 60;
+                    result(tempformatstring("%d:%02d", mins, secs));
+                }
+            );
+        }),
+        "ii"
+    );
+    bool _icmd_servinfoicon = addcommand("servinfoicon", reinterpret_cast<identfun>(+[](int *i)
+        {
+            GETSERVINFO(*i, si,
+                int mm = si->attr.inrange(2) ? si->attr[2] : MasterMode_Invalid;
+                result(si->maxplayers > 0 && si->numplayers >= si->maxplayers ? "serverfull" : mastermodeicon(mm, "serverunk"));
+            );
+        }),
+        "i"
     );
 
     const char *gameconfig()    { return "config/game.cfg"; }
@@ -1042,7 +1107,6 @@ namespace game
     {
         execfile("config/auth.cfg", false);
     }
-
 }
 /////////////////// phys
 
@@ -1570,7 +1634,7 @@ static void handleparachute(gameent *pl, bool water)
     else
     {
         pl->parachutetime -= parachutemaxtime; //immediately cancel parachute
-        if(pl->sprinting == 1)
+        if(!pl->is_sprinting)
         {
             pl->maxspeed = defaultspeed;
         }
@@ -1629,7 +1693,7 @@ bool moveplayer(gameent *pl, int moveres, bool local, int curtime) //always retu
             if(!move(pl, d) && ++collisions<5)
             {
                 i--; // discrete steps collision detection & sliding
-                pl->sprinting = 1; //if collided, turn off sprint
+                pl->is_sprinting = false; //if collided, turn off sprint
             }
         }
         if(timeinair > inairsounddelay && !pl->timeinair && !water) // if we land after long time must have been a high jump, make thud sound
@@ -1639,7 +1703,7 @@ bool moveplayer(gameent *pl, int moveres, bool local, int curtime) //always retu
     }
     if(std::abs(pl->vel.x) < 1 && std::abs(pl->vel.y) < 1 && std::abs(pl->vel.z) < 1)
     {
-        pl->sprinting = 1;
+        pl->is_sprinting = false;
     }
     if(pl->state==ClientState_Alive)
     {
@@ -1898,43 +1962,109 @@ void updatephysstate(physent *d)
     d->o = old;
 }
 
-// "convenience" macro to define movement directions
-/*creates a normal inline command but takes the following arguments:
- * name: name of the movement command
- * v: velocity type (move: along camera axis; strafe: side-to-side perp from cam)
- * d: direction: positive (forward, left) or negative (backwards, right) along axes
- * s: movement key
- * os: opposite movement key (can't do both of these @ same time)
- * sprint: allows sprinting in this direction
- */
+void gameent::move_forward(int *down)
+{
+    // Enable leftward movement when W is pressed and disables it otherwise.
+    this->k_up = *down != 0;
+    // Take into account opposite movement key (can't do both of these at the same time).
+    this->move = this->k_up ? Direction::FORWARD : (this->k_down ? Direction::BACKWARD : Direction::NONE);
+    this->spawnprotect = false;
+}
 
-#define DIR(name,v,d,s,os, sprint) ICOMMAND(name, "D", (int *down), \
-{ \
-    game::player1->s = *down!=0; \
-    game::player1->v = player->s ? d : (player->os ? -(d) : 0); \
-    game::player1->spawnprotect = false; \
-    if(!sprint) \
-    { \
-        game::player1->sprinting = 1; \
-    } \
-}); \
+void gameent::move_backward(int *down)
+{
+    // Enable leftward movement when S is pressed and disables it otherwise.
+    this->k_down = *down != 0;
+    // Take into account opposite movement key (can't do both of these at the same time).
+    this->move = this->k_down ? Direction::BACKWARD : (this->k_up ? Direction::FORWARD : Direction::NONE);
+    this->spawnprotect = false;
+    this->is_sprinting = false;
+}
 
-DIR(backward, move,   -1, k_down,  k_up,   false);
-DIR(forward,  move,    1, k_up,    k_down, true);
-DIR(left,     strafe,  1, k_left,  k_right,true);
-DIR(right,    strafe, -1, k_right, k_left, true);
+void gameent::move_rightward(int *down) {
+    // Enable leftward movement when D is pressed and disables it otherwise.
+    this->k_right = *down != 0;
+    // Take into account opposite movement key (can't do both of these at the same time).
+    this->strafe = this->k_right ? Direction::RIGHTWARD : (this->k_left ? Direction::LEFTWARD : Direction::NONE);
+    this->spawnprotect = false;
+}
 
-#undef DIR
+void gameent::move_leftward(int *down) {
+    // Enable leftward movement when A is pressed and disables it otherwise.
+    this->k_left = *down != 0;
+    // Take into account opposite movement key (can't do both of these at the same time).
+    this->strafe = this->k_left ? Direction::LEFTWARD : (this->k_right ? Direction::RIGHTWARD : Direction::NONE);
+    this->spawnprotect = false;
+}
+void gameent::crouch(int *down)
+{
+    if (!*down)
+        this->crouching = abs(this->crouching);
+    else if (game::cancrouch())
+        this->crouching = -1;
+}
+void gameent::jump(int *down)
+{
+    if(!*down || game::canjump())
+        this->jumping = *down!=0;
+}
+void gameent::sprint(int *down)
+{
+    if (game::cansprint() && *down)
+        this->is_sprinting = true;
+}
 
-//special movement actions
-ICOMMAND(jump,   "D", (int *down), { if(!*down || game::canjump()) player->jumping = *down!=0; });
-ICOMMAND(crouch, "D", (int *down), { if(!*down) player->crouching = abs(player->crouching); else if(game::cancrouch()) player->crouching = -1; });
-ICOMMAND(sprint, "D", (int *down), {
-    if(game::cansprint() && *down)
+// Bind the movements thru CubeScript. These commands cannot be called from the
+// game's command line.
+bool _icmd_forward = addcommand("forward", reinterpret_cast<identfun>(+[](int* down)
     {
-        game::player1->sprinting = -1;
-    }
-});
+        game::player1->move_forward(down);
+    }),
+    "D"
+);
+
+bool _icmd_backward = addcommand("backward", reinterpret_cast<identfun>(+[](int* down)
+    {
+        game::player1->move_backward(down);
+    }),
+    "D"
+);
+
+bool _icmd_right = addcommand("right", reinterpret_cast<identfun>(+[](int* down)
+    {
+        game::player1->move_rightward(down);
+    }),
+    "D"
+);
+
+bool _icmd_left = addcommand("left", reinterpret_cast<identfun>(+[](int* down)
+    {
+        game::player1->move_leftward(down);
+    }),
+    "D"
+);
+
+bool _icmd_jump = addcommand("jump", reinterpret_cast<identfun>(+[](int* down)
+    {
+        game::player1->jump(down);
+    }),
+    "D"
+);
+
+bool _icmd_crouch = addcommand("crouch", reinterpret_cast<identfun>(+[](int* down)
+    {
+        game::player1->crouch(down);
+    }),
+    "D"
+);
+
+bool _icmd_sprint = addcommand("sprint", reinterpret_cast<identfun>(+[](int* down)
+    {
+        game::player1->sprint(down);
+    }),
+    "D"
+);
+
 ////////////////////////// camera /////////////////////////
 
 
