@@ -35,7 +35,7 @@ the libprimis engine located at https://github.com/project-imprimis/libprimis.
 
 Imprimis requires the library built by libprimis (`libprimis.so`) to be located in
 one of the standard Linux library directories (typically `/usr/local/lib`). If the
-`libprimis.so` file has not been places there, Imprimis will fail to run once it
+`libprimis.so` file has not been placed there, Imprimis will fail to run once it
 has been compiled (as it cannot find the needed shared library).
 
 Once libprimis is installed, Imprimis can be successfully installed. The project

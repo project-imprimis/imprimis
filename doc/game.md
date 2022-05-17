@@ -45,6 +45,24 @@ conflicting design goals).
 * 4.3 Client
 * 4.4 Master Server
 
+# 3 Game Implementation
+---
+
+
+## 3.1 Weapons
+---
+
+Imprimis allows players to choose classes that best suit their playstyles. All classes have the same secondary gun, the carabine, but differ in their primary guns. The table below shows the primary guns organized by team and by class.
+
+| Team         | Rojo (Attackers) | Azul (Defenders) |
+| ------------ | ---------------- | ---------------- |
+| Soldier Gun  | Railgun          | Railgun          |
+| Demo Gun     | Demo             | N/A              |
+| Engineer Gun | N/A              | Octsetter        |
+| Support Gun  | Scattergun       | Scattergun       |
+
+Note that the scattergun has not yet been implemented.
+
 # 4 Netcode
 ---
 
@@ -58,7 +76,7 @@ responsive networking experience. It is not particularly difficult to create
 clients which exploit this behavior, but server-mediated behavior is problematic
 for a first person shooter where reaction time is paramount.
 
-# 4.1 Topology
+## 4.1 Topology
 
 The general topology of networking and its relation to the state of game state
 (variables and information) is outlined below.
