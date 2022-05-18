@@ -70,7 +70,7 @@ void toggleedit(bool force = true)
     }
     execident("resethud");
 }
-bool _icmd_edittoggle = addcommand("edittoggle", reinterpret_cast<identfun>(+[] () { toggleedit(false); }), "", Id_Command);
+bool _icmd_edittoggle = addcommand("edittoggle", reinterpret_cast<identfun>(+[] () { toggleedit(false); }));
 
 namespace game
 {
@@ -111,7 +111,7 @@ namespace game
         conoutf("your name is: %s", colorname(player1));
     }
     bool _icmd_name = addcommand("name", reinterpret_cast<identfun>(+[] (char *s, int *numargs) { { if(*numargs > 0) { switchname(s); } else if(!*numargs) { printname(); } else { result(colorname(player1)); } }; }), "sN", Id_Command);
-    bool _icmd_getname = addcommand("getname", reinterpret_cast<identfun>(+[] () { result(player1->name); }), "", Id_Command);
+    bool _icmd_getname = addcommand("getname", reinterpret_cast<identfun>(+[] () { result(player1->name); }));
 
     void switchteam(const char *team)
     {
@@ -141,7 +141,7 @@ namespace game
         }
     }
     bool _icmd_team = addcommand("team", reinterpret_cast<identfun>(+[] (char *s, int *numargs) { { if(*numargs > 0) { switchteam(s); } else if(!*numargs) { printteam(); } else if((player1->clientnum < 0 || modecheck(gamemode, Mode_Team)) && validteam(player1->team)) { result(tempformatstring("\fs%s%s\fr", teamtextcode[player1->team], teamnames[player1->team])); } }; }), "sN", Id_Command);
-    bool _icmd_getteam = addcommand("getteam", reinterpret_cast<identfun>(+[] () { intret((player1->clientnum < 0 || modecheck(gamemode, Mode_Team)) && validteam(player1->team) ? player1->team : 0); }), "", Id_Command);
+    bool _icmd_getteam = addcommand("getteam", reinterpret_cast<identfun>(+[] () { intret((player1->clientnum < 0 || modecheck(gamemode, Mode_Team)) && validteam(player1->team) ? player1->team : 0); }));
     bool _icmd_getteamname = addcommand("getteamname", reinterpret_cast<identfun>(+[] (int *num) { result(teamname(*num)); }), "i", Id_Command);
 
     struct authkey
@@ -276,7 +276,7 @@ namespace game
         conoutf("saved authkeys to %s", fname);
         delete f;
     }
-    static bool dummy_saveauthkeys = addcommand("saveauthkeys", (identfun)saveauthkeys, "", Id_Command);
+    static bool dummy_saveauthkeys = addcommand("saveauthkeys", (identfun)saveauthkeys);
 
     void sendmapinfo()
     {
@@ -423,7 +423,7 @@ namespace game
     }
     bool _icmd_isadmin = addcommand("isadmin", reinterpret_cast<identfun>(+[] (int *cn) { intret(isadmin(*cn) ? 1 : 0); }), "i", Id_Command);
 
-    bool _icmd_getmastermode = addcommand("getmastermode", reinterpret_cast<identfun>(+[] () { intret(mastermode); }), "", Id_Command);
+    bool _icmd_getmastermode = addcommand("getmastermode", reinterpret_cast<identfun>(+[] () { intret(mastermode); }));
     bool _icmd_getmastermodename = addcommand("getmastermodename", reinterpret_cast<identfun>(+[] (int *mm) { result(server::mastermodename(*mm, "")); }), "i", Id_Command);
 
     bool isspectator(int cn)
@@ -525,7 +525,7 @@ namespace game
     {
         addmsg(NetMsg_ClearBans, "r");
     }
-    static bool dummy_clearbans = addcommand("clearbans", (identfun)clearbans, "", Id_Command);
+    static bool dummy_clearbans = addcommand("clearbans", (identfun)clearbans);
 
     void kick(const char *victim, const char *reason)
     {
@@ -661,10 +661,10 @@ namespace game
         return true;
     }
     bool _icmd_auth = addcommand("auth", reinterpret_cast<identfun>(+[] (char *desc) { tryauth(desc); }), "s", Id_Command);
-    bool _icmd_sauth = addcommand("sauth", reinterpret_cast<identfun>(+[] () { if(servauth[0]) tryauth(servauth); }), "", Id_Command);
+    bool _icmd_sauth = addcommand("sauth", reinterpret_cast<identfun>(+[] () { if(servauth[0]) tryauth(servauth); }));
     bool _icmd_dauth = addcommand("dauth", reinterpret_cast<identfun>(+[] (char *desc) { if(desc[0]) tryauth(desc); }), "s", Id_Command);
 
-    bool _icmd_getservauth = addcommand("getservauth", reinterpret_cast<identfun>(+[] () { result(servauth); }), "", Id_Command);
+    bool _icmd_getservauth = addcommand("getservauth", reinterpret_cast<identfun>(+[] () { result(servauth); }));
 
     void togglespectator(int val, const char *who)
     {
@@ -676,7 +676,7 @@ namespace game
     }
     bool _icmd_spectator = addcommand("spectator", reinterpret_cast<identfun>(+[] (int *val, char *who) { togglespectator(*val, who); }), "is", Id_Command);
 
-    bool _icmd_checkmaps = addcommand("checkmaps", reinterpret_cast<identfun>(+[] () { addmsg(NetMsg_CheckMaps, "r"); }), "", Id_Command);
+    bool _icmd_checkmaps = addcommand("checkmaps", reinterpret_cast<identfun>(+[] () { addmsg(NetMsg_CheckMaps, "r"); }));
 
     int gamemode = INT_MAX, nextmode = INT_MAX;
 
@@ -732,12 +732,12 @@ namespace game
         intret(1);
     }
     bool _icmd_mode = addcommand("mode", reinterpret_cast<identfun>(+[] (int *val) { setmode(*val); }), "i", Id_Command);
-    bool _icmd_getmode = addcommand("getmode", reinterpret_cast<identfun>(+[] () { intret(gamemode); }), "", Id_Command);
-    bool _icmd_getnextmode = addcommand("getnextmode", reinterpret_cast<identfun>(+[] () { intret(validmode(nextmode) ? nextmode : (remote ? 1 : 0)); }), "", Id_Command);
+    bool _icmd_getmode = addcommand("getmode", reinterpret_cast<identfun>(+[] () { intret(gamemode); }));
+    bool _icmd_getnextmode = addcommand("getnextmode", reinterpret_cast<identfun>(+[] () { intret(validmode(nextmode) ? nextmode : (remote ? 1 : 0)); }));
     bool _icmd_getmodename = addcommand("getmodename", reinterpret_cast<identfun>(+[] (int *mode) { result(server::modename(*mode, "")); }), "i", Id_Command);
     bool _icmd_getmodeprettyname = addcommand("getmodeprettyname", reinterpret_cast<identfun>(+[] (int *mode) { result(server::modeprettyname(*mode, "")); }), "i", Id_Command);
     bool _icmd_timeremaining = addcommand("timeremaining", reinterpret_cast<identfun>(+[] (int *formatted) { { int val = max(maplimit - lastmillis, 0)/1000; if(*formatted) { result(tempformatstring("%d:%02d", val/60, val%60)); } else { intret(val); } }; }), "i", Id_Command);
-    bool _icmd_intermission = addcommand("intermission", reinterpret_cast<identfun>(+[] () { intret(intermission ? 1 : 0); }), "", Id_Command);
+    bool _icmd_intermission = addcommand("intermission", reinterpret_cast<identfun>(+[] () { intret(intermission ? 1 : 0); }));
 
     bool _icmd_MODE_TEAMMODE = addcommand("MODE_TEAMMODE", reinterpret_cast<identfun>(+[] (int *mode) { { int gamemode = *mode; intret(modecheck(gamemode, Mode_Team)); }; }), "i", Id_Command);
     bool _icmd_MODE_RAIL = addcommand("MODE_RAIL", reinterpret_cast<identfun>(+[] (int *mode) { { int gamemode = *mode; intret(modecheck(gamemode, Mode_Rail)); }; }), "i", Id_Command);
@@ -778,7 +778,7 @@ namespace game
     }
 
     static bool dummy_newmap = addcommand("newmap", (identfun)newmap, "i", Id_Command);
-    static bool dummy_mapenlarge = addcommand("mapenlarge", (identfun)mapenlarge, "", Id_Command);
+    static bool dummy_mapenlarge = addcommand("mapenlarge", (identfun)mapenlarge);
 
     int needclipboard = -1;
 
@@ -2823,7 +2823,7 @@ namespace game
         conoutf("getting map...");
         addmsg(NetMsg_GetMap, "r");
     }
-    static bool dummy_getmap = addcommand("getmap", (identfun)getmap, "", Id_Command);
+    static bool dummy_getmap = addcommand("getmap", (identfun)getmap);
 
     void stopdemo()
     {
@@ -2836,7 +2836,7 @@ namespace game
             addmsg(NetMsg_StopDemo, "r");
         }
     }
-    static bool dummy_stopdemo = addcommand("stopdemo", (identfun)stopdemo, "", Id_Command);
+    static bool dummy_stopdemo = addcommand("stopdemo", (identfun)stopdemo);
 
     void recorddemo(int val)
     {
@@ -2877,7 +2877,7 @@ namespace game
         conoutf("listing demos...");
         addmsg(NetMsg_ListDemos, "r");
     }
-    static bool dummy_listdemos = addcommand("listdemos", (identfun)listdemos, "", Id_Command);
+    static bool dummy_listdemos = addcommand("listdemos", (identfun)listdemos);
 
     void sendmap()
     {
@@ -2918,7 +2918,7 @@ namespace game
         }
         remove(findfile(fname, "rb"));
     }
-    static bool dummy_sendmap = addcommand("sendmap", (identfun)sendmap, "", Id_Command);
+    static bool dummy_sendmap = addcommand("sendmap", (identfun)sendmap);
 
     void gotoplayer(const char *arg)
     {
@@ -2955,7 +2955,7 @@ namespace game
         player1->o.add(dir.mul(-32));
         player1->resetinterp();
     }
-    static bool dummy_gotosel = addcommand("gotosel", (identfun)gotosel, "", Id_Command);
+    static bool dummy_gotosel = addcommand("gotosel", (identfun)gotosel);
 }
 
 

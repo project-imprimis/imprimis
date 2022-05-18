@@ -1089,9 +1089,9 @@ namespace game
 
         if(d==player1 || d->ai)
         {
-            if(d->sprinting == -1)
+            if(d->is_sprinting)
             {
-                d->sprinting = 1;
+                d->is_sprinting = false;
             }
             if(attacks[atk].rays > 1)
             {
@@ -1170,7 +1170,7 @@ namespace game
                     continue;
                 }
             }
-            rendermodel(mdl, Anim_Mapmodel | Anim_Loop, pos, yaw, pitch, 0, cull, nullptr, nullptr, 0, 0, fade);
+            rendermodel(mdl, Anim_Mapmodel | EntAnim::Loop, pos, yaw, pitch, 0, cull, nullptr, nullptr, 0, 0, fade);
         }
     }
     void removeweapons(gameent *d)
