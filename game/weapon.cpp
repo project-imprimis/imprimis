@@ -11,7 +11,7 @@ namespace game
         int target, lifesequence, info1, info2;
         ivec dir;
     };
-    vector<hitmsg> hits;
+    static std::vector<hitmsg> hits;
 
 /*getweapon
  *returns the index of the weapon in hand
@@ -524,7 +524,8 @@ namespace game
         }
         else
         {
-            hitmsg &h = hits.add();
+            hits.emplace_back();
+            hitmsg &h = hits.back();
             h.target = f->clientnum;
             h.lifesequence = f->lifesequence;
             h.info1 = static_cast<int>(info1*DMF);
@@ -740,7 +741,7 @@ namespace game
             dv.mul(p.speed*timefactor);
             vec v = vec(p.o).add(dv).sub(vec(0, 0, timefactor*0.001*(lastmillis-p.spawntime)*p.gravity)); //set v as current particle location o plus dv
             bool exploded = false;
-            hits.setsize(0);
+            hits.clear();
             if(p.local) //if projectile belongs to a local client
             {
                 vec halfdv = vec(dv).mul(0.5f),
@@ -806,7 +807,7 @@ namespace game
                 if(p.local)
                 {
                     addmsg(NetMsg_Explode, "rci3iv", p.owner, lastmillis-maptime, p.atk, p.id-maptime,
-                            hits.length(), hits.length()*sizeof(hitmsg)/sizeof(int), hits.getbuf()); //sizeof int should always be 4 bytes
+                            hits.size(), hits.size()*sizeof(hitmsg)/sizeof(int), hits.data()); //sizeof int should always be 4 bytes
                 }
                 projs.remove(i--);
             }
@@ -1047,7 +1048,7 @@ namespace game
         {
             offsetray(from, to, attacks[atk].spread, attacks[atk].time, to);
         }
-        hits.setsize(0);
+        hits.clear();
 
         int blocktex = d->team + 1; //2 and 3 are the indices for team blocks
         if(!attacks[atk].projspeed)
@@ -1100,7 +1101,7 @@ namespace game
                     addmsg(NetMsg_Shoot, "rci2i6iv", d, lastmillis-maptime, atk,
                            static_cast<int>(from.x*DMF), static_cast<int>(from.y*DMF), static_cast<int>(from.z*DMF),
                            static_cast<int>(rays[i].x*DMF),   static_cast<int>(rays[i].y*DMF),   static_cast<int>(rays[i].z*DMF),
-                           hits.length(), hits.length()*sizeof(hitmsg)/sizeof(int), hits.getbuf()); //sizeof int should always equal 4 (bytes) = 32b
+                           hits.size(), hits.size()*sizeof(hitmsg)/sizeof(int), hits.data()); //sizeof int should always equal 4 (bytes) = 32b
                 }
             }
             else
@@ -1108,7 +1109,7 @@ namespace game
                     addmsg(NetMsg_Shoot, "rci2i6iv", d, lastmillis-maptime, atk,
                            static_cast<int>(from.x*DMF), static_cast<int>(from.y*DMF), static_cast<int>(from.z*DMF),
                            static_cast<int>(to.x*DMF),   static_cast<int>(to.y*DMF),   static_cast<int>(to.z*DMF),
-                           hits.length(), hits.length()*sizeof(hitmsg)/sizeof(int), hits.getbuf()); //sizeof int should always equal 4 (bytes) = 32b
+                           hits.size(), hits.size()*sizeof(hitmsg)/sizeof(int), hits.data()); //sizeof int should always equal 4 (bytes) = 32b
             }
         }
 
