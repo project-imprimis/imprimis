@@ -526,7 +526,7 @@ void entrotate(int *cw)
     GROUP_EDIT_UNDO(
         e.o[dd] -= (e.o[dd]-mid)*2;
         e.o.sub(s);
-        swap(e.o[R[d]], e.o[C[d]]);
+        std::swap(e.o[R[d]], e.o[C[d]]);
         e.o.add(s);
     );
 }

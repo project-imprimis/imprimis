@@ -1056,7 +1056,7 @@ static inline uint mflip(uint face)
 
 void flipcube(cube &c, int d)
 {
-    swap(c.texture[d*2], c.texture[d*2+1]);
+    std::swap(c.texture[d*2], c.texture[d*2+1]);
     c.faces[D[d]] = dflip(c.faces[D[d]]);
     c.faces[C[d]] = cflip(c.faces[C[d]]);
     c.faces[R[d]] = rflip(c.faces[R[d]]);
@@ -1067,7 +1067,7 @@ void flipcube(cube &c, int d)
         {
             if(i&octadim(d))
             {
-                swap(c.children[i], c.children[i-octadim(d)]);
+                std::swap(c.children[i], c.children[i-octadim(d)]);
             }
         }
         for(int i = 0; i < 8; ++i)
@@ -1102,11 +1102,11 @@ void rotatecube(cube &c, int d)
     c.faces[D[d]] = cflip(mflip(c.faces[D[d]]));
     c.faces[C[d]] = dflip(mflip(c.faces[C[d]]));
     c.faces[R[d]] = rflip(mflip(c.faces[R[d]]));
-    swap(c.faces[R[d]], c.faces[C[d]]);
+    std::swap(c.faces[R[d]], c.faces[C[d]]);
     //reassign textures
-    swap(c.texture[2*R[d]], c.texture[2*C[d]+1]);
-    swap(c.texture[2*C[d]], c.texture[2*R[d]+1]);
-    swap(c.texture[2*C[d]], c.texture[2*C[d]+1]);
+    std::swap(c.texture[2*R[d]], c.texture[2*C[d]+1]);
+    std::swap(c.texture[2*C[d]], c.texture[2*R[d]+1]);
+    std::swap(c.texture[2*C[d]], c.texture[2*C[d]+1]);
     //move child members
     if(c.children)
     {
@@ -1153,7 +1153,7 @@ void mpflip(selinfo &sel, bool local)
         {
             cube &a = SELECT_CUBE(x, y, z);
             cube &b = SELECT_CUBE(x, y, zs-z-1);
-            swap(a, b);
+            std::swap(a, b);
         }
     }
     rootworld.changed(sel);
