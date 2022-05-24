@@ -534,10 +534,6 @@ void entrotate(int *cw)
 VAR(entselsnap, 0, 0, 1);
 
 extern void boxs(int orient, vec o, const vec &s, float size);
-extern void boxs(int orient, vec o, const vec &s);
-extern void boxs3D(const vec &o, vec s, int g);
-extern bool editmoveplane(const vec &o, const vec &ray, int d, float off, vec &handle, vec &dest, bool first);
-
 
 VAR(showentradius, 0, 1, 1);
 
