@@ -313,11 +313,12 @@ namespace game
         }
     };
 
-    vector<bouncer *> bouncers;
+    static std::vector<bouncer *> bouncers;
 
     void newbouncer(const vec &from, const vec &to, bool local, int id, gameent *owner, int type, int lifetime, int speed)
     {
-        bouncer &bnc = *bouncers.add(new bouncer);
+        bouncers.push_back(new bouncer);
+        bouncer &bnc = *bouncers.back();
         bnc.o = from;
         bnc.radius = bnc.xradius = bnc.yradius = type==Bouncer_Debris ? 0.5f : 1.5f;
         bnc.eyeheight = bnc.radius;
@@ -373,7 +374,7 @@ namespace game
 
     void updatebouncers(int time)
     {
-        for(int i = 0; i < bouncers.length(); i++) //∀ bouncers currently in the game
+        for(uint i = 0; i < bouncers.size(); i++) //∀ bouncers currently in the game
         {
             bouncer &bnc = *bouncers[i];
             vec old(bnc.o);
@@ -392,7 +393,9 @@ namespace game
             }
             if(stopped) //kill bouncer object if above check passes
             {
-                delete bouncers.remove(i--);
+                delete bouncers[i];
+                bouncers.erase(bouncers.begin() + i);
+                i--;
             }
             else //time evolution
             {
@@ -404,19 +407,24 @@ namespace game
 
     void removebouncers(gameent *owner)
     {
-        for(int i = 0; i < bouncers.length(); i++)
+        for(uint i = 0; i < bouncers.size(); i++)
         {
             if(bouncers[i]->owner==owner)
             {
                 delete bouncers[i];
-                bouncers.remove(i--);
+                bouncers.erase(bouncers.begin() + i);
+                i--;
             }
         }
     }
 
     void clearbouncers()
     {
-        bouncers.deletecontents();
+        for(bouncer * i : bouncers)
+        {
+            delete i;
+        }
+        bouncers.clear();
     }
 
     struct projectile
@@ -1140,7 +1148,7 @@ namespace game
     void renderbouncers()
     {
         float yaw, pitch;
-        for(int i = 0; i < bouncers.length(); i++)
+        for(uint i = 0; i < bouncers.size(); i++)
         {
             bouncer &bnc = *bouncers[i];
             vec pos(bnc.o);
