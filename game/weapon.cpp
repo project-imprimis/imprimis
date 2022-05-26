@@ -440,13 +440,17 @@ namespace game
         int deathtime;
         int gravity;
     };
-    vector<projectile> projs;
+    std::vector<projectile> projs;
 
-    void clearprojectiles() { projs.shrink(0); }
+    void clearprojectiles()
+    {
+        projs.clear();
+    }
 
     void newprojectile(const vec &from, const vec &to, float speed, bool local, int id, gameent *owner, int atk, int lifetime, int pgravity)
     {
-        projectile &p = projs.add();
+        projs.emplace_back();
+        projectile &p = projs.back();
         p.dir = vec(to).sub(from).safenormalize();
         p.o = from;
         p.from = from;
@@ -465,12 +469,13 @@ namespace game
 
     void removeprojectiles(gameent *owner)
     {
-        int len = projs.length();
+        int len = projs.size();
         for(int i = 0; i < len; ++i)
         {
             if(projs[i].owner==owner)
             {
-                projs.remove(i--);
+                projs.erase(projs.begin() + i);
+                i--;
                 len--;
             }
         }
@@ -637,7 +642,7 @@ namespace game
         {
             case Attack_PulseShoot: //pulse rifle is currently the only weapon to do this
             {
-                for(int i = 0; i < projs.length(); i++)
+                for(uint i = 0; i < projs.size(); i++)
                 {
                     projectile &p = projs[i];
                     if(p.atk == atk && p.owner == d && p.id == id && !p.local)
@@ -645,7 +650,7 @@ namespace game
                         vec pos = vec(p.offset).mul(p.offsetmillis/static_cast<float>(offsetmillis)).add(p.o);
                         explode(p.local, p.owner, pos, p.dir, nullptr, 0, atk);
                         pulsestain(p, pos);
-                        projs.remove(i);
+                        projs.erase(projs.begin() + i);
                         break;
                     }
                 }
@@ -741,7 +746,7 @@ namespace game
             return;
         }
         gameent *noside = hudplayer();
-        for(int i = 0; i < projs.length(); i++) //loop through all projectiles in the game
+        for(uint i = 0; i < projs.size(); i++) //loop through all projectiles in the game
         {
             projectile &p = projs[i];
             p.offsetmillis = max(p.offsetmillis-time, 0);
@@ -817,7 +822,8 @@ namespace game
                     addmsg(NetMsg_Explode, "rci3iv", p.owner, lastmillis-maptime, p.atk, p.id-maptime,
                             hits.size(), hits.size()*sizeof(hitmsg)/sizeof(int), hits.data()); //sizeof int should always be 4 bytes
                 }
-                projs.remove(i--);
+                projs.erase(projs.begin() + i);
+                i--;
             }
             else
             {
@@ -1132,7 +1138,7 @@ namespace game
 
     void adddynlights()
     {
-        for(int i = 0; i < projs.length(); i++)
+        for(uint i = 0; i < projs.size(); i++)
         {
             projectile &p = projs[i];
             if(p.atk!=Attack_PulseShoot)
@@ -1225,7 +1231,7 @@ namespace game
 
     void avoidweapons(ai::avoidset &obstacles, float radius)
     {
-        for(int i = 0; i < projs.length(); i++)
+        for(uint i = 0; i < projs.size(); i++)
         {
             projectile &p = projs[i];
             obstacles.avoidnear(nullptr, p.o.z + attacks[p.atk].exprad + 1, p.o, radius + attacks[p.atk].exprad);
