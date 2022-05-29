@@ -574,7 +574,7 @@ const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudso
     { Gun_Rail,    Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,    Sound_Rail2,    300,  5,  20, 0,    0, 10, 1200,  1,  200,  0, 0, 0, 1,  60, 100, 0},
     { Gun_Pulse,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1,   Sound_Pulse2,   700,  8,  10, 1,    6, 50, 9000,  1, 2500, 50, 1, 0, 0, 200, 300, 5},
     { Gun_Eng,     Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,    Sound_Melee,    250,  0,   0, 1,    0,  0,   80,  1,   10, 20, 2, 0, 1,   1, 100, 0},
-    { Gun_Shotgun, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1, 750,  1,  75, 1,    0,  2,  384, 12,   50,  0, 0, 0, 1,  10, 100, 0},
+    { Gun_Shotgun, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1, 750,  2,  75, 1,    0,  2,  384,  8,   50,  0, 0, 0, 1,  10, 100, 0},
     { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1,  90,  2, 100, 0,    0,  2,  512,  1,   50,  0, 0, 0, 1,  25, 125, 0},
 };
 

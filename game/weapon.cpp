@@ -1108,23 +1108,10 @@ namespace game
             {
                 d->sprinting = 1;
             }
-            if(attacks[atk].rays > 1)
-            {
-                for(int i = 0; i < attacks[atk].rays; ++i)
-                {
-                    addmsg(NetMsg_Shoot, "rci2i6iv", d, lastmillis-maptime, atk,
-                           static_cast<int>(from.x*DMF), static_cast<int>(from.y*DMF), static_cast<int>(from.z*DMF),
-                           static_cast<int>(rays[i].x*DMF),   static_cast<int>(rays[i].y*DMF),   static_cast<int>(rays[i].z*DMF),
-                           hits.size(), hits.size()*sizeof(hitmsg)/sizeof(int), hits.data()); //sizeof int should always equal 4 (bytes) = 32b
-                }
-            }
-            else
-            {
-                    addmsg(NetMsg_Shoot, "rci2i6iv", d, lastmillis-maptime, atk,
-                           static_cast<int>(from.x*DMF), static_cast<int>(from.y*DMF), static_cast<int>(from.z*DMF),
-                           static_cast<int>(to.x*DMF),   static_cast<int>(to.y*DMF),   static_cast<int>(to.z*DMF),
-                           hits.size(), hits.size()*sizeof(hitmsg)/sizeof(int), hits.data()); //sizeof int should always equal 4 (bytes) = 32b
-            }
+            addmsg(NetMsg_Shoot, "rci2i6iv", d, lastmillis-maptime, atk,
+                   static_cast<int>(from.x*DMF), static_cast<int>(from.y*DMF), static_cast<int>(from.z*DMF),
+                   static_cast<int>(to.x*DMF),   static_cast<int>(to.y*DMF),   static_cast<int>(to.z*DMF),
+                   hits.size(), hits.size()*sizeof(hitmsg)/sizeof(int), hits.data()); //sizeof int should always equal 4 (bytes) = 32b
         }
 
         d->gunwait = attacks[atk].attackdelay;
