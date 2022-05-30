@@ -483,6 +483,12 @@ namespace ai
         {
             weappref = randomint(2); //do not allow eng/carbine preferences, they are suboptimal
             aiplayer->combatclass = weappref;
+            aiplayer->gunselect = weappref;
+            if(aiplayer->team == 2)
+            {
+                aiplayer->combatclass = 3; //for red team, always shotgun
+                aiplayer->gunselect = 3;
+            }
         }
         vec dp = aiplayer->headpos();
         findorientation(dp, aiplayer->yaw, aiplayer->pitch, target);
@@ -1325,22 +1331,16 @@ namespace ai
             static const int gunprefs[] =
             {
                 Gun_Pulse,
-                Gun_Rail
+                Gun_Rail,
+                Gun_Shotgun
             };
             int gun = -1;
-            if(aiplayer->hasammo(weappref) && hasrange(e, weappref))
+            for(uint i = 0; i < sizeof(gunprefs)/sizeof(gunprefs[0]); ++i)
             {
-                gun = weappref;
-            }
-            else
-            {
-                for(int i = 0; i < static_cast<int>(sizeof(gunprefs)/sizeof(gunprefs[0])); ++i)
+                if(weaponallowed(gunprefs[i], aiplayer))
                 {
-                    if(aiplayer->hasammo(gunprefs[i]) && hasrange(e, gunprefs[i]))
-                    {
-                        gun = gunprefs[i];
-                        break;
-                    }
+                    gun = gunprefs[i];
+                    break;
                 }
             }
             if(gun >= 0 && gun != aiplayer->gunselect)

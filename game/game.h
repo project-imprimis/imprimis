@@ -562,7 +562,8 @@ enum
     HudIcon_Size    = 120,
 };
 
-const int MAXRAYS = 12,
+//you will buffer overflow the rays vector if rays > MAXRAYS
+const int MAXRAYS = 16,
           EXP_SELFDAMDIV = 2;
 const float EXP_SELFPUSH  = 2.5f,
             EXP_DISTSCALE = 0.5f;
@@ -573,8 +574,8 @@ const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudso
 {
     { Gun_Rail,    Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,    Sound_Rail2,    300,  5,  20, 0,    0, 10, 1200,  1,  200,  0, 0, 0, 1,  60, 100, 0},
     { Gun_Pulse,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1,   Sound_Pulse2,   700,  8,  10, 1,    6, 50, 9000,  1, 2500, 50, 1, 0, 0, 200, 300, 5},
-    { Gun_Eng,     Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,    Sound_Melee,    250,  0,   0, 1,    0,  0,   80,  1,   10, 20, 2, 0, 1,   1, 100, 0},
-    { Gun_Shotgun, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1, 750,  2,  75, 1,    0,  2,  384,  8,   50,  0, 0, 0, 1,  10, 100, 0},
+    { Gun_Eng,     Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,    Sound_Melee,    250,  0,   0, 1,    0,  0,   80,  1,   10, 20, 2, 0, 1,  10, 100, 0},
+    { Gun_Shotgun, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1, 750,  1,  75, 0,    0, 10,  384, 13,   50,  0, 0, 0, 1,  20, 100, 0},
     { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1,  90,  2, 100, 0,    0,  2,  512,  1,   50,  0, 0, 0, 1,  25, 125, 0},
 };
 
@@ -972,6 +973,7 @@ namespace game
     // weapon
     extern int spawncombatclass;
     extern int getweapon(const char *name);
+    extern bool weaponallowed(int weapon, gameent * player = player1); //returns whether weapon is valid for player's class
     extern void shoot(gameent *d, const vec &targ);
     extern void shoteffects(int atk, const vec &from, const vec &to, gameent *d, bool local, int id, int prevaction);
     extern void explode(bool local, gameent *owner, const vec &v, const vec &vel, dynent *safe, int dam, int atk);

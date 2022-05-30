@@ -70,10 +70,10 @@ namespace game
         d->gunselect = gun;
     }
 
-    bool weaponallowed(int weapon)
+    bool weaponallowed(int weapon, gameent * player)
     {
         //rifle
-        if(player1->combatclass == 0)
+        if(player->combatclass == 0)
         {
             switch(weapon)
             {
@@ -85,7 +85,7 @@ namespace game
             }
         }
         //demo
-        else if(player1->combatclass == 1)
+        else if(player->combatclass == 1)
         {
             switch(weapon)
             {
@@ -97,7 +97,7 @@ namespace game
             }
         }
         //eng
-        else if(player1->combatclass == 2)
+        else if(player->combatclass == 2)
         {
             switch(weapon)
             {
@@ -109,7 +109,7 @@ namespace game
             }
         }
         //shotgun
-        else if(player1->combatclass == 3)
+        else if(player->combatclass == 3)
         {
             switch(weapon)
             {
