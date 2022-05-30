@@ -412,6 +412,7 @@ namespace game
     {
         if(player1->state==ClientState_Dead)
         {
+            checkclass();
             player1->attacking = Act_Idle;
             if(lastmillis < player1->lastpain + spawnwait)
             {

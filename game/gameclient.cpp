@@ -2013,6 +2013,7 @@ namespace game
                         {
                             toggleedit();
                         }
+                        checkclass();
                         s->combatclass = spawncombatclass;
                     }
                     parsestate(s, p);

@@ -42,7 +42,29 @@ namespace game
     }
     COMMAND(getweaponheat, "");
 
-    VAR(spawncombatclass, 0, 0, 3);
+    VARF(spawncombatclass, 0, 0, 3,
+    {
+        checkclass();
+    });
+
+    //sets spawncombatclass to a valid class for the team
+    void checkclass()
+    {
+        if(player1->team == 1)
+        {
+            if(spawncombatclass > 1)
+            {
+                spawncombatclass = 0; //don't allow wrong class
+            }
+        }
+        else if(player1->team == 2)
+        {
+            if(spawncombatclass <= 1)
+            {
+                spawncombatclass = 3; //don't allow wrong class
+            }
+        }
+    }
 
 /*getcombatclass
  * returns the combat class the player currently has (may be different than
@@ -981,8 +1003,7 @@ namespace game
     {
         dynent *o;
         float dist;
-        int maxrays = attacks[atk].rays,
-            margin = attacks[atk].margin;
+        int margin = attacks[atk].margin;
         if((o = intersectclosest(from, to, d, margin, dist)))
         {
             shorten(from, to, dist);
