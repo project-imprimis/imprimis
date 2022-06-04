@@ -426,7 +426,7 @@ void edithmap(int dir, int mode)
         multiplayerwarn();
         return;
     }
-    hmap::run(dir, mode);
+    heightmaprun(dir, mode);
 }
 
 void editface(int *dir, int *mode)

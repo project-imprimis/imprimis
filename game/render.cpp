@@ -940,7 +940,7 @@ namespace game
 
                 if(hmapedit==1 && DIM_COORD(horient) == (camdir[DIMENSION(horient)]<0))
                 {
-                    hmapsel = hmap::isheightmap(horient, false, *c);
+                    hmapsel = isheightmap(horient, false, *c);
                     if(hmapsel)
                     {
                         od = DIMENSION(orient = horient);
