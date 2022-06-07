@@ -170,8 +170,8 @@ namespace ai
 
         if(dist <= mdist)
         {
-            float x = fmod(fabs(asin((q.z-o.z)/dist)/RAD-pitch), 360),
-                  y = fmod(fabs(-atan2(q.x-o.x, q.y-o.y)/RAD-yaw), 360);
+            float x = fmod(fabs(asin((q.z-o.z)/dist)*RAD-pitch), 360),
+                  y = fmod(fabs(-atan2(q.x-o.x, q.y-o.y)*RAD-yaw), 360);
             if(min(x, 360-x) <= fovx && min(y, 360-y) <= fovy)
             {
                 return raycubelos(o, q, v);
@@ -1075,8 +1075,8 @@ namespace ai
     void waypointai::getyawpitch(const vec &from, const vec &pos, float &yaw, float &pitch)
     {
         float dist = from.dist(pos);
-        yaw = -atan2(pos.x-from.x, pos.y-from.y)/RAD;
-        pitch = asin((pos.z-from.z)/dist)/RAD;
+        yaw = -atan2(pos.x-from.x, pos.y-from.y)*RAD;
+        pitch = asin((pos.z-from.z)/dist)*RAD;
     }
 
     void waypointai::scaleyawpitch(float &yaw, float &pitch, float targyaw, float targpitch, float frame, float scale)

@@ -587,7 +587,7 @@ void vangle(float *a)
     }
     VSlot ds;
     ds.changed = 1 << VSlot_Angle;
-    ds.angle = vec(*a, sinf(RAD**a), cosf(RAD**a));
+    ds.angle = vec(*a, sinf(*a/RAD), cosf(*a/RAD));
     mpeditvslot(usevdelta, ds, allfaces, sel, true);
 }
 COMMAND(vangle, "f");
