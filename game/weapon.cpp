@@ -421,7 +421,7 @@ namespace game
             }
             else //time evolution
             {
-                bnc.roll += old.sub(bnc.o).magnitude()/(4*RAD);
+                bnc.roll += old.sub(bnc.o).magnitude()/(4/RAD);
                 bnc.offsetmillis = max(bnc.offsetmillis-time, 0);
             }
         }
