@@ -51,12 +51,12 @@ namespace game
         {
             dir.mul(maxdist/dist);
         }
-        dir.rotate_around_z(-camera1->yaw*RAD);
+        dir.rotate_around_z(-camera1->yaw/RAD);
         float bs = 0.06f*blipsize*s,
               bx = x + s*0.5f*(1.0f + dir.x),
               by = y + s*0.5f*(1.0f + dir.y);
         vec v(-0.5f, -0.5f, 0);
-        v.rotate_around_z((90+o->yaw-camera1->yaw)*RAD);
+        v.rotate_around_z((90+o->yaw-camera1->yaw)/RAD);
         gle::attribf(bx + bs*v.x, by + bs*v.y); gle::attribf(0, 0);
         gle::attribf(bx + bs*v.y, by - bs*v.x); gle::attribf(1, 0);
         gle::attribf(bx - bs*v.x, by - bs*v.y); gle::attribf(1, 1);
@@ -170,7 +170,7 @@ namespace game
               rsize = s + 2*roffset;
         pushhudmatrix();
         hudmatrix.translate(x - roffset + 0.5f*rsize, y - roffset + 0.5f*rsize, 0);
-        hudmatrix.rotate_around_z((camera1->yaw + 180)*-RAD);
+        hudmatrix.rotate_around_z((camera1->yaw + 180)/-RAD);
         flushhudmatrix();
         pophudmatrix();
         drawplayerblip(d, x, y+50, s, 1.5f);
