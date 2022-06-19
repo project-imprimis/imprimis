@@ -160,9 +160,24 @@ namespace ai
             return false;
         }
          //if player is alive and not on the same team
-        return e->state == ClientState_Alive && !(modecheck(gamemode, Mode_Team) && aiplayer->team == e->team);
+        bool istarget = e->state == ClientState_Alive && !(modecheck(gamemode, Mode_Team) && aiplayer->team == e->team);
+        //now check if the ray towards the target intersects any players on own team
+        if(istarget)
+        {
+            for(int i = 0; i < players.length(); ++i)
+            {
+                //select non-self team members to check against
+                if(players[i]->team == aiplayer->team && players[i] != aiplayer)
+                {
+                    if(intersect(players[i], aiplayer->o, target))
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return istarget;
     }
-
 
     bool waypointai::getsight(vec &o, float yaw, float pitch, vec &q, vec &v, float mdist, float fovx, float fovy)
     {
