@@ -976,19 +976,22 @@ namespace game
         for(int i = 0; i < numdynents; ++i)
         {
             dynent *o = iterdynents(i);
-            if(o==at || o->state!=ClientState_Alive)
+            if(o != nullptr)
             {
-                continue;
-            }
-            float dist;
-            if(!intersect(o, from, to, margin, dist))
-            {
-                continue;
-            }
-            if(dist<bestdist)
-            {
-                best = o;
-                bestdist = dist;
+                if(o==at || o->state!=ClientState_Alive)
+                {
+                    continue;
+                }
+                float dist;
+                if(!intersect(o, from, to, margin, dist))
+                {
+                    continue;
+                }
+                if(dist<bestdist)
+                {
+                    best = o;
+                    bestdist = dist;
+                }
             }
         }
         return best;
