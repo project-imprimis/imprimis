@@ -10,7 +10,7 @@
         entadd(enthover); \
         undonext = (enthover != oldhover); \
         f; \
-        entgroup.drop(); \
+        entgroup.pop_back(); \
     } \
     else \
     { \
@@ -82,7 +82,7 @@
     vector<extentity *> &ents = entities::getents(); \
     entlooplevel++; \
     int efocusplaceholder = efocus; \
-    for(int i = 0; i < entgroup.length(); i++) \
+    for(uint i = 0; i < entgroup.size(); i++) \
     { \
         ENT_EDIT_V(entgroup[i], f, ents); \
     } \
@@ -134,7 +134,7 @@ bool undonext = true;
 void entadd(int id)
 {
     undonext = true;
-    entgroup.add(id);
+    entgroup.push_back(id);
 }
 
 bool noentedit()
@@ -149,7 +149,7 @@ bool noentedit()
 
 undoblock *newundoent()
 {
-    int numents = entgroup.length();
+    uint numents = entgroup.size();
     if(numents <= 0)
     {
         return NULL;
@@ -157,7 +157,7 @@ undoblock *newundoent()
     undoblock *u = (undoblock *)new uchar[sizeof(undoblock) + numents*sizeof(undoent)];
     u->numents = numents;
     undoent *e = (undoent *)(u + 1);
-    for(int i = 0; i < entgroup.length(); i++)
+    for(uint i = 0; i < entgroup.size(); i++)
     {
         e->i = entgroup[i];
         e->e = *entities::getents()[entgroup[i]];
@@ -289,14 +289,14 @@ void nearestent()
             closedist = dist;
         }
     }
-    if(closest >= 0 && entgroup.find(closest) < 0)
+    if(closest >= 0 && std::find(entgroup.begin(), entgroup.end(), closest) != entgroup.end())
     {
         entadd(closest);
     }
 }
 
-ICOMMAND(enthavesel,"",  (), ADD_IMPLICIT(intret(entgroup.length())));
-ICOMMAND(entselect, "e", (uint *body), if(!noentedit()) ADD_GROUP(e.type != EngineEnt_Empty && entgroup.find(n)<0 && executebool(body)));
+ICOMMAND(enthavesel,"",  (), ADD_IMPLICIT(intret(entgroup.size())));
+ICOMMAND(entselect, "e", (uint *body), if(!noentedit()) ADD_GROUP(e.type != EngineEnt_Empty && std::find(entgroup.begin(), entgroup.end(), n) != entgroup.end() && executebool(body)));
 ICOMMAND(entloop,   "e", (uint *body), if(!noentedit()) ADD_IMPLICIT(GROUP_EDIT_LOOP(((void)e, execute(body)))));
 ICOMMAND(insel,     "",  (), ENT_FOCUS(efocus, intret(pointinsel(sel, e.o))));
 ICOMMAND(entget,    "",  (), ENT_FOCUS(efocus, string s; printent(e, s, sizeof(s)); result(s)));
@@ -448,7 +448,7 @@ void findplayerspawn(dynent *d, int forceent, int tag) // place at random spawn
 vec getselpos()
 {
     vector<extentity *> &ents = entities::getents();
-    if(entgroup.length() && ents.inrange(entgroup[0]))
+    if(entgroup.size() && ents.length() > entgroup[0])
     {
         return ents[entgroup[0]]->o;
     }
@@ -472,7 +472,10 @@ undoblock *copyundoents(undoblock *u)
     {
         if(e[i].e.type==EngineEnt_Empty)
         {
-            entgroup.removeobj(e[i].i);
+            if(std::find(entgroup.begin(), entgroup.end(), e[i].i) != entgroup.end())
+            {
+                entgroup.erase(std::find(entgroup.begin(), entgroup.end(), e[i].i));
+            }
         }
     }
     return c;
@@ -835,12 +838,12 @@ void renderentselection(const vec &o, const vec &ray, bool entmoving)
     }
     vec eo, es;
 
-    if(entgroup.length())
+    if(entgroup.size())
     {
         gle::colorub(0, 40, 0);
         gle::defvertex();
-        gle::begin(GL_LINES, entgroup.length()*24);
-        for(int i = 0; i < entgroup.length(); i++)
+        gle::begin(GL_LINES, entgroup.size()*24);
+        for(uint i = 0; i < entgroup.size(); i++)
         {
             ENT_FOCUS(entgroup[i],
                 entselectionbox(e, eo, es);
@@ -864,7 +867,7 @@ void renderentselection(const vec &o, const vec &ray, bool entmoving)
     {
         glDepthFunc(GL_GREATER);
         gle::colorf(0.25f, 0.25f, 0.25f);
-        for(int i = 0; i < entgroup.length(); i++)
+        for(uint i = 0; i < entgroup.size(); i++)
         {
             ENT_FOCUS(entgroup[i], renderentradius(e, false));
         }
@@ -873,7 +876,7 @@ void renderentselection(const vec &o, const vec &ray, bool entmoving)
             ENT_FOCUS(enthover, renderentradius(e, false));
         }
         glDepthFunc(GL_LESS);
-        for(int i = 0; i < entgroup.length(); i++)
+        for(uint i = 0; i < entgroup.size(); i++)
         {
             ENT_FOCUS(entgroup[i], renderentradius(e, true));
         }
@@ -888,16 +891,17 @@ void renderentselection(const vec &o, const vec &ray, bool entmoving)
 bool enttoggle(int id)
 {
     undonext = true;
-    int i = entgroup.find(id);
-    if(i < 0)
+    auto i = std::find(entgroup.begin(), entgroup.end(), id);
+    bool notfound = i == entgroup.end();
+    if(notfound)
     {
         entadd(id);
     }
     else
     {
-        entgroup.remove(i);
+        entgroup.erase(i);
     }
-    return i < 0;
+    return notfound;
 }
 
 bool hoveringonent(int ent, int orient)
@@ -911,7 +915,7 @@ bool hoveringonent(int ent, int orient)
     {
         return true;
     }
-    efocus   = entgroup.empty() ? -1 : entgroup.last();
+    efocus   = entgroup.empty() ? -1 : entgroup.back();
     enthover = -1;
     return false;
 }
@@ -920,7 +924,7 @@ ICOMMAND(entadd, "", (),
 {
     if(enthover >= 0 && !noentedit())
     {
-        if(entgroup.find(enthover) < 0)
+        if(std::find(entgroup.begin(), entgroup.end(), enthover) != entgroup.end())
         {
             entadd(enthover);
         }
@@ -958,7 +962,7 @@ ICOMMAND(entmoving, "b", (int *n),
         }
         else
         {
-            if(entgroup.find(enthover) < 0)
+            if(std::find(entgroup.begin(), entgroup.end(), enthover) != entgroup.end())
             {
                 entadd(enthover);
                 entmoving = 1;
@@ -1003,10 +1007,10 @@ void entautoview(int *dir)
     v.normalize();
     v.mul(entautoviewdist);
     int t = s + *dir;
-    s = abs(t) % entgroup.length();
+    s = abs(t) % entgroup.size();
     if(t<0 && s>0)
     {
-        s = entgroup.length() - s;
+        s = entgroup.size() - s;
     }
     ENT_FOCUS(entgroup[s],
         v.add(e.o);
@@ -1243,7 +1247,7 @@ void entcopy()
     entcopygrid = sel.grid;
     entcopybuf.shrink(0);
     ADD_IMPLICIT({
-        for(int i = 0; i < entgroup.length(); i++)
+        for(uint i = 0; i < entgroup.size(); i++)
         {
             ENT_FOCUS(entgroup[i], entcopybuf.add(e).o.sub(vec(sel.o)));
         }
@@ -1283,7 +1287,7 @@ void entreplace()
         return;
     }
     const entity &c = entcopybuf[0];
-    if(entgroup.length() || enthover >= 0)
+    if(entgroup.size() || enthover >= 0)
     {
         GROUP_EDIT({
             e.type = c.type;
@@ -1353,7 +1357,7 @@ void entdrag(const vec &ray)
     int d = DIMENSION(entorient),
         dc= DIM_COORD(entorient);
 
-    ENT_FOCUS(entgroup.last(),
+    ENT_FOCUS(entgroup.back(),
         entselectionbox(e, eo, es);
 
         if(!editmoveplane(e.o, ray, d, eo[d] + (dc ? es[d] : 0), handle, dest, entmoving==1))
