@@ -2732,7 +2732,7 @@ namespace game
                 case NetMsg_GetRoundTimer:
                 {
                     int time = getint(p);
-                    maplimit = time;
+                    maplimit = lastmillis + time;
                     break;
                 }
                 default:
