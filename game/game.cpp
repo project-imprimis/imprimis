@@ -723,6 +723,9 @@ namespace game
                 stopfollowing();
             }
         }
+        //we need to update the dynent vector to reflect the lost player and avoid use-after-free
+        updateenginevalues();
+
     }
 
     void clearclients(bool notify)

@@ -1056,6 +1056,9 @@ namespace game
     extern const char *defaultconfig();
 }
 
+//main
+extern void updateenginevalues();
+
 // game
 extern int thirdperson;
 extern bool isthirdperson();
