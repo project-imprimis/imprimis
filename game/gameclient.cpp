@@ -2729,6 +2729,12 @@ namespace game
                     teaminfos[1].score = team2score;
                     break;
                 }
+                case NetMsg_GetRoundTimer:
+                {
+                    int time = getint(p);
+                    maplimit = time;
+                    break;
+                }
                 default:
                 {
                     neterr("packet of unknown type", cn < 0);
