@@ -1759,6 +1759,14 @@ namespace game
                     else
                     {
                         conoutf("game is %s", val ? "paused" : "resumed");
+                        if(val)
+                        {
+                            UI::showui("class_selection");
+                        }
+                        else
+                        {
+                            UI::hideui("class_selection");
+                        }
                     }
                     break;
                 }
