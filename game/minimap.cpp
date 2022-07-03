@@ -186,8 +186,8 @@ namespace game
 
     void updateminimap()
     {
-        vec cameraoffset = vec(0,00,200);//.rotate_around_z(M_PI*game::player1->yaw/180);
+        vec cameraoffset = vec(0,0,190);//.rotate_around_z(M_PI*game::player1->yaw/180);
         cameraoffset = cameraoffset.add(game::player1->o);
-        drawminimap(game::player1->yaw, -40, cameraoffset, rootworld, 1);
+        drawminimap(game::player1->yaw, -42, cameraoffset, rootworld, 2);
     }
 }
