@@ -8,6 +8,7 @@
 //ragdoll handling
 //player colors
 
+bool boxoutline = false;
 
 namespace game
 {
@@ -568,7 +569,7 @@ namespace game
         }
         gle::colorub(190,190,190);
 
-        boxs3D(vec(lu), vec(lusize), 1);
+        boxs3D(vec(lu), vec(lusize), 1, boxoutline);
 
         disablepolygonoffset(GL_POLYGON_OFFSET_LINE);
 
@@ -1020,7 +1021,7 @@ namespace game
             {
                 gle::colorub(120,120,120);
             }
-            boxs(orient, vec(lu), vec(lusize));
+            boxs(orient, vec(lu), vec(lusize), boxoutline);
         }
 
         // selections
@@ -1028,9 +1029,9 @@ namespace game
         {
             d = DIMENSION(sel.orient);
             gle::colorub(50,50,50);   // grid
-            boxsgrid(sel.orient, vec(sel.o), vec(sel.s), sel.grid);
+            boxsgrid(sel.orient, vec(sel.o), vec(sel.s), sel.grid, boxoutline);
             gle::colorub(200,0,0);    // 0 reference
-            boxs3D(vec(sel.o).sub(0.5f*std::min(gridsize*0.25f, 2.0f)), vec(std::min(gridsize*0.25f, 2.0f)), 1);
+            boxs3D(vec(sel.o).sub(0.5f*std::min(gridsize*0.25f, 2.0f)), vec(std::min(gridsize*0.25f, 2.0f)), 1, boxoutline);
             gle::colorub(200,200,200);// 2D selection box
             vec co(sel.o.v), cs(sel.s.v);
             co[R[d]] += 0.5f*(sel.cx*gridsize);
@@ -1038,7 +1039,7 @@ namespace game
             cs[R[d]]  = 0.5f*(sel.cxs*gridsize);
             cs[C[d]]  = 0.5f*(sel.cys*gridsize);
             cs[D[d]] *= gridsize;
-            boxs(sel.orient, co, cs);
+            boxs(sel.orient, co, cs, boxoutline);
             if(hmapedit==1)         // 3D selection box
             {
                 gle::colorub(0,120,0);
@@ -1047,7 +1048,7 @@ namespace game
             {
                 gle::colorub(0,0,120);
             }
-            boxs3D(vec(sel.o), vec(sel.s), sel.grid);
+            boxs3D(vec(sel.o), vec(sel.s), sel.grid, boxoutline);
         }
 
         disablepolygonoffset(GL_POLYGON_OFFSET_LINE);

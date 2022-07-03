@@ -857,10 +857,10 @@ void renderentselection(const vec &o, const vec &ray, bool entmoving)
     {
         gle::colorub(0, 40, 0);
         ENT_FOCUS(enthover, entselectionbox(e, eo, es)); // also ensures enthover is back in focus
-        boxs3D(eo, es, 1);
+        boxs3D(eo, es, 1, boxoutline);
         gle::colorub(200,0,0);
-        boxs(entorient, eo, es);
-        boxs(entorient, eo, es, std::clamp(static_cast<float>(0.015f*camera1->o.dist(eo)*tan(fovy*0.5f/RAD)), 0.1f, 1.0f));
+        boxs(entorient, eo, es, boxoutline);
+        boxs(entorient, eo, es, std::clamp(static_cast<float>(0.015f*camera1->o.dist(eo)*tan(fovy*0.5f/RAD)), 0.1f, 1.0f), boxoutline);
     }
 
     if(showentradius)

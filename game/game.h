@@ -862,6 +862,8 @@ enum
     Edit_Redo
 };
 
+extern bool boxoutline;
+
 extern void mpeditent(int i, const vec &o, int type, int attr1, int attr2, int attr3, int attr4, int attr5, bool local);
 extern void entdrag(const vec &ray);
 
