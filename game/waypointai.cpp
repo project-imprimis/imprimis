@@ -287,24 +287,7 @@ namespace ai
         return o;
     }
 
-    void waypointai::create()
-    {
-        if(!aiplayer->ai)
-        {
-            aiplayer->ai = new waypointai;
-        }
-    }
-
-    void waypointai::destroy()
-    {
-        if(aiplayer->ai)
-        {
-            delete aiplayer->ai;
-            aiplayer->ai = nullptr;
-        }
-    }
-
-    void waypointai::init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team)
+    bool waypointai::init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team)
     {
         loadwaypoints();
 
@@ -356,7 +339,6 @@ namespace ai
         }
         if(d->ownernum >= 0 && player1->clientnum == d->ownernum)
         {
-            create();
             if(d->ai)
             {
                 views[0] = viewfieldx(d->skill);
@@ -366,8 +348,10 @@ namespace ai
         }
         else if(d->ai)
         {
-            destroy();
+            delete this;
+            return false;
         }
+        return true;
     }
 
     void update()

@@ -231,7 +231,7 @@ namespace ai
 
             virtual bool hasprevnode(int n) const = 0;
             virtual void addprevnode(int n) = 0;
-            virtual void init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team) = 0;
+            virtual bool init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team) = 0;
             virtual void spawned(gameent *d) = 0;
             virtual void damaged(gameent *e) = 0;
             virtual void killed() = 0;
@@ -275,7 +275,7 @@ namespace ai
                 }
             }
 
-            void init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team);
+            bool init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team);
             void spawned(gameent *d);
             void damaged(gameent *e);
             void killed();
@@ -327,8 +327,6 @@ namespace ai
             bool canshoot(int atk);
             bool hastarget(int atk, aistate &b, gameent *e, float yaw, float pitch, float dist);
             vec getaimpos(int atk, gameent *e);
-            void create();
-            void destroy();
             bool randomnode(aistate &b, const vec &pos, float guard, float wander);
             bool randomnode(aistate &b, float guard, float wander);
             bool isenemy(aistate &b, const vec &pos, float guard = sightmin, int pursue = 0);

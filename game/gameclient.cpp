@@ -2716,7 +2716,10 @@ namespace game
                         break;
                     }
                     b->ai = new ai::waypointai();
-                    b->ai->init(b, at, on, sk, bn, pm, col, name, team);
+                    if(!b->ai->init(b, at, on, sk, bn, pm, col, name, team))
+                    {
+                        b->ai = nullptr;
+                    }
                     break;
                 }
                 case NetMsg_ServerCommand:
