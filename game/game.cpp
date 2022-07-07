@@ -10,6 +10,8 @@ void physicsframe();
 
 const float jumpvel = 56.0f; //impulse scale for player jump
 
+static VAR(floatspeed, 1, 100, 10000);
+
 namespace game
 {
     bool intermission = false;

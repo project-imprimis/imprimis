@@ -10,6 +10,12 @@
 
 #include "nettools.h"
 
+constexpr float stairheight = 4.1f; //max height in cubits of an allowable step (4 = 0.5m)
+constexpr float floorz = 0.867f; //to be considered a level floor, slope is below this
+constexpr float slopez = 0.5f; //maximum climbable slope
+constexpr float wallz = 0.2f; //steeper than this is considered a wall
+constexpr float gravity = 100.0f; //downwards force scale
+
 //command macros only used in the game--the engine does not use these anywhere
 //create lambda and use as function pointer, then dereference it to cast as identfun
 //unary + operator on lambda used to degrade it to a function pointer
