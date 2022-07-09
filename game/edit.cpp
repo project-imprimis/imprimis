@@ -1,5 +1,7 @@
 #include "game.h"
 
+editinfo *localedit = nullptr;
+
 static const struct
 {
     const char *name;
