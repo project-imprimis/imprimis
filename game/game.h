@@ -1115,6 +1115,7 @@ extern bool mpeditvslot(int delta, int allfaces, selinfo &sel, ucharbuf &buf);
 extern void mpcalclight(bool local);
 
 extern uint getfacecorner(uint face, int num);
+extern editinfo *localedit;
 
 struct facearray
 {

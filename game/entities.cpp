@@ -128,6 +128,7 @@ int efocus    = -1,
     entorient = -1,
     oldhover  = -1;
 bool undonext = true;
+editinfo *localedit = nullptr;
 
 //=== ent modification functions ===//
 
