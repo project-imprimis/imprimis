@@ -1,6 +1,7 @@
 #include "game.h"
 
 editinfo *localedit = nullptr;
+int lasttexmillis = -1;
 
 static const struct
 {
