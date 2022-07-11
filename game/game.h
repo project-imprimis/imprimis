@@ -326,6 +326,22 @@ enum
 
 enum
 {
+    Discon_None = 0,
+    Discon_EndOfPacket,
+    Discon_Local,
+    Discon_Kick,
+    Discon_MsgError,
+    Discon_IPBan,
+    Discon_Private,
+    Discon_MaxClients,
+    Discon_Timeout,
+    Discon_Overflow,
+    Discon_Password,
+    Discon_NumDiscons
+};
+
+enum
+{
     Priv_None = 0,
     Priv_Master,
     Priv_Auth,
@@ -1115,6 +1131,8 @@ extern bool mpeditvslot(int delta, int allfaces, selinfo &sel, ucharbuf &buf);
 extern void mpcalclight(bool local);
 
 extern uint getfacecorner(uint face, int num);
+extern int shouldpacktex(int index);
+
 extern editinfo *localedit;
 
 struct facearray
