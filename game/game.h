@@ -858,12 +858,17 @@ struct teaminfo
 
 namespace entities
 {
-    extern vector<extentity *> ents;
-
+    extern void editent(int i, bool local);
     extern void resetspawns();
     extern void putitems(packetbuf &p);
     extern void setspawn(int i, bool on);
 }
+
+struct vslotref
+{
+    vslotref(int &index) { editingvslots.push_back(&index); }
+    ~vslotref() { editingvslots.pop_back(); }
+};
 
 enum
 {

@@ -114,14 +114,6 @@
     ADD_IMPLICIT(GROUP_EDIT_UNDO(f)); \
 }
 
-namespace entities
-{
-    extern void editent(int i, bool local);
-    extern vector<extentity *> &getents();
-}
-
-extern selinfo sel;
-extern bool havesel;
 int entlooplevel = 0;
 int efocus    = -1,
     enthover  = -1,

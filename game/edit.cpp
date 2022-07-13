@@ -28,7 +28,6 @@ ICOMMAND(calclight, "", (), mpcalclight(true));
 
 void mpremip(bool local)
 {
-    extern selinfo sel;
     if(local)
     {
         game::edittrigger(sel, Edit_Remip);
