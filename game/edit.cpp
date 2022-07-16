@@ -3,6 +3,12 @@
 editinfo *localedit = nullptr;
 int lasttexmillis = -1;
 
+struct vslotref
+{
+    vslotref(int &index) { editingvslots.push_back(&index); }
+    ~vslotref() { editingvslots.pop_back(); }
+};
+
 static const struct
 {
     const char *name;

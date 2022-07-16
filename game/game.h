@@ -60,6 +60,16 @@ struct VSlot;
 //game state information
 //game entity definition
 
+enum
+{
+    ClientState_Alive = 0,
+    ClientState_Dead,
+    ClientState_Spawning,
+    ClientState_Lagged,
+    ClientState_Editing,
+    ClientState_Spectator,
+};
+
 // animations
 // used in render.cpp
 enum
@@ -863,12 +873,6 @@ namespace entities
     extern void putitems(packetbuf &p);
     extern void setspawn(int i, bool on);
 }
-
-struct vslotref
-{
-    vslotref(int &index) { editingvslots.push_back(&index); }
-    ~vslotref() { editingvslots.pop_back(); }
-};
 
 enum
 {
