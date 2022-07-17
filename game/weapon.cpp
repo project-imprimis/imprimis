@@ -331,7 +331,7 @@ namespace game
 
         bouncer() : bounces(0), roll(0), variant(0)
         {
-            type = PhysEnt_Bounce;
+            type = physent::PhysEnt_Bounce;
         }
     };
 
@@ -381,7 +381,7 @@ namespace game
 
     void bounced(physent *d, const vec &surface)
     {
-        if(d->type != PhysEnt_Bounce)
+        if(d->type != physent::PhysEnt_Bounce)
         {
             return;
         }
@@ -543,7 +543,7 @@ namespace game
         gameent *f = (gameent *)d;
 
         f->lastpain = lastmillis;
-        if(at->type==PhysEnt_Player && at->team != f->team)
+        if(at->type==physent::PhysEnt_Player && at->team != f->team)
         {
             at->totaldamage += damage;
         }

@@ -460,7 +460,7 @@ namespace game
         {
             flags |= Model_CullVFC | Model_CullOccluded | Model_CullQuery;
         }
-        if(d->type==PhysEnt_Player)
+        if(d->type==physent::PhysEnt_Player)
         {
             flags |= Model_FullBright;
         }
@@ -696,7 +696,7 @@ namespace game
 
     struct hudent : dynent
     {
-        hudent() { type = PhysEnt_Camera; }
+        hudent() { type = physent::PhysEnt_Camera; }
     } guninterp;
 
     void drawhudmodel(gameent *d, int anim, int basetime)

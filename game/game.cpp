@@ -814,14 +814,14 @@ namespace game
         }
         if(floorlevel>0)
         {
-            if(d==player1 || d->type!=PhysEnt_Player || ((gameent *)d)->ai)
+            if(d==player1 || d->type!=physent::PhysEnt_Player || ((gameent *)d)->ai)
             {
                 msgsound(Sound_Jump, d);
             }
         }
         else if(floorlevel<0)
         {
-            if(d==player1 || d->type!=PhysEnt_Player || ((gameent *)d)->ai)
+            if(d==player1 || d->type!=physent::PhysEnt_Player || ((gameent *)d)->ai)
             {
                 msgsound(Sound_Land, d);
             }
@@ -837,7 +837,7 @@ namespace game
         }
         else
         {
-            if(d->type==PhysEnt_Player && ((gameent *)d)->ai)
+            if(d->type==physent::PhysEnt_Player && ((gameent *)d)->ai)
             {
                 addmsg(NetMsg_Sound, "ci", d, n);
             }
@@ -917,7 +917,7 @@ namespace game
 
     void suicide(physent *d)
     {
-        if(d==player1 || (d->type==PhysEnt_Player && ((gameent *)d)->ai))
+        if(d==player1 || (d->type==physent::PhysEnt_Player && ((gameent *)d)->ai))
         {
             if(d->state!=ClientState_Alive)
             {
@@ -979,7 +979,7 @@ namespace game
         else if(teamcrosshair && Mode_Team)
         {
             dynent *o = intersectclosest(d->o, worldpos, d);
-            if(o && o->type==PhysEnt_Player && validteam(d->team) && (reinterpret_cast<gameent *>(o))->team == d->team)
+            if(o && o->type==physent::PhysEnt_Player && validteam(d->team) && (reinterpret_cast<gameent *>(o))->team == d->team)
             {
                 crosshair = 1;
             }
@@ -1379,7 +1379,7 @@ bool move(physent *d, vec &dir)
     {
         obstacle = collidewall;
         /* check to see if there is an obstacle that would prevent this one from being used as a floor (or ceiling bump) */
-        if(d->type==PhysEnt_Player && ((collidewall.z>=slopez && dir.z<0) || (collidewall.z<=-slopez && dir.z>0)) && (dir.x || dir.y) && collide(d, vec(dir.x, dir.y, 0)))
+        if(d->type==physent::PhysEnt_Player && ((collidewall.z>=slopez && dir.z<0) || (collidewall.z<=-slopez && dir.z>0)) && (dir.x || dir.y) && collide(d, vec(dir.x, dir.y, 0)))
         {
             if(collidewall.dot(dir) >= 0)
             {
@@ -1591,7 +1591,7 @@ bool moveplayer(gameent *pl, int moveres, bool local, int curtime) //always retu
 {
     int material = rootworld.lookupmaterial(vec(pl->o.x, pl->o.y, pl->o.z + (3*pl->aboveeye - pl->eyeheight)/4));
     bool water = IS_LIQUID(material&MatFlag_Volume);
-    bool floating = pl->type==PhysEnt_Player && (pl->state==ClientState_Editing || pl->state==ClientState_Spectator);
+    bool floating = pl->type==physent::PhysEnt_Player && (pl->state==ClientState_Editing || pl->state==ClientState_Spectator);
     float secs = curtime/1000.f;
 
     // apply gravity
@@ -1710,7 +1710,7 @@ void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curt
     vec m(0.0f, 0.0f, 0.0f);
     if(pl->move || pl->strafe)
     {
-        vecfromyawpitch(pl->yaw, floating || water || pl->type==PhysEnt_Camera ? pl->pitch : 0, pl->move, pl->strafe, m);
+        vecfromyawpitch(pl->yaw, floating || water || pl->type==physent::PhysEnt_Camera ? pl->pitch : 0, pl->move, pl->strafe, m);
         if(!floating && pl->physstate >= PhysEntState_Slope)
         {
             /* move up or down slopes in air
@@ -1724,7 +1724,7 @@ void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curt
 
     vec d(m);
     d.mul(pl->maxspeed);
-    if(pl->type==PhysEnt_Player)
+    if(pl->type==physent::PhysEnt_Player)
     {
         if(floating)
         {
@@ -1975,7 +1975,7 @@ void recomputecamera()
             detachedcamera = shoulddetach;
         }
         camera1->reset();
-        camera1->type = PhysEnt_Camera;
+        camera1->type = physent::PhysEnt_Camera;
         camera1->move = -1;
         camera1->eyeheight = camera1->aboveeye = camera1->radius = camera1->xradius = camera1->yradius = 2;
 
