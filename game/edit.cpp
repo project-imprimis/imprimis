@@ -123,7 +123,7 @@ void swapundo(undolist &a, undolist &b, int op)
         }
         freeundo(u);
     }
-    commitchanges();
+    rootworld.commitchanges();
     if(!hmapsel)
     {
         sel = l;
@@ -235,7 +235,7 @@ bool unpackundo(const uchar *inbuf, int inlen, int outlen)
         unpackundocube(buf, outbuf);
     }
     delete[] outbuf;
-    commitchanges();
+    rootworld.commitchanges();
     return true;
 }
 

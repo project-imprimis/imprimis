@@ -834,7 +834,7 @@ namespace game
         //externs from engine below
         flushpreloadedmodels();
         preloadmapsounds();
-        entitiesinoctanodes();
+        rootworld.entitiesinoctanodes();
         attachentities();
         rootworld.allchanged(true);
     }

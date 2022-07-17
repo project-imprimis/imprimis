@@ -1403,7 +1403,7 @@ namespace game
             const char *mname = getclientmap();
             putint(p, NetMsg_MapCRC);
             sendstring(mname, p);
-            putint(p, mname[0] ? getmapcrc() : 0);
+            putint(p, mname[0] ? rootworld.getmapcrc() : 0);
         }
         if(senditemstoserver)
         {

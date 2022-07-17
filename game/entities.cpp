@@ -99,7 +99,7 @@
     else \
     { \
         GROUP_EDIT_LOOP(f); \
-        commitchanges(); \
+        rootworld.commitchanges(); \
     } \
 }
 
@@ -1211,7 +1211,7 @@ void newentity(int type, int a1, int a2, int a3, int a4, int a5, bool fix = true
     enttoggle(idx);
     makeundoent();
     ENT_EDIT(idx, e.type = type);
-    commitchanges();
+    rootworld.commitchanges();
 }
 
 void newent(char *what, int *a1, int *a2, int *a3, int *a4, int *a5)
@@ -1333,7 +1333,7 @@ void mpeditent(int i, const vec &o, int type, int attr1, int attr2, int attr3, i
     }
     entities::editent(i, local);
     clearshadowcache();
-    commitchanges();
+    rootworld.commitchanges();
 }
 
 void entdrag(const vec &ray)
