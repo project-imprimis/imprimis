@@ -1,4 +1,7 @@
-CXXFLAGS= -O3 -ffast-math -std=c++17 -march=x86-64 -Wall -fsigned-char
+CXXFLAGS ?= -O3 -ffast-math -Wall
+CXXFLAGS += -std=c++17 -march=x86-64 -fsigned-char
+
+PREFIX ?= /usr/local
 
 #set appropriate library includes
 CLIENT_INCLUDES= -Igame -Ienet/include -I/usr/X11R6/include `sdl2-config --cflags`
@@ -26,6 +29,8 @@ CLIENT_OBJS= \
 
 default: client
 
+install: client emplace
+
 #cleanup build files and executable
 clean:
 	-$(RM) -r $(CLIENT_OBJS) tess_client
@@ -42,3 +47,15 @@ client:	libenet $(CLIENT_OBJS)
 enet/libenet.a:
 	$(MAKE) -C enet
 libenet: enet/libenet.a
+
+emplace:
+	# clean out target install dir to prevent pollution
+	rm -rf $(DESTDIR)$(PREFIX)/share/imprimis
+	cp -R ./ $(DESTDIR)$(PREFIX)/share/imprimis
+	# edit install dir, not source
+	cd $(DESTDIR)$(PREFIX)/share/imprimis; \
+		rm -r game/ vcpp/ bin64/ enet/ libprimis-headers/ .git/ .semaphore/ imprimis.bat .gitmodules Makefile; \
+		# set launcher script to launch from installed binaries
+		sed -i "s|=\.$$|=$(DESTDIR)$(PREFIX)/share/imprimis|" imprimis_unix; \
+		cp ./imprimis_unix $(DESTDIR)$(PREFIX)/bin/imprimis;
+
