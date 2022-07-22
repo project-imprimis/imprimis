@@ -50,19 +50,18 @@ libenet: enet/libenet.a
 
 emplace: uninstall  # clean out installation locations to prevent pollution
 	# initialize installation directories (for minimal packager filesystems)
-	mkdir --parents $(DESTDIR)$(PREFIX)/share/
 	mkdir --parents $(DESTDIR)$(PREFIX)/share/pixmaps/
+	mkdir --parents $(DESTDIR)$(PREFIX)/lib/
 	mkdir --parents $(DESTDIR)$(PREFIX)/bin/
-	cp -R ./ $(DESTDIR)$(PREFIX)/share/imprimis
+	cp -R ./ $(DESTDIR)$(PREFIX)/lib/imprimis
 	# edit install dir, not source
-	cd $(DESTDIR)$(PREFIX)/share/imprimis; \
+	cd $(DESTDIR)$(PREFIX)/lib/imprimis; \
 		rm -rf game/ vcpp/ bin64/ enet/ libprimis-headers/ .git/ .semaphore/ imprimis.bat .gitmodules Makefile; \
-		# set launcher script to launch from installed binaries
-		sed -i "s|=\.$$|=$(DESTDIR)$(PREFIX)/share/imprimis|" imprimis_unix; \
+ 		sed -i "s|=\.$$|=$(DESTDIR)$(PREFIX)/lib/imprimis|" imprimis_unix; \
 		mv ./imprimis_unix $(DESTDIR)$(PREFIX)/bin/imprimis; \
 		cp ./media/interface/icon.png $(DESTDIR)$(PREFIX)/share/pixmaps/imprimis.png
 
 uninstall:
-	rm -rf $(DESTDIR)$(PREFIX)/share/imprimis
+	rm -rf $(DESTDIR)$(PREFIX)/lib/imprimis/
 	rm -rf $(DESTDIR)$(PREFIX)/share/pixmaps/imprimis.png
 	rm -rf $(DESTDIR)$(PREFIX)/bin/imprimis
