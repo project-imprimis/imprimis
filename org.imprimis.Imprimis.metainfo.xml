@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+	<id>org.imprimis.Imprimis</id>
+	<metadata_license>MIT <!--TODO--></metadata_license>
+	<project_license>Zlib</project_license>
+	<name>Imprimis</name>
+	<summary>Imprimis, the team based destroyable world shooter game</summary>
+	<!-- TODO
+	<description></description>
+	-->
+	<icon type="local" width="512" height="512" >/usr/share/pixmaps/imprimis.png</icon>
+	<categories>
+		<category>Game</category>
+		<category>Shooter</category>
+	</categories>
+	<!-- TODO
+	<keywords></keywords>
+	<screenshots></screenshots>
+	-->
+	<!-- tentative -->
+	<developer_name>Project Imprimis</developer_name>
+	<url type="homepage">https://project-imprimis.org</url>
+	<url type="bugtracker">https://github.com/project-imprimis/imprimis/issues</url>
+	<!-- TODO
+	<url type="faq"></url>
+	<url type="help"></url>
+	<url type="donation"></url>
+	<url type="translate"></url>
+	-->
+	<url type="contact">https://discord.gg/WVFjtzA</url>
+	<url type="vcs-browser">https://github.com/project-imprimis/imprimis</url>
+
+	<launchable type="desktop-id">org.imprimis.Imprimis.desktop</launchable>
+	<!-- TODO
+	<releases></releases>
+	-->
+	<provides>
+		<binary>imprimis</binary>
+	</provides>
+
+
+</component>
