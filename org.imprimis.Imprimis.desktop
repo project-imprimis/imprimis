@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Imprimis
+Exec=imprimis
+Type=Application
+Icon=org.imprimis.Imprimis
+Categories=Game;Shooter;
+Terminal=false
