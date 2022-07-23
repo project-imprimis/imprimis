@@ -3,5 +3,6 @@ Name=Imprimis
 Exec=imprimis
 Type=Application
 Icon=org.imprimis.Imprimis
+Comment=3D FPS destroyable world shooter
 Categories=Game;Shooter;
 Terminal=false
