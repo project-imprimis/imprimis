@@ -50,18 +50,26 @@ libenet: enet/libenet.a
 
 emplace: uninstall  # clean out installation locations to prevent pollution
 	# initialize installation directories (for minimal packager filesystems)
-	mkdir --parents $(DESTDIR)$(PREFIX)/share/pixmaps/
-	mkdir --parents $(DESTDIR)$(PREFIX)/lib/
 	mkdir --parents $(DESTDIR)$(PREFIX)/bin/
+	mkdir --parents $(DESTDIR)$(PREFIX)/lib/
+	mkdir --parents $(DESTDIR)$(PREFIX)/share/applications/
+	mkdir --parents $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/
+	mkdir --parents $(DESTDIR)$(PREFIX)/share/metainfo/
+	mkdir --parents $(DESTDIR)$(PREFIX)/share/pixmaps/
 	cp -R ./ $(DESTDIR)$(PREFIX)/lib/imprimis
 	# edit install dir, not source
 	cd $(DESTDIR)$(PREFIX)/lib/imprimis; \
 		rm -rf game/ vcpp/ bin64/ enet/ libprimis-headers/ .git/ .semaphore/ imprimis.bat .gitmodules Makefile; \
  		sed -i "s|=\.$$|=$(DESTDIR)$(PREFIX)/lib/imprimis|" imprimis_unix; \
 		mv ./imprimis_unix $(DESTDIR)$(PREFIX)/bin/imprimis; \
-		cp ./media/interface/icon.png $(DESTDIR)$(PREFIX)/share/pixmaps/imprimis.png
+		cp ./media/interface/icon.png $(DESTDIR)$(PREFIX)/share/pixmaps/imprimis.png; \
+		mv ./media/interface/icon.svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/org.imprimis.Imprimis.svg; \
+		mv ./org.imprimis.Imprimis.desktop $(DESTDIR)$(PREFIX)/share/applications/org.imprimis.Imprimis.desktop; \
+		mv ./org.imprimis.Imprimis.metainfo.xml $(DESTDIR)$(PREFIX)/share/metainfo/org.imprimis.Imprimis.metainfo.xml;
 
 uninstall:
-	rm -rf $(DESTDIR)$(PREFIX)/lib/imprimis/
-	rm -rf $(DESTDIR)$(PREFIX)/share/pixmaps/imprimis.png
-	rm -rf $(DESTDIR)$(PREFIX)/bin/imprimis
+	rm -rf $(DESTDIR)$(PREFIX)/lib/imprimis/ $(DESTDIR)$(PREFIX)/share/pixmaps/imprimis.png \
+	       $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/org.imprimis.Imprimis.svg \
+	       $(DESTDIR)$(PREFIX)/share/applications/org.imprimis.Imprimis.desktop \
+	       $(DESTDIR)$(PREFIX)/share/metainfo/org.imprimis.Imprimis.metainfo.xml \
+	       $(DESTDIR)$(PREFIX)/bin/imprimis
