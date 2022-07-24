@@ -2,7 +2,7 @@
 
 editinfo *localedit = nullptr;
 int lasttexmillis = -1;
-
+bool hmapsel = false;
 struct vslotref
 {
     vslotref(int &index) { editingvslots.push_back(&index); }
