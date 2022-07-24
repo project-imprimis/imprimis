@@ -308,7 +308,7 @@ int main(int argc, char **argv)
         frames++;
         // miscellaneous general game effects
         recomputecamera();
-        updateparticles();
+        rootworld.updateparticles();
         updatesounds();
 
         if(minimized)
