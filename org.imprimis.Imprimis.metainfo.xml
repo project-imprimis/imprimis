@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2022 Project Imprimis -->
 <component type="desktop-application">
     <id>org.imprimis.Imprimis</id>
     <metadata_license>CC0-1.0</metadata_license>
@@ -29,41 +30,41 @@
             on Sundays weekly, for a chance to play with other players and developers.
         </p>
     </description>
-    <icon type="local" width="512" height="512">/usr/share/pixmaps/imprimis.png</icon>
+
     <categories>
         <category>Game</category>
         <category>Shooter</category>
     </categories>
     <screenshots>
         <screenshot type="default">
-            <image type="source" width="1920" height="1080">
-                https://project-imprimis.github.io/www/_nuxt/img/header.6eaa8b0.png
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/header-1600x900.jpg
             </image>
-            <caption>A view from a vantage point of one of the maps available in Imprimis.</caption>
+            <caption>A view from a vantage point in map in Imprimis</caption>
         </screenshot>
         <screenshot>
-            <image type="source" width="1920" height="1080">
-                https://project-imprimis.github.io/www/_nuxt/img/1.bd2fdd7.png
-            </image>
-        </screenshot>
-        <screenshot>
-            <image type="source" width="1920" height="1080">
-                https://project-imprimis.github.io/www/_nuxt/img/2.e9a6135.png
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/1-1600x900.jpg
             </image>
         </screenshot>
         <screenshot>
-            <image type="source" width="1920" height="1080">
-                https://project-imprimis.github.io/www/_nuxt/img/3.0771c88.png
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/2-1600x900.jpg
             </image>
         </screenshot>
         <screenshot>
-            <image type="source" width="1920" height="1080">
-                https://project-imprimis.github.io/www/_nuxt/img/4.b176f4d.png
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/3-1600x900.jpg
             </image>
         </screenshot>
         <screenshot>
-            <image type="source" width="1920" height="1080">
-                https://project-imprimis.github.io/www/_nuxt/img/5.712615e.png
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/4-1600x900.jpg
+            </image>
+        </screenshot>
+        <screenshot>
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/5-1600x900.jpg
             </image>
         </screenshot>
     </screenshots>
@@ -71,7 +72,6 @@
     <url type="homepage">https://project-imprimis.org</url>
     <url type="bugtracker">https://github.com/project-imprimis/imprimis/issues</url>
     <url type="contact">https://discord.gg/WVFjtzA</url>
-    <url type="vcs-browser">https://github.com/project-imprimis/imprimis</url>
 
     <launchable type="desktop-id">org.imprimis.Imprimis.desktop</launchable>
     <provides>
@@ -106,4 +106,9 @@
             </artifacts>
         </release>
     </releases>
+
+    <content_rating type="oars-1.1">
+        <content_attribute id="violence-fantasy">moderate</content_attribute>
+        <content_attribute id="social-chat">intense</content_attribute>
+    </content_rating>
 </component>
