@@ -1,7 +1,9 @@
 CXXFLAGS ?= -O3 -ffast-math -Wall
 CXXFLAGS += -std=c++17 -march=x86-64 -fsigned-char
 
+# install prefix, configurable by the user
 PREFIX ?= /usr/local
+# the DESTDIR variable is also used as an install prefix, but is meant to only be used by package builders for system images
 
 #set appropriate library includes
 CLIENT_INCLUDES= -Igame -Ienet/include -I/usr/X11R6/include `sdl2-config --cflags`
@@ -59,7 +61,7 @@ emplace: uninstall  # clean out installation locations to prevent pollution
 	# edit install dir, not source
 	cd $(DESTDIR)$(PREFIX)/lib/imprimis; \
 		rm -rf game/ vcpp/ bin64/ enet/ libprimis-headers/ .git/ .semaphore/ imprimis.bat .gitmodules Makefile; \
- 		sed -i "s|=\.$$|=$(DESTDIR)$(PREFIX)/lib/imprimis|" imprimis_unix; \
+ 		sed -i "s|=\.$$|=$(PREFIX)/lib/imprimis|" imprimis_unix; \
 		mv ./imprimis_unix $(DESTDIR)$(PREFIX)/bin/imprimis; \
 		mv ./media/interface/icon.svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/org.imprimis.Imprimis.svg; \
 		mv ./org.imprimis.Imprimis.desktop $(DESTDIR)$(PREFIX)/share/applications/org.imprimis.Imprimis.desktop; \
