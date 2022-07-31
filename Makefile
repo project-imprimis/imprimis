@@ -1,4 +1,9 @@
-CXXFLAGS= -O3 -ffast-math -std=c++17 -march=x86-64 -Wall -fsigned-char
+CXXFLAGS ?= -O3 -ffast-math -Wall
+CXXFLAGS += -std=c++17 -march=x86-64 -fsigned-char
+
+# install prefix, configurable by the user
+PREFIX ?= /usr/local
+# the DESTDIR variable is also used as an install prefix, but is meant to only be used by package builders for system images
 
 #set appropriate library includes
 CLIENT_INCLUDES= -Igame -Ienet/include -I/usr/X11R6/include `sdl2-config --cflags`
@@ -26,6 +31,8 @@ CLIENT_OBJS= \
 
 default: client
 
+install: client emplace
+
 #cleanup build files and executable
 clean:
 	-$(RM) -r $(CLIENT_OBJS) tess_client
@@ -42,3 +49,28 @@ client:	libenet $(CLIENT_OBJS)
 enet/libenet.a:
 	$(MAKE) -C enet
 libenet: enet/libenet.a
+
+emplace: uninstall  # clean out installation locations to prevent pollution
+	# initialize installation directories (for minimal packager filesystems)
+	mkdir --parents $(DESTDIR)$(PREFIX)/bin/
+	mkdir --parents $(DESTDIR)$(PREFIX)/lib/
+	mkdir --parents $(DESTDIR)$(PREFIX)/share/applications/
+	mkdir --parents $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/
+	mkdir --parents $(DESTDIR)$(PREFIX)/share/metainfo/
+	cp -R ./ $(DESTDIR)$(PREFIX)/lib/imprimis
+	# edit install dir, not source
+	cd $(DESTDIR)$(PREFIX)/lib/imprimis; \
+		rm -rf game/ vcpp/ bin64/ enet/ libprimis-headers/ .git/ .semaphore/ imprimis.bat .gitmodules Makefile; \
+ 		sed -i "s|=\.$$|=$(PREFIX)/lib/imprimis|" imprimis_unix; \
+		mv ./imprimis_unix $(DESTDIR)$(PREFIX)/bin/imprimis; \
+		mv ./media/interface/icon.svg $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/org.imprimis.Imprimis.svg; \
+		mv ./org.imprimis.Imprimis.desktop $(DESTDIR)$(PREFIX)/share/applications/org.imprimis.Imprimis.desktop; \
+		mv ./org.imprimis.Imprimis.metainfo.xml $(DESTDIR)$(PREFIX)/share/metainfo/org.imprimis.Imprimis.metainfo.xml;
+
+uninstall:
+	rm -rf $(DESTDIR)$(PREFIX)/lib/imprimis/ \
+	       $(DESTDIR)$(PREFIX)/bin/imprimis \
+	       $(DESTDIR)$(PREFIX)/share/icons/hicolor/scalable/apps/org.imprimis.Imprimis.svg \
+	       $(DESTDIR)$(PREFIX)/share/applications/org.imprimis.Imprimis.desktop \
+	       $(DESTDIR)$(PREFIX)/share/metainfo/org.imprimis.Imprimis.metainfo.xml
+
