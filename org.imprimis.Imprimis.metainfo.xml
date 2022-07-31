@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2022 Project Imprimis -->
+<component type="desktop-application">
+    <id>org.imprimis.Imprimis</id>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>zlib-acknowledgement</project_license>
+    <name>Imprimis</name>
+    <summary>Imprimis, the team based destroyable world shooter game</summary>
+    <description>
+        <p>
+            A first person 3D multiplayer shooter designed around terrain modification.
+            Destroy and build the level to modify the playing field to your advantage,
+            and play against other players online using the integrated server interface.
+        </p>
+        <p>
+            Built on the fast and fully dynamic Libprimis engine, Imprimis is capable of
+            fully realtime lighting effects to go along with its realtime world modification.
+        </p>
+        <p>
+            Fully open source with 100% permissively licensed assets.
+        </p>
+
+        <p>
+            This game is in an alpha state and releases stable monthly snapshots with more
+            verification than the nightly edge builds.
+        </p>
+
+        <p>
+            Multiplayer playtests are conducted at 1 PM PDT/ 4 PM EDT/ 10 PM CEST
+            on Sundays weekly, for a chance to play with other players and developers.
+        </p>
+    </description>
+
+    <categories>
+        <category>Game</category>
+        <category>Shooter</category>
+    </categories>
+    <screenshots>
+        <screenshot type="default">
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/header-1600x900.jpg
+            </image>
+            <caption>A view from a vantage point in map in Imprimis</caption>
+        </screenshot>
+        <screenshot>
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/1-1600x900.jpg
+            </image>
+        </screenshot>
+        <screenshot>
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/2-1600x900.jpg
+            </image>
+        </screenshot>
+        <screenshot>
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/3-1600x900.jpg
+            </image>
+        </screenshot>
+        <screenshot>
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/4-1600x900.jpg
+            </image>
+        </screenshot>
+        <screenshot>
+            <image type="source">
+                https://raw.githubusercontent.com/TheEgghead27/media/master/screenshots/5-1600x900.jpg
+            </image>
+        </screenshot>
+    </screenshots>
+    <developer_name>Project Imprimis</developer_name>
+    <url type="homepage">https://project-imprimis.org</url>
+    <url type="bugtracker">https://github.com/project-imprimis/imprimis/issues</url>
+    <url type="contact">https://discord.gg/WVFjtzA</url>
+
+    <launchable type="desktop-id">org.imprimis.Imprimis.desktop</launchable>
+    <provides>
+        <binary>imprimis</binary>
+    </provides>
+
+    <releases>
+        <release version="0.19a" date="2022-07-01" date_eol="2022-08-01" urgency="critical">
+            <description>
+                <p>Alpha 19 "Snoqualmie" - The nineteenth alpha release of Imprimis.</p>
+            </description>
+            <url>
+                https://github.com/project-imprimis/imprimis/releases/tag/v0.19a
+            </url>
+            <artifacts>
+                <artifact type="binary" platform="x86_64-linux-gnu">
+                    <location>
+                        https://github.com/project-imprimis/imprimis/releases/download/v0.19a/imprimis-linux-ubuntu.zip
+                    </location>
+                    <checksum type="sha256">
+                        f2f6f3a6435607b3a979d2f68722cfa33ad7311b303fa42561cd8b5eaf367ac2
+                    </checksum>
+                </artifact>
+                <artifact type="binary" platform="x86_64-windows-msvc">
+                    <location>
+                        https://github.com/project-imprimis/imprimis/releases/download/v0.19a/imprimis-linux-ubuntu.zip
+                    </location>
+                    <checksum type="sha256">
+                        3d10202ebd39eb5143845b3646a5c926ebbf308174003835a4c8299266acf65c
+                    </checksum>
+                </artifact>
+            </artifacts>
+        </release>
+    </releases>
+
+    <content_rating type="oars-1.1">
+        <content_attribute id="violence-fantasy">moderate</content_attribute>
+        <content_attribute id="social-chat">intense</content_attribute>
+    </content_rating>
+</component>
