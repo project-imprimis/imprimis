@@ -1,0 +1,39 @@
+name: Flatpak build
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout flatpak build templates
+      uses: actions/checkout@v3
+      with:
+        repository: project-imprimis/org.imprimis.Imprimis.flatpak
+        submodules: true
+
+    - name: Update package list
+      run: sudo apt-get update
+
+    - name: Install flatpak
+      run: sudo apt-get install flatpak flatpak-builder
+
+    - name: Add Flathub repository
+      run: sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      
+    - name: Install flatpak SDK/dependencies
+      run: sudo flatpak install --assumeyes flathub org.freedesktop.Platform/x86_64/21.08 org.freedesktop.Sdk/x86_64/21.08 org.freedesktop.Platform.GL.default/x86_64/21.08
+      
+    - name: Build flatpak
+      run: flatpak-builder --repo=local build-dir org.imprimis.Imprimis.json
+      
+    - name: Bundle flatpak
+      run: flatpak build-bundle ./local imprimis.flatpak org.imprimis.Imprimis
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: imprimis-flatpak
+        path: ./imprimis.flatpak
