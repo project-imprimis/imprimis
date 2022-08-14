@@ -54,7 +54,7 @@ int resolverloop(void * data)
             resolverresult &rr = resolverresults.add();
             rr.query = rt->query;
             rr.address = address;
-            rt->query = NULL;
+            rt->query = nullptr;
             rt->starttime = 0;
             SDL_CondSignal(resultcond);
         }
@@ -73,7 +73,7 @@ void resolverinit()
     for(int i = 0; i < numresolverthreads; ++i)
     {
         resolverthread &rt = resolverthreads.add();
-        rt.query = NULL;
+        rt.query = nullptr;
         rt.starttime = 0;
         rt.thread = SDL_CreateThread(resolverloop, "resolver", &rt);
     }
@@ -90,7 +90,7 @@ void resolverstop(resolverthread &rt)
 #endif
         rt.thread = SDL_CreateThread(resolverloop, "resolver", &rt);
     }
-    rt.query = NULL;
+    rt.query = nullptr;
     rt.starttime = 0;
     SDL_UnlockMutex(resolvermutex);
 }
@@ -341,7 +341,7 @@ struct serverinfo : servinfo, pingattempts
     const char *password;
 
     serverinfo()
-     : resolved(Resolve_Unresolved), keep(false), password(NULL)
+     : resolved(Resolve_Unresolved), keep(false), password(nullptr)
     {
         clearpings();
         setoffset();
@@ -432,7 +432,7 @@ struct serverinfo : servinfo, pingattempts
         {
             return "[newer protocol]";
         }
-        return NULL;
+        return nullptr;
     }
 
     bool valid() const { return !status(); }
@@ -511,7 +511,7 @@ static serverinfo *newserver(const char *name, int port, uint ip = ENET_HOST_ANY
     else if(ip==ENET_HOST_ANY || enet_address_get_host_ip(&si->address, si->name, sizeof(si->name)) < 0)
     {
         delete si;
-        return NULL;
+        return nullptr;
 
     }
     servers.add(si);
@@ -646,7 +646,7 @@ void checkresolver()
     {
         return;
     }
-    const char *name = NULL;
+    const char *name = nullptr;
     for(;;)
     {
         ENetAddress addr = { ENET_HOST_ANY, ENET_PORT_ANY };
@@ -691,7 +691,7 @@ void checkpings()
         }
         ucharbuf p(ping, len);
         int millis = getint(p);
-        serverinfo *si = NULL;
+        serverinfo *si = nullptr;
         for(int i = 0; i < servers.length(); i++)
         {
             if(addr.host == servers[i]->address.host && addr.port == servers[i]->address.port)
@@ -714,7 +714,7 @@ void checkpings()
         }
         else
         {
-            si = newserver(NULL, addr.port, addr.host);
+            si = newserver(nullptr, addr.port, addr.host);
             millis = lanpings.decodeping(millis);
         }
         int rtt = std::clamp(totalmillis - millis, 0, min(servpingdecay, totalmillis));
@@ -824,7 +824,7 @@ ICOMMAND(connectservinfo, "is", (int *i, char *pw), GETSERVERINFO_(*i, si, conne
 
 servinfo *getservinfo(int i)
 {
-    return servers.inrange(i) && servers[i]->valid() ? servers[i] : NULL;
+    return servers.inrange(i) && servers[i]->valid() ? servers[i] : nullptr;
 }
 
 void clearservers(bool full = false)
@@ -872,7 +872,7 @@ void retrieveservers(vector<char> &data)
         {
             buf.data = (void *)req;
             buf.dataLength = reqlen;
-            int sent = enet_socket_send(sock, NULL, &buf, 1);
+            int sent = enet_socket_send(sock, nullptr, &buf, 1);
             if(sent < 0)
             {
                 break;
@@ -909,7 +909,7 @@ void retrieveservers(vector<char> &data)
                 }
                 buf.data = data.getbuf() + data.length();
                 buf.dataLength = data.capacity() - data.length();
-                int recv = enet_socket_receive(sock, NULL, &buf, 1);
+                int recv = enet_socket_receive(sock, nullptr, &buf, 1);
                 if(recv <= 0)
                 {
                     break;
@@ -963,8 +963,8 @@ void initservers()
     }
 }
 
-ICOMMAND(addserver, "sis", (const char *name, int *port, const char *password), addserver(name, *port, password[0] ? password : NULL));
-ICOMMAND(keepserver, "sis", (const char *name, int *port, const char *password), addserver(name, *port, password[0] ? password : NULL, true));
+ICOMMAND(addserver, "sis", (const char *name, int *port, const char *password), addserver(name, *port, password[0] ? password : nullptr));
+ICOMMAND(keepserver, "sis", (const char *name, int *port, const char *password), addserver(name, *port, password[0] ? password : nullptr, true));
 ICOMMAND(clearservers, "i", (int *full), clearservers(*full!=0));
 COMMAND(updatefrommaster, "");
 COMMAND(initservers, "");
