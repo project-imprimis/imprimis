@@ -298,7 +298,7 @@ namespace game
         if(intermission && d->state!=ClientState_Dead)
         {
             anim = attack = Anim_Lose | Anim_Loop;
-            if(validteam(team) ? bestteams.htfind(team)>=0 : bestplayers.find(d)>=0)
+            if(validteam(team) ? bestteams.find(team)>=0 : bestplayers.find(d)>=0)
             {
                 anim = attack = Anim_Win | Anim_Loop;
             }
