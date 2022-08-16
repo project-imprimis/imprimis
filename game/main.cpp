@@ -292,7 +292,27 @@ int main(int argc, char **argv)
         totalmillis = millis;
         updatetime();
 
-        checkinput(); //go and see if SDL has any new input: mouse, keyboard, screen dimensions
+        //go and see if SDL has any new input: mouse, keyboard, screen dimensions
+        if(!mainmenu)
+        {
+            if(editmode)
+            {
+                checkinput(1);
+            }
+            else if(player->state==ClientState_Spectator)
+            {
+                checkinput(2);
+            }
+            else
+            {
+                checkinput(0);
+            }
+        }
+        else
+        {
+            checkinput(0);
+        }
+
         UI::update(); //checks cursor and updates uis
         menuprocess(); //shows main menu if not ingame and not online
 
