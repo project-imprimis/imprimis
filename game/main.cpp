@@ -73,10 +73,10 @@ void updateenginevalues()
     allowediting = game::allowedittoggle(false);
     multiplayer = curpeer;
     //pass players list
-    vector<dynent *> dyns;
+    std::vector<dynent *> dyns;
     for(int i = 0; i < game::players.length(); ++i)
     {
-        dyns.add(game::players[i]);
+        dyns.push_back(game::players[i]);
     }
     dynents = dyns;
 }
