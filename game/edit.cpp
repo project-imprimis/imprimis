@@ -758,7 +758,7 @@ static int unpacktex(int &tex, ucharbuf &buf, bool insert = true)
 
 int shouldpacktex(int index)
 {
-    if(vslots.inrange(index))
+    if(vslots.size() > index)
     {
         VSlot &vs = *vslots[index];
         if(vs.changed)
@@ -781,11 +781,11 @@ bool mpedittex(int tex, int allfaces, selinfo &sel, ucharbuf &buf)
 
 static void filltexlist()
 {
-    if(static_cast<int>(texmru.size())!=vslots.length())
+    if(static_cast<int>(texmru.size())!=vslots.size())
     {
         for(int i = texmru.size(); --i >=0;) //note reverse iteration
         {
-            if(texmru[i]>=vslots.length())
+            if(texmru[i]>=vslots.size())
             {
                 if(curtexindex > i)
                 {
@@ -798,7 +798,7 @@ static void filltexlist()
                 texmru.erase(texmru.begin() + i);
             }
         }
-        for(int i = 0; i < vslots.length(); i++)
+        for(uint i = 0; i < vslots.size(); i++)
         {
             if(std::find(texmru.begin(), texmru.end(), i) == texmru.end())
             {
@@ -903,7 +903,7 @@ void gettexname(int *tex, int *subslot)
     }
     VSlot &vslot = lookupvslot(*tex, false);
     Slot &slot = *vslot.slot;
-    if(!slot.sts.inrange(*subslot))
+    if(slot.sts.size() <= *subslot)
     {
         return;
     }
@@ -912,7 +912,7 @@ void gettexname(int *tex, int *subslot)
 
 void getslottex(int *idx)
 {
-    if(*idx < 0 || !slots.inrange(*idx))
+    if(*idx < 0 || !(slots.size() > (*idx)))
     {
         intret(-1);
         return;
@@ -924,7 +924,7 @@ void getslottex(int *idx)
 COMMANDN(edittex, edittex_, "i");
 ICOMMAND(settex, "i", (int *tex),
 {
-    if(!vslots.inrange(*tex) || noedit())
+    if(!(vslots.size() > (*tex)) || noedit())
     {
         return;
     }
@@ -938,7 +938,7 @@ ICOMMAND(getreptex, "", (),
 {
     if(!noedit())
     {
-        intret(vslots.inrange(reptex) ? reptex : -1);
+        intret(vslots.size() > (reptex) ? reptex : -1);
     }
 });
 COMMAND(gettexname, "ii");
@@ -957,10 +957,10 @@ ICOMMAND(looptexmru, "re", (ident *id, uint *body),
     }
     loopend(id, stack);
 });
-ICOMMAND(numvslots, "", (), intret(vslots.length()));
-ICOMMAND(numslots, "", (), intret(slots.length()));
+ICOMMAND(numvslots, "", (), intret(vslots.size()));
+ICOMMAND(numslots, "", (), intret(slots.size()));
 COMMAND(getslottex, "i");
-ICOMMAND(texloaded, "i", (int *tex), intret(slots.inrange(*tex) && slots[*tex]->loaded ? 1 : 0));
+ICOMMAND(texloaded, "i", (int *tex), intret(slots.size() > (*tex) && slots[*tex]->loaded ? 1 : 0));
 
 void replacetexcube(cube &c, int oldtex, int newtex)
 {

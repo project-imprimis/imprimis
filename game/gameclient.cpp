@@ -2199,7 +2199,7 @@ namespace game
                 case NetMsg_ItemSpawn:
                 {
                     int i = getint(p);
-                    if(!entities::ents.inrange(i))
+                    if(!(entities::ents.size() > i))
                     {
                         break;
                     }

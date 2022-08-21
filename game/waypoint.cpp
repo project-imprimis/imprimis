@@ -943,7 +943,7 @@ namespace ai
         {
             addwaypoint(vec(0, 0, 0));
         }
-        for(int i = 0; i < entities::ents.length(); i++)
+        for(uint i = 0; i < entities::ents.size(); i++)
         {
             extentity &e = *entities::ents[i];
             switch(e.type)

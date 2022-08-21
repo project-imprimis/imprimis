@@ -64,8 +64,8 @@
 
 #define ADD_GROUP(exp) \
 { \
-    vector<extentity *> &ents = entities::getents(); \
-    for(int i = 0; i < ents.length(); i++) \
+    std::vector<extentity *> &ents = entities::getents(); \
+    for(uint i = 0; i < ents.size(); i++) \
     { \
         ENT_FOCUS_V(i, \
         { \
@@ -79,7 +79,7 @@
 
 #define GROUP_EDIT_LOOP(f) \
 { \
-    vector<extentity *> &ents = entities::getents(); \
+    std::vector<extentity *> &ents = entities::getents(); \
     entlooplevel++; \
     int efocusplaceholder = efocus; \
     for(uint i = 0; i < entgroup.size(); i++) \
@@ -266,8 +266,8 @@ void nearestent()
     }
     int closest = -1;
     float closedist = 1e16f;
-    vector<extentity *> &ents = entities::getents();
-    for(int i = 0; i < ents.length(); i++)
+    std::vector<extentity *> &ents = entities::getents();
+    for(uint i = 0; i < ents.size(); i++)
     {
         extentity &e = *ents[i];
         if(e.type == EngineEnt_Empty)
@@ -347,12 +347,12 @@ COMMAND(entattr, "iiN");
 
 extern int findentity(int type, int index = 0, int attr1 = -1, int attr2 = -1)
 {
-    const vector<extentity *> &ents = entities::getents();
-    if(index > ents.length())
+    const std::vector<extentity *> &ents = entities::getents();
+    if(index > ents.size())
     {
-        index = ents.length();
+        index = ents.size();
     }
-    else for(int i = index; i<ents.length(); i++)
+    else for(uint i = index; i<ents.size(); i++)
     {
         extentity &e = *ents[i];
         if(e.type==type && (attr1<0 || e.attr1==attr1) && (attr2<0 || e.attr2==attr2))
@@ -407,7 +407,7 @@ void findplayerspawn(dynent *d, int forceent, int tag) // place at random spawn
     }
     if(pick>=0)
     {
-        const vector<extentity *> &ents = entities::getents();
+        const std::vector<extentity *> &ents = entities::getents();
         d->pitch = 0;
         d->roll = 0;
         for(int attempt = pick;;)
@@ -439,12 +439,12 @@ void findplayerspawn(dynent *d, int forceent, int tag) // place at random spawn
 //returns origin "o" of selected region
 vec getselpos()
 {
-    vector<extentity *> &ents = entities::getents();
-    if(entgroup.size() && ents.length() > entgroup[0])
+    std::vector<extentity *> &ents = entities::getents();
+    if(entgroup.size() && ents.size() > entgroup[0])
     {
         return ents[entgroup[0]]->o;
     }
-    if(ents.inrange(enthover))
+    if(ents.size() > enthover)
     {
         return ents[enthover]->o;
     }
@@ -479,10 +479,11 @@ void pasteundoent(int idx, const entity &ue)
     {
         return;
     }
-    vector<extentity *> &ents = entities::getents();
-    while(ents.length() < idx)
+    std::vector<extentity *> &ents = entities::getents();
+    while(ents.size() < idx)
     {
-        ents.add(entities::newentity())->type = EngineEnt_Empty;
+        ents.push_back(entities::newentity());
+        ents.back()->type = EngineEnt_Empty;
     }
     int efocus = -1;
     ENT_EDIT(idx, (entity &)e = ue);
@@ -1119,11 +1120,11 @@ static int keepents = 0;
 
 extentity *newentity(bool local, const vec &o, int type, int v1, int v2, int v3, int v4, int v5, int &idx, bool fix = true)
 {
-    vector<extentity *> &ents = entities::getents();
+    std::vector<extentity *> &ents = entities::getents();
     if(local)
     {
         idx = -1;
-        for(int i = keepents; i < ents.length(); i++)
+        for(uint i = keepents; i < ents.size(); i++)
         {
             if(ents[i]->type == EngineEnt_Empty)
             {
@@ -1131,7 +1132,7 @@ extentity *newentity(bool local, const vec &o, int type, int v1, int v2, int v3,
                 break;
             }
         }
-        if(idx < 0 && ents.length() >= maxents)
+        if(idx < 0 && ents.size() >= maxents)
         {
             conoutf("too many entities");
             return NULL;
@@ -1139,9 +1140,10 @@ extentity *newentity(bool local, const vec &o, int type, int v1, int v2, int v3,
     }
     else
     {
-        while(ents.length() < idx)
+        while(ents.size() < idx)
         {
-            ents.add(entities::newentity())->type = EngineEnt_Empty;
+            ents.push_back(entities::newentity());
+            ents.back()->type = EngineEnt_Empty;
         }
     }
     extentity &e = *entities::newentity();
@@ -1185,15 +1187,15 @@ extentity *newentity(bool local, const vec &o, int type, int v1, int v2, int v3,
             }
         }
     }
-    if(ents.inrange(idx))
+    if(ents.size() > idx)
     {
         entities::deleteentity(ents[idx]);
         ents[idx] = &e;
     }
     else
     {
-        idx = ents.length();
-        ents.add(&e);
+        idx = ents.size();
+        ents.push_back(&e);
     }
     return &e;
 }
@@ -1302,8 +1304,8 @@ void mpeditent(int i, const vec &o, int type, int attr1, int attr2, int attr3, i
     {
         return;
     }
-    vector<extentity *> &ents = entities::getents();
-    if(ents.length()<=i)
+    std::vector<extentity *> &ents = entities::getents();
+    if(ents.size()<=i)
     {
         extentity *e = newentity(local, o, type, attr1, attr2, attr3, attr4, attr5, i);
         if(!e)
@@ -1406,7 +1408,7 @@ namespace entities
 
     void resetspawns()
     {
-        for(int i = 0; i < ents.length(); i++)
+        for(uint i = 0; i < ents.size(); i++)
         {
             ents[i]->clearspawned();
         }
@@ -1414,7 +1416,7 @@ namespace entities
 
     void setspawn(int i, bool on)
     {
-        if(ents.inrange(i))
+        if(ents.size() > i)
         {
             ents[i]->setspawned(on);
         }

@@ -562,7 +562,7 @@ namespace ai
                     {
                         return 1;
                     }
-                    if(entities::ents.inrange(b.target))
+                    if(entities::ents.size() > b.target)
                     {
                         return defend(b, entities::ents[b.target]->o) ? 1 : 0;
                     }
@@ -1364,7 +1364,7 @@ namespace ai
                     case 2:
                     case 3:
                     {
-                        if(entities::ents.inrange(targnode))
+                        if(entities::ents.size() > targnode)
                         {
                             addprevnode(targnode);
                         }
@@ -1406,7 +1406,7 @@ namespace ai
                     case 2:
                     case 3:
                     {
-                        if(entities::ents.inrange(targnode)) addprevnode(targnode);
+                        if(entities::ents.size() > targnode) addprevnode(targnode);
                         {
                             clear(false);
                         }
