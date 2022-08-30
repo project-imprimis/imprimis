@@ -1,4 +1,5 @@
 #include "../libprimis-headers/cube.h"
+#include "game.h"
 
 ///////////////////////// cryptography /////////////////////////////////
 
