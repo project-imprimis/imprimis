@@ -880,13 +880,16 @@ namespace game
                     tex1 ? tex1 : arg1,        //14
                     arg2))                     //15
                 {
-                    messages.pad(2);
-                    int offset = messages.length();
+                    for(int i = 0; i < sizeof(ushort); ++i)
+                    {
+                        messages.emplace_back();
+                    }
+                    int offset = messages.size();
                     if(tex1)
                     {
                         packvslot(messages, arg1);
                     }
-                    *reinterpret_cast<ushort *>(&messages[offset-2]) = static_cast<ushort>(messages.length() - offset);
+                    *reinterpret_cast<ushort *>(&messages[offset-sizeof(ushort)]) = static_cast<ushort>(messages.size() - offset);
                 }
                 break;
             }
@@ -905,8 +908,11 @@ namespace game
                     tex2 ? tex2 : arg2,        //15
                     arg3))
                 {
-                    messages.pad(2);
-                    int offset = messages.length();
+                    for(int i = 0; i < sizeof(ushort); ++i)
+                    {
+                        messages.emplace_back();
+                    }
+                    int offset = messages.size();
                     if(tex1)
                     {
                         packvslot(messages, arg1);
@@ -915,7 +921,7 @@ namespace game
                     {
                         packvslot(messages, arg2);
                     }
-                    *reinterpret_cast<ushort *>(&messages[offset-2]) = static_cast<ushort>(messages.length() - offset);
+                    *reinterpret_cast<ushort *>(&messages[offset-sizeof(ushort)]) = static_cast<ushort>(messages.size() - offset);
                 }
                 break;
             }
@@ -936,10 +942,13 @@ namespace game
                     sel.corner,                //13
                     arg1, arg2))               //14,15
                 {
-                    messages.pad(2);
-                    int offset = messages.length();
+                    for(int i = 0; i < sizeof(ushort); ++i)
+                    {
+                        messages.emplace_back();
+                    }
+                    int offset = messages.size();
                     packvslot(messages, vs);
-                    *reinterpret_cast<ushort *>(&messages[offset-2]) = static_cast<ushort>(messages.length() - offset);
+                    *reinterpret_cast<ushort *>(&messages[offset-sizeof(ushort)]) = static_cast<ushort>(messages.size() - offset);
                 }
                 break;
             }
@@ -954,7 +963,10 @@ namespace game
                 {
                     if(addmsg(NetMsg_EditFace + op, "ri2", inlen, outlen))
                     {
-                        messages.put(outbuf, outlen);
+                        for(int i = 0; i < outlen; ++i)
+                        {
+                            messages.push_back(outbuf[i]);
+                        }
                     }
                     delete[] outbuf;
                 }
@@ -1099,7 +1111,7 @@ namespace game
     }
 
     // collect c2s messages conveniently
-    vector<uchar> messages;
+    std::vector<uchar> messages;
     int messagecn = -1,
         messagereliable = false;
 
@@ -1188,10 +1200,16 @@ namespace game
             ucharbuf m(mbuf, sizeof(mbuf));
             putint(m, NetMsg_FromAI);
             putint(m, mcn);
-            messages.put(mbuf, m.length());
+            for(int i = 0; i < m.length(); ++i)
+            {
+                messages.push_back(mbuf[i]);
+            }
             messagecn = mcn;
         }
-        messages.put(buf, p.length());
+        for(int i = 0; i < p.length(); ++i)
+        {
+            messages.push_back(buf[i]);
+        }
         return true;
     }
 
@@ -1225,7 +1243,7 @@ namespace game
         }
         sessionid = 0;
         mastermode = MasterMode_Open;
-        messages.setsize(0);
+        messages.clear();
         messagereliable = false;
         messagecn = -1;
         player1->respawn();
@@ -1415,10 +1433,10 @@ namespace game
             }
             senditemstoserver = false;
         }
-        if(messages.length())
+        if(messages.size())
         {
-            p.put(messages.getbuf(), messages.length());
-            messages.setsize(0);
+            p.put(messages.data(), messages.size());
+            messages.clear();
             if(messagereliable)
             {
                 p.reliable();
