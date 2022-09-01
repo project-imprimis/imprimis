@@ -81,7 +81,7 @@ void updateenginevalues()
     dynents = dyns;
 }
 
-constexpr const char * versionstring = "Alpha 20 \"Tatoosh\"";
+constexpr const char * versionstring = "Alpha 21 \"Unicorn\"";
 
 //sets engine constants that need information from the game
 //as a result, all values set here are global variables defined elsewhere in
