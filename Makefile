@@ -6,8 +6,8 @@ PREFIX ?= /usr/local
 # the DESTDIR variable is also used as an install prefix, but is meant to only be used by package builders for system images
 
 #set appropriate library includes
-CLIENT_INCLUDES= -Igame -Ienet/include -I/usr/X11R6/include `sdl2-config --cflags`
-CLIENT_LIBS= -lprimis -Lenet -lenet -L. -L/usr/X11R6/lib -lX11 `sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lz -lGL -lGLEW
+CLIENT_INCLUDES= -Igame -Ienet/include `sdl2-config --cflags`
+CLIENT_LIBS= -lprimis -Lenet -lenet -L. `sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lz -lGL -lGLEW
 
 #list of source code files to be compiled
 CLIENT_OBJS= \
