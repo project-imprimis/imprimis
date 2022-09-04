@@ -562,7 +562,7 @@ namespace ai
                     {
                         return 1;
                     }
-                    if(entities::ents.size() > b.target)
+                    if(static_cast<int>(entities::ents.size()) > b.target)
                     {
                         return defend(b, entities::ents[b.target]->o) ? 1 : 0;
                     }
@@ -1364,7 +1364,7 @@ namespace ai
                     case 2:
                     case 3:
                     {
-                        if(entities::ents.size() > targnode)
+                        if(static_cast<int>(entities::ents.size()) > targnode)
                         {
                             addprevnode(targnode);
                         }
@@ -1406,10 +1406,11 @@ namespace ai
                     case 2:
                     case 3:
                     {
-                        if(entities::ents.size() > targnode) addprevnode(targnode);
+                        if(static_cast<int>(entities::ents.size()) > targnode)
                         {
-                            clear(false);
+                            addprevnode(targnode);
                         }
+                        clear(false);
                         break;
                     }
                     case 4:
