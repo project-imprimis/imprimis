@@ -880,7 +880,7 @@ namespace game
                     tex1 ? tex1 : arg1,        //14
                     arg2))                     //15
                 {
-                    for(int i = 0; i < sizeof(ushort); ++i)
+                    for(uint i = 0; i < sizeof(ushort); ++i)
                     {
                         messages.emplace_back();
                     }
@@ -908,7 +908,7 @@ namespace game
                     tex2 ? tex2 : arg2,        //15
                     arg3))
                 {
-                    for(int i = 0; i < sizeof(ushort); ++i)
+                    for(uint i = 0; i < sizeof(ushort); ++i)
                     {
                         messages.emplace_back();
                     }
@@ -942,7 +942,7 @@ namespace game
                     sel.corner,                //13
                     arg1, arg2))               //14,15
                 {
-                    for(int i = 0; i < sizeof(ushort); ++i)
+                    for(uint i = 0; i < sizeof(ushort); ++i)
                     {
                         messages.emplace_back();
                     }
@@ -2216,7 +2216,7 @@ namespace game
                 }
                 case NetMsg_ItemSpawn:
                 {
-                    int i = getint(p);
+                    uint i = static_cast<uint>(getint(p));
                     if(!(entities::ents.size() > i))
                     {
                         break;
