@@ -75,7 +75,7 @@ namespace game
                 best.add(o);
             }
         }
-        best.sort(playersort);
+        std::sort(best.buf, best.buf + best.length(), playersort);
         while(best.length() > 1 && best.last()->frags < best[0]->frags)
         {
             best.drop();
@@ -89,7 +89,7 @@ namespace game
         {
             vector<teamscore> teamscores;
             cmode->getteamscores(teamscores);
-            teamscores.sort(teamscore::compare);
+            std::sort(teamscores.buf, teamscores.buf + teamscores.length(), teamscore::compare);
             //loop through and drop teams
             while(teamscores.length() > 1 && teamscores.last().score < teamscores[0].score)
             {
@@ -145,9 +145,9 @@ namespace game
         }
         for(int i = 0; i < 1+maxteams; ++i)
         {
-            teamplayers[i].sort(playersort);
+            std::sort(teamplayers[i].buf, teamplayers[i].buf + teamplayers[i].length(), playersort);
         }
-        spectators.sort(playersort);
+        std::sort(spectators.buf, spectators.buf + spectators.length(), playersort);
     }
 
     void removegroupedplayer(gameent *d)

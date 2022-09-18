@@ -745,7 +745,7 @@ void checkpings()
 
 void sortservers()
 {
-    servers.sort(serverinfo::compare);
+    std::sort(servers.buf, servers.buf + servers.length(), serverinfo::compare);
 }
 COMMAND(sortservers, "");
 

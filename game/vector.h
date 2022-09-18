@@ -414,11 +414,10 @@ struct vector
      *
      * @return true if the address is inside the vector's array
      * @return false if the address is outside the vector's array
-     * /
+     *
     bool inbuf(const T *e) const { return e >= buf && e < &buf[ulen]; }
-    */
 
-    /**
+     **
      * @brief Sorts using the passed function between passed indices.
      *
      * Calls quicksort on `this` array, using the comparison function passed as
@@ -428,14 +427,14 @@ struct vector
      * @param fun the function to sort elements with
      * @param i the first element to sort from
      * @param n the last element to sort until
-     */
+     *
     template<class F>
     void sort(F fun, int i = 0, int n = -1)
     {
         quicksort(&buf[i], n < 0 ? ulen-i : n, fun);
     }
 
-    /**
+     **
      * @brief Sorts the values of the array in ascending order.
      *
      * Runs the quicksort algorithm to sort the values in the vector in ascending
@@ -444,10 +443,10 @@ struct vector
      *
      * This operation has a time complexity of n*log(n) on average and n^2 in the
      * worst-case scenario.
-     */
+     *
     void sort() { sort(sortless()); }
 
-    /**
+     **
      * @brief Sorts the values of the array in ascending order.
      *
      * Runs the quicksort algorithm to sort the values in the vector in ascending
@@ -458,9 +457,9 @@ struct vector
      *
      * This operation has a time complexity of n*log(n) on average and n^2 in the
      * worst-case scenario.
-     */
+     *
     void sortname() { sort(sortnameless()); }
-
+    */
     /**
      * @brief Expands the array to the requested size.
      *
