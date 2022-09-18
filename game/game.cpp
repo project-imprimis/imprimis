@@ -437,7 +437,9 @@ namespace game
         if((player1->attacking = act) && attackspawn)
         {
             respawn();
+            return;
         }
+        game::player1->spawnprotect = false;
     }
 
     ICOMMAND(shoot, "D", (int *down), doaction(*down ? Act_Shoot : Act_Idle));
