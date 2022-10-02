@@ -128,6 +128,7 @@
     <Library Include="..\..\libprimis-headers\3rdparty\bin\SDL2.lib" />
     <Library Include="..\..\libprimis-headers\3rdparty\bin\SDL2_image.lib" />
     <Library Include="..\..\libprimis-headers\3rdparty\bin\SDL2_mixer.lib" />
+    <Library Include="..\..\libprimis-headers\3rdparty\bin\SDL2_ttf.lib" />
     <Library Include="..\..\libprimis-headers\3rdparty\bin\zdll.lib" />
     <Library Include="..\..\libprimis.lib" />
     <Library Include="..\..\libprimis-headers\3rdparty\bin\glew32.lib" />
