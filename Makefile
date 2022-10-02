@@ -7,7 +7,7 @@ PREFIX ?= /usr/local
 
 #set appropriate library includes
 CLIENT_INCLUDES= -Igame -Ienet/include `sdl2-config --cflags`
-CLIENT_LIBS= -lprimis -Lenet -lenet -L. `sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lz -lGL -lGLEW
+CLIENT_LIBS= -lprimis -Lenet -lenet -L. `sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lz -lGL -lGLEW
 
 #list of source code files to be compiled
 CLIENT_OBJS= \
