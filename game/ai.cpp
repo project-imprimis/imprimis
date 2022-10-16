@@ -81,7 +81,6 @@ namespace ai
                             !wpai->route.empty() ? wpai->route[0] : -1,
                             wpai->route.length()
                         );
-                        particle_textcopy(pos, q, Part_Text, 1);
                         pos.z += 2;
                     }
                     bool top = true;
@@ -94,7 +93,6 @@ namespace ai
                             lastmillis-b.millis,
                             sttypes[b.targtype+1], b.target
                         );
-                        particle_textcopy(pos, s, Part_Text, 1);
                         pos.z += 2;
                         if(top)
                         {
@@ -112,13 +110,11 @@ namespace ai
                     {
                         if(d->ai->weappref >= 0 && d->ai->weappref < Gun_NumGuns)
                         {
-                            particle_textcopy(pos, guns[d->ai->weappref].name, Part_Text, 1);
                             pos.z += 2;
                         }
                         gameent *e = getclient(d->ai->enemy);
                         if(e)
                         {
-                            particle_textcopy(pos, colorname(e), Part_Text, 1);
                             pos.z += 2;
                         }
                     }

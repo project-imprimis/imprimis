@@ -616,7 +616,6 @@ namespace game
             if(d->state!=ClientState_Dead)
             {
                 int team = modecheck(gamemode, Mode_Team) && validteam(d->team) ? d->team : 0;
-                particle_text(d->abovehead(), d->info, Part_Text, 1, teamtextcolor[team], 2.0f);
             }
             if(lastmillis - d->parachutetime < parachutemaxtime && d->timeinair > 0 && !modecheck(game::gamemode, Mode_Edit))
             {
