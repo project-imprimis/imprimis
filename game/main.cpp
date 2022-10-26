@@ -22,6 +22,7 @@ void writeinitcfg()
 
         cfgfile << "// This file is written automatically on exit.\n"
             << "// Any changes to this file WILL be overwritten.\n\n"
+            << "name " << game::player1->name << "\n"
             << "fullscreen " << fullscreen << "\n"
             << "screenw " << scr_w << "\n"
             << "screenh " << scr_h << "\n"
@@ -140,7 +141,6 @@ int main(int argc, char **argv)
             break;
         }
     }
-    execfile("config/init.cfg", false);
     //init SDL display/input library
     logoutf("init: sdl");
     if(!initsdl()) //initalize sdl from engine library
@@ -229,12 +229,15 @@ int main(int argc, char **argv)
     logoutf("init: cfg");
     initing = Init_Load;
     //run startup scripts
+    execfile("config/init.cfg", false);
+
     execfile("config/keymap.cfg");
     execfile("config/stdedit.cfg");
     execfile(game::gameconfig());
     execfile("config/sound.cfg");
     execfile("config/ui.cfg");
     execfile("config/heightmap.cfg");
+    execident("applychanges");
     //server list
     if(game::savedservers())
     {
