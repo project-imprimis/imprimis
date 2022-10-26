@@ -104,7 +104,7 @@ void connectserv(const char *servername, int serverport, const char *serverpassw
         conoutf("attempting to connect to %s:%d", servername, serverport);
         if(!resolverwait(servername, &address))
         {
-            conoutf("\f3could not resolve server %s", servername);
+            conoutf("^f3could not resolve server %s", servername);
             return;
         }
     }
@@ -121,7 +121,7 @@ void connectserv(const char *servername, int serverport, const char *serverpassw
         clienthost = enet_host_create(NULL, 2, server::numchannels(), rate*1024, rate*1024);
         if(!clienthost)
         {
-            conoutf("\f3could not connect to server");
+            conoutf("^f3could not connect to server");
             return;
         }
         clienthost->duplicatePeers = 0;
@@ -216,7 +216,7 @@ void flushclient()
 
 void neterr(const char *s, bool disc)
 {
-    conoutf(Console_Error, "\f3illegal network message (%s)", s);
+    conoutf(Console_Error, "^f3illegal network message (%s)", s);
     if(disc)
     {
         disconnect();
@@ -243,7 +243,7 @@ void gets2c()           // get updates from the server
         ++connattempts;
         if(connattempts > 3)
         {
-            conoutf("\f3could not connect to server");
+            conoutf("^f3could not connect to server");
             abortconnect();
             return;
         }
@@ -287,7 +287,7 @@ void gets2c()           // get updates from the server
                 }
                 if(event.peer==connpeer)
                 {
-                    conoutf("\f3could not connect to server");
+                    conoutf("^f3could not connect to server");
                     abortconnect();
                 }
                 else
@@ -297,11 +297,11 @@ void gets2c()           // get updates from the server
                         const char *msg = disconnectreason(event.data);
                         if(msg)
                         {
-                            conoutf("\f3server network error, disconnecting (%s) ...", msg);
+                            conoutf("^f3server network error, disconnecting (%s) ...", msg);
                         }
                         else
                         {
-                            conoutf("\f3server network error, disconnecting...");
+                            conoutf("^f3server network error, disconnecting...");
                         }
                     }
                     disconnect();

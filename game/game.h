@@ -282,7 +282,7 @@ struct servinfo
 };
 
 const char * const mastermodenames[] =  { "auth",   "open",   "veto",       "locked",     "private",    "password" };
-const char * const mastermodecolors[] = { "",       "\f0",    "\f2",        "\f2",        "\f3",        "\f3" };
+const char * const mastermodecolors[] = { "",       "^f0",    "^f2",        "^f2",        "^f3",        "^f3" };
 const char * const mastermodeicons[] =  { "server", "server", "serverlock", "serverlock", "serverpriv", "serverpriv" };
 
 // crypto
@@ -716,7 +716,7 @@ constexpr int maxtrans = 5000;
 
 const int maxteams = 2;
 const char * const teamnames[1+maxteams]     = { "", "azul", "rojo" };
-const char * const teamtextcode[1+maxteams]  = { "\f0", "\f1", "\f3" };
+const char * const teamtextcode[1+maxteams]  = { "^f0", "^f1", "^f3" };
 const char * const teamblipcolor[1+maxteams] = { "_neutral", "_blue", "_red" };
 const int teamtextcolor[1+maxteams] = { 0x1EC850, 0x6496FF, 0xFF4B19 };
 const int teamscoreboardcolor[1+maxteams] = { 0, 0x3030C0, 0xC03030 };

@@ -304,7 +304,7 @@ namespace ai
             }
             else
             {
-                conoutf("\f0join:\f7 %s", colorname(d, name));
+                conoutf("^f0join:^f7 %s", colorname(d, name));
             }
             resetthisguy = true;
         }

@@ -88,7 +88,7 @@ namespace ai
                     {
                         aistate &b = d->ai->state[i];
                         DEF_FORMAT_STRING(s, "%s%s (%d ms) %s:%d",
-                            top ? "\fg" : "\fy",
+                            top ? "^fg" : "^fy",
                             stnames[b.type],
                             lastmillis-b.millis,
                             sttypes[b.targtype+1], b.target

@@ -593,33 +593,33 @@ namespace game
         }
         if(d==actor)
         {
-            conoutf(contype, "\f2%s suicided%s", dname, d==player1 ? "!" : "");
+            conoutf(contype, "^f2%s suicided%s", dname, d==player1 ? "!" : "");
         }
         else if(modecheck(gamemode, Mode_Team) && (d->team == actor->team)) //if player is on the same team in a team mode
         {
             contype |= ConsoleMsg_TeamKill;
             if(actor==player1)
             {
-                conoutf(contype, "\f6%s fragged a teammate (%s)", aname, dname);
+                conoutf(contype, "^f6%s fragged a teammate (%s)", aname, dname);
             }
             else if(d==player1)
             {
-                conoutf(contype, "\f6%s got fragged by a teammate (%s)", dname, aname);
+                conoutf(contype, "^f6%s got fragged by a teammate (%s)", dname, aname);
             }
             else
             {
-                conoutf(contype, "\f2%s fragged a teammate (%s)", aname, dname);
+                conoutf(contype, "^f2%s fragged a teammate (%s)", aname, dname);
             }
         }
         else
         {
             if(d==player1)
             {
-                conoutf(contype, "\f2%s got fragged by %s (%dm)", dname, aname, fragdist);
+                conoutf(contype, "^f2%s got fragged by %s (%dm)", dname, aname, fragdist);
             }
             else
             {
-                conoutf(contype, "\f2%s fragged %s (%dm)", aname, dname, fragdist);
+                conoutf(contype, "^f2%s fragged %s (%dm)", aname, dname, fragdist);
             }
         }
         deathstate(d);
@@ -639,11 +639,11 @@ namespace game
         {
             intermission = true;
             player1->attacking = Act_Idle;
-            conoutf(ConsoleMsg_GameInfo, "\f2intermission:");
-            conoutf(ConsoleMsg_GameInfo, "\f2game has ended!");
-            conoutf(ConsoleMsg_GameInfo, "\f2player frags: %d, deaths: %d, score: %d", player1->frags, player1->deaths, player1->score);
+            conoutf(ConsoleMsg_GameInfo, "^f2intermission:");
+            conoutf(ConsoleMsg_GameInfo, "^f2game has ended!");
+            conoutf(ConsoleMsg_GameInfo, "^f2player frags: %d, deaths: %d, score: %d", player1->frags, player1->deaths, player1->score);
             int accuracy = (player1->totaldamage*100)/max(player1->totalshots, 1);
-            conoutf(ConsoleMsg_GameInfo, "\f2player total damage dealt: %d, damage wasted: %d, efficiency(%%): %d", player1->totaldamage, player1->totalshots-player1->totaldamage, accuracy);
+            conoutf(ConsoleMsg_GameInfo, "^f2player total damage dealt: %d, damage wasted: %d, efficiency(%%): %d", player1->totaldamage, player1->totalshots-player1->totaldamage, accuracy);
             showscores(true);
             disablezoom();
             execident("intermission");
@@ -705,7 +705,7 @@ namespace game
         {
             if(notify && d->name[0])
             {
-                conoutf("\f4leave:\f7 %s", colorname(d));
+                conoutf("^f4leave:^f7 %s", colorname(d));
             }
             removeweapons(d);
             removetrackedparticles(d);
@@ -767,11 +767,11 @@ namespace game
         intermission = false;
         maptime = maprealtime = 0;
         maplimit = -1;
-        conoutf(ConsoleMsg_GameInfo, "\f2game mode is %s", server::modeprettyname(gamemode));
+        conoutf(ConsoleMsg_GameInfo, "^f2game mode is %s", server::modeprettyname(gamemode));
         const char *info = validmode(gamemode) ? gamemodes[gamemode - startgamemode].info : nullptr;
         if(showmodeinfo && info)
         {
-            conoutf(ConsoleMsg_GameInfo, "\f0%s", info);
+            conoutf(ConsoleMsg_GameInfo, "^f0%s", info);
         }
         syncplayer();
         showscores(false);
@@ -878,9 +878,9 @@ namespace game
         {
             if(dup)
             {
-                return tempformatstring(d->aitype == AI_None ? "\fs%s%s \f5(%d)\fr" : "\fs%s%s \f5[%d]\fr", color, name, d->clientnum);
+                return tempformatstring(d->aitype == AI_None ? "^fs%s%s ^f5(%d)^fr" : "^fs%s%s ^f5[%d]^fr", color, name, d->clientnum);
             }
-            return tempformatstring("\fs%s%s\fr", color, name);
+            return tempformatstring("^fs%s%s^fr", color, name);
         }
         return name;
     }
@@ -902,7 +902,7 @@ namespace game
         {
             return alt;
         }
-        return tempformatstring("\fs%s%s%s%s\fr", teamtextcode[team], prefix, teamnames[team], suffix);
+        return tempformatstring("^fs%s%s%s%s^fr", teamtextcode[team], prefix, teamnames[team], suffix);
     }
 
     VARP(teamsounds, 0, 1, 1);
