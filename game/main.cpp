@@ -89,7 +89,6 @@ constexpr const char * versionstring = "Alpha 22 \"Vesper\"";
 //global scope
 void startupconstants()
 {
-    numanims = Anim_NumAnims;
     std::string animlist[] =
     {
         "mapmodel",
