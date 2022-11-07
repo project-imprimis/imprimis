@@ -9,6 +9,12 @@ int connmillis = 0,
     connattempts = 0,
     discmillis = 0;
 
+SVAR(connectservmsg, "");
+SVAR(connectservattempt, "");
+SVAR(connectservfailed, "");
+SVAR(connectservlan, "");
+SVAR(connectservnoconnect, "");
+
 void setrate(int rate)
 {
    if(!curpeer)
@@ -80,7 +86,7 @@ void connectserv(const char *servername, int serverport, const char *serverpassw
 {
     if(connpeer)
     {
-        conoutf("aborting connection attempt");
+        conoutf("%s", connectservmsg);
         abortconnect();
     }
     if(serverport <= 0)
@@ -101,10 +107,10 @@ void connectserv(const char *servername, int serverport, const char *serverpassw
             setvar("connectport", serverport);
         }
         addserver(servername, serverport, serverpassword && serverpassword[0] ? serverpassword : NULL);
-        conoutf("attempting to connect to %s:%d", servername, serverport);
+        conoutf("%s %s:%d", connectservattempt, servername, serverport);
         if(!resolverwait(servername, &address))
         {
-            conoutf("^f3could not resolve server %s", servername);
+            conoutf("%s %s", connectservfailed, servername);
             return;
         }
     }
@@ -112,7 +118,7 @@ void connectserv(const char *servername, int serverport, const char *serverpassw
     {
         setsvar("connectname", "");
         setvar("connectport", 0);
-        conoutf("attempting to connect over LAN");
+        conoutf("%s", connectservlan);
         address.host = ENET_HOST_BROADCAST;
     }
 
@@ -121,7 +127,7 @@ void connectserv(const char *servername, int serverport, const char *serverpassw
         clienthost = enet_host_create(NULL, 2, server::numchannels(), rate*1024, rate*1024);
         if(!clienthost)
         {
-            conoutf("^f3could not connect to server");
+            conoutf("%s", connectservnoconnect);
             return;
         }
         clienthost->duplicatePeers = 0;
