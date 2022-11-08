@@ -14,6 +14,17 @@ SVAR(connectservattempt, "");
 SVAR(connectservfailed, "");
 SVAR(connectservlan, "");
 SVAR(connectservnoconnect, "");
+static SVAR(reconnectnone, "");
+static SVAR(disconnectmessage, "");
+static SVAR(trydisconnectabort, "");
+static SVAR(trydisconnectattempt, "");
+static SVAR(trydisconnectnoconnect, "");
+static SVAR(neterrmessage, "");
+static SVAR(gets2cattempt, "");
+static SVAR(gets2cfailed, "");
+static SVAR(gets2cconnect, "");
+static SVAR(gets2cdisconnect, "");
+static SVAR(gets2cneterr, "");
 
 void setrate(int rate)
 {
@@ -145,7 +156,7 @@ void reconnect(const char *serverpassword)
 {
     if(!connectname[0] || connectport <= 0)
     {
-        conoutf(Console_Error, "no previous connection");
+        conoutf(Console_Error, "%s", reconnectnone);
         return;
     }
 
@@ -172,7 +183,7 @@ void disconnect(bool async, bool cleanup)
         }
         curpeer = NULL;
         discmillis = 0;
-        conoutf("disconnected");
+        conoutf("%s", disconnectmessage);
         game::gamedisconnect(cleanup);
         mainmenu = 1;
         execident("resethud");
@@ -186,17 +197,18 @@ void disconnect(bool async, bool cleanup)
 
 void trydisconnect(bool local)
 {
+
     if(connpeer)
     {
-        conoutf("aborting connection attempt");
+        conoutf("%s", trydisconnectabort);
         abortconnect();
     }
     else if(curpeer)
     {
-        conoutf("attempting to disconnect...");
+        conoutf("%s", trydisconnectattempt);
         disconnect(!discmillis);
     }
-    else conoutf("not connected");
+    else conoutf("%s", trydisconnectnoconnect);
 }
 
 ICOMMAND(connect, "sis", (char *name, int *port, char *pw), connectserv(name, *port, pw));
@@ -222,7 +234,7 @@ void flushclient()
 
 void neterr(const char *s, bool disc)
 {
-    conoutf(Console_Error, "^f3illegal network message (%s)", s);
+    conoutf(Console_Error, "%s (%s)", neterrmessage, s);
     if(disc)
     {
         disconnect();
@@ -244,12 +256,12 @@ void gets2c()           // get updates from the server
     }
     if(connpeer && totalmillis/3000 > connmillis/3000)
     {
-        conoutf("attempting to connect...");
+        conoutf("%s", gets2cattempt);
         connmillis = totalmillis;
         ++connattempts;
         if(connattempts > 3)
         {
-            conoutf("^f3could not connect to server");
+            conoutf("%s", gets2cfailed);
             abortconnect();
             return;
         }
@@ -263,7 +275,7 @@ void gets2c()           // get updates from the server
                 disconnect(false, false);
                 curpeer = connpeer;
                 connpeer = NULL;
-                conoutf("connected to server");
+                conoutf("%s", gets2cconnect);
                 throttle();
                 if(rate)
                 {
@@ -276,7 +288,7 @@ void gets2c()           // get updates from the server
             {
                 if(discmillis)
                 {
-                    conoutf("attempting to disconnect...");
+                    conoutf("%s", gets2cdisconnect);
                 }
                 else
                 {
@@ -293,7 +305,7 @@ void gets2c()           // get updates from the server
                 }
                 if(event.peer==connpeer)
                 {
-                    conoutf("^f3could not connect to server");
+                    conoutf("%s", gets2cfailed);
                     abortconnect();
                 }
                 else
@@ -303,11 +315,11 @@ void gets2c()           // get updates from the server
                         const char *msg = disconnectreason(event.data);
                         if(msg)
                         {
-                            conoutf("^f3server network error, disconnecting (%s) ...", msg);
+                            conoutf("%s (%s)", gets2cneterr, msg);
                         }
                         else
                         {
-                            conoutf("^f3server network error, disconnecting...");
+                            conoutf("%s", gets2cneterr);
                         }
                     }
                     disconnect();
