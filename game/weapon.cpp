@@ -760,6 +760,17 @@ namespace game
         mpplacecube(sel, tex, true);
     }
 
+    vec calctrajectory(projectile &p, int iter)
+    {
+        float timefactor = elapsedtime/16.7f; //normalize physics to 60 fps
+        vec v = vec(p.o);
+        for(int i = 0; i < iter; ++i)
+        {
+            v.add(p.dir*p.speed*timefactor).sub(vec(0, 0, timefactor*0.001*(lastmillis-p.spawntime)*p.gravity)); //set v as current particle location o plus dv
+        }
+        return v;
+    }
+
     void updateprojectiles(int time)
     {
         float timefactor = elapsedtime/16.7f; //normalize physics to 60 fps
@@ -774,7 +785,7 @@ namespace game
             p.offsetmillis = max(p.offsetmillis-time, 0);
             vec dv = p.dir; //displacement vector
             dv.mul(p.speed*timefactor);
-            vec v = vec(p.o).add(dv).sub(vec(0, 0, timefactor*0.001*(lastmillis-p.spawntime)*p.gravity)); //set v as current particle location o plus dv
+            vec v = calctrajectory(p, 1);
             bool exploded = false;
             hits.clear();
             if(p.local) //if projectile belongs to a local client
