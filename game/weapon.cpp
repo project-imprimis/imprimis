@@ -1,5 +1,7 @@
 // weapon.cpp: all shooting and effects code, projectile management
 #include "game.h"
+#include <random>
+
 namespace game
 {
     static const int offsetmillis = 500;
@@ -288,13 +290,14 @@ namespace game
         gunselect(s, d);
     }
 
-    void offsetray(const vec &from, const vec &to, int spread, float range, vec &dest)
+    //gaussian offet with stdev = spread
+    void offsetray(const vec &from, const vec &to, int spread, float range, vec &dest, bool wander = false)
     {
-        vec offset;
-        do
-        {
-            offset = vec(randomfloat(1), randomfloat(1), randomfloat(1)).sub(0.5f);
-        } while(offset.squaredlen() > 0.5f*0.5f);
+        std::random_device rd{};
+        std::mt19937 gen{rd()};
+
+        std::normal_distribution<float> d{0, 0.2};
+        vec offset = vec( d(gen), d(gen), d(gen) );
         offset.mul((to.dist(from)/1024)*spread);
         dest = vec(offset).add(to);
         if(dest != from)
