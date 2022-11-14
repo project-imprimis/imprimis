@@ -290,16 +290,22 @@ namespace game
         gunselect(s, d);
     }
 
-    //gaussian offet with stdev = spread
-    void offsetray(const vec &from, const vec &to, int spread, float range, vec &dest, bool wander = false)
+    //gaussian spread, weighted average 10:0:1
+    void offsetray(const vec &from, const vec &to, int spread, float range, vec &dest, bool wander = true)
     {
+        static vec old(0,0);
         std::random_device rd{};
         std::mt19937 gen{rd()};
 
-        std::normal_distribution<float> d{0, 0.2};
-        vec offset = vec( d(gen), d(gen), d(gen) );
-        offset.mul((to.dist(from)/1024)*spread);
-        dest = vec(offset).add(to);
+        std::normal_distribution<float> d{0, 1.5};
+        vec offset = vec( d(gen), d(gen), d(gen) );                             //generate a 3-vector, stdev +/- 1.5 normal dist
+        if(wander)
+        {
+            old.mul(10).add(offset).add(vec(0,0,0)).div(11);                    //weight average, 10x for previous, 1x for 0 (centering), 1x for new random
+            offset = vec(old).rotate_around_z(camera1->yaw/RAD);                //old value is not normalized to camera orientation
+        }
+        offset.mul((to.dist(from)/1024)*spread);                                //offset weighted by projectile distance
+        dest = vec(offset).add(to);                                             //apply offset
         if(dest != from)
         {
             vec dir = vec(dest).sub(from).normalize();
