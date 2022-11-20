@@ -622,7 +622,7 @@ const struct guninfo { const char *name, *file, *vwep; int attacks[Act_NumActs];
     { "railgun", "railgun", "worldgun/railgun", { -1, Attack_RailShot } },
     { "pulse rifle", "pulserifle", "worldgun/pulserifle", { -1, Attack_PulseShoot } },
     { "engineer rifle", "enggun", "worldgun/pulserifle", { -1, Attack_EngShoot } },
-    { "shotgun", "carbine", "worldgun/carbine", { -1, Attack_ShotgunShoot } },
+    { "shotgun", "scattergun", "worldgun/carbine", { -1, Attack_ShotgunShoot } },
     { "carbine", "carbine", "worldgun/carbine", { -1, Attack_CarbineShoot } },
 };
 
