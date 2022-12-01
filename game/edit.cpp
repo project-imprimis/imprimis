@@ -533,7 +533,7 @@ void mpeditvslot(int delta, VSlot &ds, int allfaces, selinfo &sel, bool local)
     bool findrep = local && !allfaces && reptex < 0;
     VSlot *findedit = nullptr;
     LOOP_SEL_XYZ(remapvslots(c, delta != 0, ds, allfaces ? -1 : sel.orient, findrep, findedit));
-    remappedvslots.clear();
+    clearremappedvslots();
     if(local && findedit)
     {
         lasttex = findedit->index;
