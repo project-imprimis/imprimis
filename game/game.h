@@ -614,7 +614,7 @@ const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudso
     { Gun_Pulse,   Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Pulse1,   Sound_Pulse2,   700,  8,  10, 1,    7, 50, 9000,  1, 2500, 50, 1, 0, 0, 200, 300, 4},
     { Gun_Eng,     Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Melee,    Sound_Melee,    250,  0,   0, 1,    0,  0,   80,  1,   10, 20, 2, 0, 1,  10, 100, 0},
     { Gun_Shotgun, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Shotgun1, Sound_Shotgun1, 750,  1, 120, 0,    0, 10,  384, 12,  100,  0, 0, 0, 1,  20, 100, 0},
-    { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1,  90,  2, 100, 0,    0,  2,  512,  1,   50,  0, 0, 0, 1,  25, 125, 0},
+    { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1,  90,  2, 120, 0,    0,  2,  512,  1,   50,  0, 0, 0, 1,  25, 125, 0},
 };
 
 const struct guninfo { const char *name, *file, *vwep; int attacks[Act_NumActs]; } guns[Gun_NumGuns] =
