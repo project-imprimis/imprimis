@@ -976,8 +976,9 @@ void writeservercfg()
     {
         return;
     }
-    stream *f = openutf8file(copypath(game::savedservers()), "w");
-    if(!f)
+    std::fstream f;
+    f.open(copypath(game::savedservers()));
+    if(!f.is_open())
     {
         return;
     }
@@ -989,24 +990,24 @@ void writeservercfg()
         {
             if(!kept)
             {
-                f->printf("// servers that should never be cleared from the server list\n\n");
+                f << "// servers that should never be cleared from the server list\n\n";
             }
             if(s->password)
             {
-                f->printf("keepserver %s %d %s\n", escapeid(s->name), s->address.port, escapestring(s->password));
+                f << "keepserver " << escapeid(s->name) << " " << s->address.port << " " << escapestring(s->password) << std::endl;
             }
             else
             {
-                f->printf("keepserver %s %d\n", escapeid(s->name), s->address.port);
+                f << "keepserver " << escapeid(s->name) << " " << s->address.port << std::endl;
             }
             kept++;
         }
     }
     if(kept)
     {
-        f->printf("\n");
+        f << std::endl;
     }
-    f->printf("// servers connected to are added here automatically\n\n");
+    f << "// servers connected to are added here automatically\n\n";
     for(int i = 0; i < servers.length(); i++)
     {
         serverinfo *s = servers[i];
@@ -1014,14 +1015,14 @@ void writeservercfg()
         {
             if(s->password)
             {
-                f->printf("addserver %s %d %s\n", escapeid(s->name), s->address.port, escapestring(s->password));
+                f << "addserver " << escapeid(s->name) << " " << s->address.port << " " << escapestring(s->password);
             }
             else
             {
-                f->printf("addserver %s %d\n", escapeid(s->name), s->address.port);
+                f << "addserver " << escapeid(s->name) << " " << s->address.port << std::endl;
             }
         }
     }
-    delete f;
+    f.close();
 }
 
