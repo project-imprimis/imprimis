@@ -843,16 +843,6 @@ struct teamscore
     }
 };
 
-inline uint hthash(const teamscore &t)
-{
-    return hthash(t.team);
-}
-
-inline bool htcmp(int team, const teamscore &t)
-{
-    return team == t.team;
-}
-
 struct teaminfo
 {
     int frags, score;
