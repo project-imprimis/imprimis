@@ -938,7 +938,7 @@ ICOMMAND(getreptex, "", (),
 {
     if(!noedit())
     {
-        intret(vslots.size() > (reptex) ? reptex : -1);
+        intret(static_cast<int>(vslots.size()) > (reptex) ? reptex : -1);
     }
 });
 COMMAND(gettexname, "ii");
@@ -960,7 +960,7 @@ ICOMMAND(looptexmru, "re", (ident *id, uint *body),
 ICOMMAND(numvslots, "", (), intret(vslots.size()));
 ICOMMAND(numslots, "", (), intret(slots.size()));
 COMMAND(getslottex, "i");
-ICOMMAND(texloaded, "i", (int *tex), intret(slots.size() > (*tex) && slots[*tex]->loaded ? 1 : 0));
+ICOMMAND(texloaded, "i", (int *tex), intret(static_cast<int>(slots.size()) > (*tex) && slots[*tex]->loaded ? 1 : 0));
 
 void replacetexcube(cube &c, int oldtex, int newtex)
 {
