@@ -81,7 +81,7 @@ namespace ai
             }//child elem 1 AND'd by 1 bitshifted right by 30+which places is not equal to 0?
         };
 
-        vector<node> nodes;
+        std::vector<node> nodes;
         int firstwp, lastwp;
         vec bbmin, bbmax;
 
@@ -92,7 +92,7 @@ namespace ai
 
         void clear()
         {
-            nodes.setsize(0);
+            nodes.clear();
             firstwp = lastwp = -1;
             bbmin = vec(1e16f, 1e16f, 1e16f);
             bbmax = vec(-1e16f, -1e16f, -1e16f);
@@ -105,12 +105,12 @@ namespace ai
             {
                 last = waypoints.length();
             }
-            vector<int> indices;
+            std::vector<int> indices;
             //go and populate the vector<int> indices with this loop
             for(int i = first; i < last; i++) //if cleared, 0 to waypoints.length
             {
                 waypoint &w = waypoints[i];
-                indices.add(i);
+                indices.push_back(i);
                 if(firstwp < 0)
                 {
                     firstwp = i;
@@ -123,14 +123,14 @@ namespace ai
             {
                 lastwp = max(lastwp, last-1);
             }
-            if(indices.length()) //if this above loop yielded something useful
+            if(indices.size()) //if this above loop yielded something useful
             {
-                nodes.reserve(indices.length());//create some space
-                build(indices.getbuf(), indices.length(), bbmin, bbmax);//build() calls an unrelated build() because that's what makes sense in this timeline
+                nodes.reserve(indices.size());//create some space
+                build(indices.data(), indices.size(), bbmin, bbmax);//build() calls an unrelated build() because that's what makes sense in this timeline
             }
         }
         //takes from above build() call
-        void build(int *indices, int numindices, const vec &vmin, const vec &vmax)
+        void build(int *indices, uint numindices, const vec &vmin, const vec &vmax)
         {
             int axis = 2;
             for(int k = 0; k < 2; ++k)
@@ -149,7 +149,7 @@ namespace ai
             float split = 0.5f*(vmax[axis] + vmin[axis]),
                   splitleft = -1e16f,
                   splitright = 1e16f;
-            int left, right;
+            uint left, right;
             for(left = 0, right = numindices; left < right;)
             {
                 waypoint &w = waypoints[indices[left]];
@@ -197,8 +197,9 @@ namespace ai
                 }
             }
 
-            int offset = nodes.length();
-            node &curnode = nodes.add();
+            size_t offset = nodes.size();
+            nodes.emplace_back();
+            node &curnode = nodes.back();
             curnode.split[0] = splitleft;
             curnode.split[1] = splitright;
 
@@ -208,7 +209,7 @@ namespace ai
             }
             else
             {
-                curnode.child[0] = (axis<<30) | (nodes.length()-offset);
+                curnode.child[0] = (axis<<30) | (nodes.size()-offset);
                 if(left)
                 {
                     build(indices, left, leftmin, leftmax);
@@ -221,7 +222,7 @@ namespace ai
             }
             else
             {
-                curnode.child[1] = (left<=1 ? 1<<30 : 0) | (nodes.length()-offset);
+                curnode.child[1] = (left<=1 ? 1<<30 : 0) | (nodes.size()-offset);
                 if(numindices-right)
                 {
                     build(&indices[right], numindices-right, rightmin, rightmax);
@@ -297,13 +298,7 @@ namespace ai
         }
     }
 
-    struct wpcachestack
-    {
-        wpcache::node *node;
-        float tmin, tmax;
-    };
-
-    vector<wpcache::node *> wpcachestack;
+    std::vector<wpcache::node *> wpcachestack;
 
     int closestwaypoint(const vec &pos, float mindist, bool links, gameent *d)
     {
@@ -338,7 +333,7 @@ namespace ai
         {
             if(wpcaches[i].firstwp >= 0) //if the first waypoint in the enumerated (by i) cache is not -1 (-1 set by clearing)
             {
-                for(curnode = &wpcaches[i].nodes[0], wpcachestack.setsize(0);;) //for cache[i] node 0, set the cachestack size to 0
+                for(curnode = &wpcaches[i].nodes[0], wpcachestack.clear();;) //for cache[i] node 0, set the cachestack size to 0
                 {
                     int axis = curnode->axis(); //axis property from wpcache struct
                     float dist1 = pos[axis] - curnode->split[0],
@@ -374,7 +369,7 @@ namespace ai
                         {
                             if(!curnode->isleaf(1))
                             {
-                                wpcachestack.add(curnode + curnode->childindex(1));
+                                wpcachestack.push_back(curnode + curnode->childindex(1));
                             }
                             else
                             {
@@ -388,7 +383,8 @@ namespace ai
                     {
                         break;
                     }
-                    curnode = wpcachestack.pop();
+                    curnode = wpcachestack.back();
+                    wpcachestack.pop_back();
                 }
             }
         }
@@ -432,7 +428,7 @@ namespace ai
         {
             if(wpcaches[which].firstwp >= 0)
             {
-                for(curnode = &wpcaches[which].nodes[0], wpcachestack.setsize(0);;)
+                for(curnode = &wpcaches[which].nodes[0], wpcachestack.clear();;)
                 {
                     int axis = curnode->axis();
                     float dist1 = pos[axis] - curnode->split[0],
@@ -468,7 +464,7 @@ namespace ai
                         {
                             if(!curnode->isleaf(1))
                             {
-                                wpcachestack.add(curnode + curnode->childindex(1));
+                                wpcachestack.push_back(curnode + curnode->childindex(1));
                             }
                             else
                             {
@@ -482,7 +478,8 @@ namespace ai
                     {
                         break;
                     }
-                    curnode = wpcachestack.pop();
+                    curnode = wpcachestack.back();
+                    wpcachestack.pop_back();
                 }
             }
         }
@@ -521,7 +518,7 @@ namespace ai
         {
             if(wpcaches[which].firstwp >= 0)
             {
-                for(curnode = &wpcaches[which].nodes[0], wpcachestack.setsize(0);;)
+                for(curnode = &wpcaches[which].nodes[0], wpcachestack.clear();;)
                 {
                     int axis = curnode->axis();
                     float dist1 = pos[axis] - curnode->split[0],
@@ -557,7 +554,7 @@ namespace ai
                         {
                             if(!curnode->isleaf(1))
                             {
-                                wpcachestack.add(curnode + curnode->childindex(1));
+                                wpcachestack.push_back(curnode + curnode->childindex(1));
                             }
                             else
                             {
@@ -571,7 +568,8 @@ namespace ai
                     {
                         break;
                     }
-                    curnode = wpcachestack.pop();
+                    curnode = wpcachestack.back();
+                    wpcachestack.pop_back();
                 }
             }
         }
@@ -655,7 +653,7 @@ namespace ai
             return false;
         }
         static ushort routeid = 1;
-        static vector<waypoint *> queue;
+        static std::vector<waypoint *> queue;
 
         if(!routeid)
         {
@@ -697,14 +695,17 @@ namespace ai
         waypoints[node].route = routeid;
         waypoints[node].curscore = waypoints[node].estscore = 0;
         waypoints[node].prev = 0;
-        queue.setsize(0);
-        queue.add(&waypoints[node]);
+        queue.clear();
+        queue.push_back(&waypoints[node]);
         route.setsize(0);
 
         int lowest = -1;
+        std::make_heap(queue.begin(), queue.end());
         while(!queue.empty())
         {
-            waypoint &m = *queue.removeheap();
+            std::pop_heap(queue.begin(), queue.end());
+            waypoint &m = *queue.back();
+            queue.pop_back();
             float prevscore = m.curscore;
             m.curscore = -1;
             for(int i = 0; i < maxwaypointlinks; ++i)
@@ -737,18 +738,8 @@ namespace ai
                         {
                             goto foundgoal;
                         }
-                        queue.addheap(&n);
-                    }
-                    else
-                    {
-                        for(int j = 0; j < queue.length(); j++)
-                        {
-                            if(queue[j] == &n)
-                            {
-                                queue.upheap(j);
-                                break;
-                            }
-                        }
+                        queue.push_back(&n);
+                        std::push_heap(queue.begin(), queue.end());
                     }
                 }
             }
