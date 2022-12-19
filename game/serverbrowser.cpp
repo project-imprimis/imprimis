@@ -13,9 +13,9 @@ struct resolverresult
     ENetAddress address;
 };
 
-vector<resolverthread> resolverthreads;
-vector<const char *> resolverqueries;
-vector<resolverresult> resolverresults;
+std::vector<resolverthread> resolverthreads;
+std::vector<const char *> resolverqueries;
+std::vector<resolverresult> resolverresults;
 SDL_mutex *resolvermutex;
 SDL_cond *querycond, *resultcond;
 
@@ -30,10 +30,6 @@ int resolverloop(void * data)
     SDL_LockMutex(resolvermutex);
     SDL_Thread *thread = rt->thread;
     SDL_UnlockMutex(resolvermutex);
-    if(!thread || SDL_GetThreadID(thread) != SDL_ThreadID())
-    {
-        return 0;
-    }
     while(thread == rt->thread)
     {
         SDL_LockMutex(resolvermutex);
@@ -41,7 +37,8 @@ int resolverloop(void * data)
         {
             SDL_CondWait(querycond, resolvermutex);
         }
-        rt->query = resolverqueries.pop();
+        rt->query = resolverqueries.back();
+        resolverqueries.pop_back();
         rt->starttime = totalmillis;
         SDL_UnlockMutex(resolvermutex);
 
@@ -51,7 +48,8 @@ int resolverloop(void * data)
         SDL_LockMutex(resolvermutex);
         if(rt->query && thread == rt->thread)
         {
-            resolverresult &rr = resolverresults.add();
+            resolverresults.emplace_back();
+            resolverresult &rr = resolverresults.back();
             rr.query = rt->query;
             rr.address = address;
             rt->query = nullptr;
@@ -72,7 +70,8 @@ void resolverinit()
     SDL_LockMutex(resolvermutex);
     for(int i = 0; i < numresolverthreads; ++i)
     {
-        resolverthread &rt = resolverthreads.add();
+        resolverthreads.emplace_back();
+        resolverthread &rt = resolverthreads.back();
         rt.query = nullptr;
         rt.starttime = 0;
         rt.thread = SDL_CreateThread(resolverloop, "resolver", &rt);
@@ -102,9 +101,9 @@ void resolverclear()
         return;
     }
     SDL_LockMutex(resolvermutex);
-    resolverqueries.shrink(0);
-    resolverresults.shrink(0);
-    for(int i = 0; i < resolverthreads.length(); i++)
+    resolverqueries.clear();
+    resolverresults.clear();
+    for(uint i = 0; i < resolverthreads.size(); i++)
     {
         resolverthread &rt = resolverthreads[i];
         resolverstop(rt);
@@ -119,7 +118,7 @@ void resolverquery(const char *name)
         resolverinit();
     }
     SDL_LockMutex(resolvermutex);
-    resolverqueries.add(name);
+    resolverqueries.push_back(name);
     SDL_CondSignal(querycond);
     SDL_UnlockMutex(resolvermutex);
 }
@@ -130,14 +129,15 @@ bool resolvercheck(const char **name, ENetAddress *address)
     SDL_LockMutex(resolvermutex);
     if(!resolverresults.empty())
     {
-        resolverresult &rr = resolverresults.pop();
+        resolverresult rr = resolverresults.back();
+        resolverresults.pop_back();
         *name = rr.query;
         address->host = rr.address.host;
         resolved = true;
     }
     else
     {
-        for(int i = 0; i < resolverthreads.length(); i++)
+        for(uint i = 0; i < resolverthreads.size(); i++)
         {
             resolverthread &rt = resolverthreads[i];
             if(rt.query && totalmillis - rt.starttime > resolverlimit)
@@ -162,7 +162,7 @@ bool resolverwait(const char *name, ENetAddress *address)
     renderprogress(0, text);
 
     SDL_LockMutex(resolvermutex);
-    resolverqueries.add(name);
+    resolverqueries.push_back(name);
     SDL_CondSignal(querycond);
     int starttime = SDL_GetTicks(),
         timeout = 0;
@@ -170,12 +170,12 @@ bool resolverwait(const char *name, ENetAddress *address)
     for(;;)
     {
         SDL_CondWaitTimeout(resultcond, resolvermutex, 250);
-        for(int i = 0; i < resolverresults.length(); i++)
+        for(uint i = 0; i < resolverresults.size(); i++)
         {
             if(resolverresults[i].query == name)
             {
                 address->host = resolverresults[i].address.host;
-                resolverresults.remove(i);
+                resolverresults.erase(resolverresults.begin() + i);
                 resolved = true;
                 break;
             }
@@ -197,7 +197,7 @@ bool resolverwait(const char *name, ENetAddress *address)
     }
     if(!resolved && timeout > resolverlimit)
     {
-        for(int i = 0; i < resolverthreads.length(); i++)
+        for(uint i = 0; i < resolverthreads.size(); i++)
         {
             resolverthread &rt = resolverthreads[i];
             if(rt.query == name)
@@ -491,7 +491,7 @@ struct serverinfo : servinfo, pingattempts
     }
 };
 
-vector<serverinfo *> servers;
+std::vector<serverinfo *> servers;
 ENetSocket pingsock = ENET_SOCKET_NULL;
 int lastinfo = 0;
 
@@ -514,7 +514,7 @@ static serverinfo *newserver(const char *name, int port, uint ip = ENET_HOST_ANY
         return nullptr;
 
     }
-    servers.add(si);
+    servers.push_back(si);
     return si;
 }
 
@@ -524,7 +524,7 @@ void addserver(const char *name, int port, const char *password, bool keep)
     {
         port = Port_Server;
     }
-    for(int i = 0; i < servers.length(); i++)
+    for(uint i = 0; i < servers.size(); i++)
     {
         serverinfo *s = servers[i];
         if(strcmp(s->name, name) || s->address.port != port)
@@ -591,14 +591,14 @@ void pingservers()
     uchar ping[maxtrans];
 
     static int lastping = 0;
-    if(lastping >= servers.length())
+    if(lastping >= servers.size())
     {
         lastping = 0;
     }
-    for(int i = 0; i < (maxservpings ? min(servers.length(), maxservpings) : servers.length()); ++i)
+    for(int i = 0; i < (maxservpings ? std::min(static_cast<int>(servers.size()), maxservpings) : servers.size()); ++i)
     {
         serverinfo &si = *servers[lastping];
-        if(++lastping >= servers.length())
+        if(++lastping >= servers.size())
         {
             lastping = 0;
         }
@@ -625,7 +625,7 @@ void pingservers()
 void checkresolver()
 {
     int resolving = 0;
-    for(int i = 0; i < servers.length(); i++)
+    for(uint i = 0; i < servers.size(); i++)
     {
         serverinfo &si = *servers[i];
         if(si.resolved == Resolve_Resolved)
@@ -654,7 +654,7 @@ void checkresolver()
         {
             break;
         }
-        for(int i = 0; i < servers.length(); i++)
+        for(uint i = 0; i < servers.size(); i++)
         {
             serverinfo &si = *servers[i];
             if(name == si.name)
@@ -692,7 +692,7 @@ void checkpings()
         ucharbuf p(ping, len);
         int millis = getint(p);
         serverinfo *si = nullptr;
-        for(int i = 0; i < servers.length(); i++)
+        for(uint i = 0; i < servers.size(); i++)
         {
             if(addr.host == servers[i]->address.host && addr.port == servers[i]->address.port)
             {
@@ -745,7 +745,7 @@ void checkpings()
 
 void sortservers()
 {
-    std::sort(servers.buf, servers.buf + servers.length(), serverinfo::compare);
+    std::sort(servers.begin(), servers.end(), serverinfo::compare);
 }
 COMMAND(sortservers, "");
 
@@ -761,7 +761,7 @@ void refreshservers()
     }
     if(totalmillis - lastrefresh > 1000)
     {
-        for(int i = 0; i < servers.length(); i++)
+        for(uint i = 0; i < servers.size(); i++)
         {
             servers[i]->reset();
         }
@@ -771,7 +771,7 @@ void refreshservers()
 
     checkresolver();
     checkpings();
-    if(totalmillis - lastinfo >= servpingrate/(maxservpings ? max(1, (servers.length() + maxservpings - 1) / maxservpings) : 1))
+    if(totalmillis - lastinfo >= servpingrate/(maxservpings ? std::max(1, (static_cast<int>(servers.size()) + maxservpings - 1) / maxservpings) : 1))
     {
         pingservers();
     }
@@ -781,10 +781,10 @@ void refreshservers()
     }
 }
 
-ICOMMAND(numservers, "", (), intret(servers.length()))
+ICOMMAND(numservers, "", (), intret(servers.size()))
 
 #define GETSERVERINFO_(idx, si, body) \
-    if(servers.inrange(idx)) \
+    if(servers.size() > idx) \
     { \
         serverinfo &si = *servers[idx]; \
         body; \
@@ -824,7 +824,7 @@ ICOMMAND(connectservinfo, "is", (int *i, char *pw), GETSERVERINFO_(*i, si, conne
 
 servinfo *getservinfo(int i)
 {
-    return servers.inrange(i) && servers[i]->valid() ? servers[i] : nullptr;
+    return servers.size() > i && servers[i]->valid() ? servers[i] : nullptr;
 }
 
 void clearservers(bool full = false)
@@ -832,15 +832,20 @@ void clearservers(bool full = false)
     resolverclear();
     if(full)
     {
-        servers.deletecontents();
+        for(serverinfo* i : servers)
+        {
+            delete i;
+        }
+        servers.clear();
     }
     else
     {
-        for(int i = servers.length(); --i >=0;) //note reverse iteration
+        for(int i = static_cast<int>(servers.size()); --i >=0;) //note reverse iteration to preserve indices
         {
             if(!servers[i]->keep)
             {
-                delete servers.remove(i);
+                delete servers.at(i);
+                servers.erase(servers.begin()+i);
             }
         }
     }
@@ -848,7 +853,7 @@ void clearservers(bool full = false)
 
 static const int retrievelimit = 20000; //20 seconds
 
-void retrieveservers(vector<char> &data)
+static void retrieveservers(std::vector<char>& data)
 {
     ENetSocket sock = connectmaster(true);
     if(sock == ENET_SOCKET_NULL)
@@ -903,18 +908,15 @@ void retrieveservers(vector<char> &data)
             enet_uint32 events = ENET_SOCKET_WAIT_RECEIVE;
             if(enet_socket_wait(sock, &events, 250) >= 0 && events)
             {
-                if(data.length() >= data.capacity())
-                {
-                    data.reserve(4096);
-                }
-                buf.data = data.getbuf() + data.length();
-                buf.dataLength = data.capacity() - data.length();
+                std::array<char, 4096> databuffer;
+                buf.data = databuffer.data();
+                buf.dataLength = 4096;
                 int recv = enet_socket_receive(sock, nullptr, &buf, 1);
                 if(recv <= 0)
                 {
                     break;
                 }
-                data.advance(recv);
+                data.insert(data.end(), databuffer.begin(), databuffer.end());
             }
             timeout = SDL_GetTicks() - starttime;
             renderprogress(min(static_cast<float>(timeout)/retrievelimit, 1.0f), text);
@@ -929,9 +931,9 @@ void retrieveservers(vector<char> &data)
         }
     }
 
-    if(data.length())
+    if(data.size())
     {
-        data.add('\0');
+        data.push_back('\0');
     }
     enet_socket_destroy(sock);
 }
@@ -940,7 +942,7 @@ bool updatedservers = false;
 
 void updatefrommaster()
 {
-    vector<char> data;
+    std::vector<char> data;
     retrieveservers(data);
     if(data.empty())
     {
@@ -949,7 +951,7 @@ void updatefrommaster()
     else
     {
         clearservers();
-        execute(data.getbuf());
+        execute(data.data());
     }
     refreshservers();
     updatedservers = true;
@@ -983,7 +985,7 @@ void writeservercfg()
         return;
     }
     int kept = 0;
-    for(int i = 0; i < servers.length(); i++)
+    for(uint i = 0; i < servers.size(); i++)
     {
         serverinfo *s = servers[i];
         if(s->keep)
@@ -1008,7 +1010,7 @@ void writeservercfg()
         f << std::endl;
     }
     f << "// servers connected to are added here automatically\n\n";
-    for(int i = 0; i < servers.length(); i++)
+    for(uint i = 0; i < servers.size(); i++)
     {
         serverinfo *s = servers[i];
         if(!s->keep)
