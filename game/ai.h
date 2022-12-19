@@ -65,11 +65,11 @@ namespace ai
                 return links[0]!=0;
             }
     };
-    extern vector<waypoint> waypoints;
+    extern std::vector<waypoint> waypoints;
 
-    inline bool iswaypoint(int n)
+    inline bool iswaypoint(uint n)
     {
-        return n > 0 && n < waypoints.length();
+        return n > 0 && n < waypoints.size();
     }
 
     extern int showwaypoints, dropwaypoints;

@@ -142,7 +142,7 @@ namespace ai
         if(showwaypoints || aidebug >= 6)
         {
             vector<int> close;
-            int len = waypoints.length();
+            size_t len = waypoints.size();
             if(showwaypointsradius)
             {
                 findwaypointswithin(camera1->o, 0, showwaypointsradius, close);

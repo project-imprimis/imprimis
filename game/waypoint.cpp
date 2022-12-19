@@ -6,7 +6,7 @@ namespace ai
 {
     using namespace game;
 
-    vector<waypoint> waypoints; //this is the box that all waypoints go into
+    std::vector<waypoint> waypoints; //this is the box that all waypoints go into
 
     //bad kinds of materials for bots to path into: clipping, instadeath
     bool clipped(const vec &o)
@@ -103,7 +103,7 @@ namespace ai
         {
             if(last < 0) //if list has been cleared
             {
-                last = waypoints.length();
+                last = static_cast<int>(waypoints.size());
             }
             std::vector<int> indices;
             //go and populate the vector<int> indices with this loop
@@ -286,10 +286,10 @@ namespace ai
             }
         }
         clearedwpcaches = 0;
-        lastwpcache = waypoints.length();
+        lastwpcache = waypoints.size();
 
         wpavoid.clear();
-        for(int i = 0; i < waypoints.length(); i++)
+        for(uint i = 0; i < waypoints.size(); i++)
         {
             if(waypoints[i].weight < 0)
             {
@@ -312,7 +312,7 @@ namespace ai
         }
 //==================================================================CHECKCLOSEST
         #define CHECKCLOSEST(index) do { \
-            if(index < waypoints.length()) \
+            if(index < waypoints.size()) \
             { \
                 const waypoint &w = waypoints[index]; \
                 if(!links || w.links[0]) \
@@ -388,7 +388,7 @@ namespace ai
                 }
             }
         }
-        for(int i = lastwpcache; i < waypoints.length(); i++)
+        for(uint i = lastwpcache; i < waypoints.size(); i++)
         {
             CHECKCLOSEST(i);
         }
@@ -413,7 +413,7 @@ namespace ai
         #define CHECKWITHIN(index) \
         do { \
             int n = (index); \
-            if(n < waypoints.length()) \
+            if(n < waypoints.size()) \
             { \
                 const waypoint &w = waypoints[n]; \
                 float dist = w.o.squaredist(pos); \
@@ -483,7 +483,7 @@ namespace ai
                 }
             }
         }
-        for(int i = lastwpcache; i < waypoints.length(); i++)
+        for(uint i = lastwpcache; i < waypoints.size(); i++)
         {
             CHECKWITHIN(i);
         }
@@ -504,7 +504,7 @@ namespace ai
         #define CHECKNEAR(index) \
         do { \
             int n = (index); \
-            if(n < ai::waypoints.length()) \
+            if(n < ai::waypoints.size()) \
             { \
                 const waypoint &w = ai::waypoints[n]; \
                 if(w.o.squaredist(pos) < limit2) \
@@ -657,7 +657,7 @@ namespace ai
 
         if(!routeid)
         {
-            for(int i = 0; i < waypoints.length(); i++)
+            for(uint i = 0; i < waypoints.size(); i++)
             {
                 waypoints[i].route = 0;
             }
@@ -763,12 +763,12 @@ namespace ai
 
     int addwaypoint(const vec &o, int weight = -1)
     {
-        if(waypoints.length() > maxwaypoints)
+        if(waypoints.size() > maxwaypoints)
         {
             return -1;
         }
-        int n = waypoints.length();
-        waypoints.add(waypoint(o, weight >= 0 ? weight : getweight(o)));
+        int n = waypoints.size();
+        waypoints.push_back(waypoint(o, weight >= 0 ? weight : getweight(o)));
         invalidatewpcache(n);
         return n;
     }
@@ -918,7 +918,7 @@ namespace ai
     //deletes all waypoints on the map
     void clearwaypoints(bool full)
     {
-        waypoints.setsize(0);
+        waypoints.clear();
         clearwpcache();
         if(full)
         {
@@ -957,12 +957,12 @@ namespace ai
     {
         vector<ushort> remap;
         int total = 0;
-        for(int i = 0; i < waypoints.length(); i++)
+        for(uint i = 0; i < waypoints.size(); i++)
         {
             remap.add(waypoints[i].links[1] == 0xFFFF ? 0 : total++);
         }
         total = 0;
-        for(int j = 0; j < waypoints.length(); j++)
+        for(uint j = 0; j < waypoints.size(); j++)
         {
             if(waypoints[j].links[1] == 0xFFFF)
             {
@@ -992,13 +992,13 @@ namespace ai
             }
             total++;
         }
-        waypoints.setsize(total);
+        waypoints.resize(total);
     }
 
     bool cleanwaypoints()
     {
         int cleared = 0;
-        for(int i = 1; i < waypoints.length(); i++)
+        for(uint i = 1; i < waypoints.size(); i++)
         {
             waypoint &w = waypoints[i];
             if(clipped(w.o))
@@ -1050,7 +1050,7 @@ namespace ai
         {
             return;
         }
-        if(!force && (waypoints.length() || !strcmp(loadedwaypoints, wptname)))
+        if(!force && (waypoints.size() || !strcmp(loadedwaypoints, wptname)))
         {
             return;
         }
@@ -1068,8 +1068,8 @@ namespace ai
 
         copystring(loadedwaypoints, wptname);
 
-        waypoints.setsize(0);
-        waypoints.add(vec(0, 0, 0));
+        waypoints.clear();
+        waypoints.emplace_back(vec(0, 0, 0));
         ushort numwp = f->get<ushort>();
         for(int i = 0; i < numwp; ++i)
         {
@@ -1081,7 +1081,8 @@ namespace ai
             o.x = f->get<float>();
             o.y = f->get<float>();
             o.z = f->get<float>();
-            waypoint &w = waypoints.add(waypoint(o, getweight(o)));
+            waypoints.push_back(waypoint(o, getweight(o)));
+            waypoint &w = waypoints.back();
             int numlinks = f->getchar(), k = 0;
             for(int i = 0; i < numlinks; ++i)
             {
@@ -1123,8 +1124,8 @@ namespace ai
             return;
         }
         f->write("OWPT", 4);
-        f->put<ushort>(waypoints.length()-1);
-        for(int i = 1; i < waypoints.length(); i++)
+        f->put<ushort>(waypoints.size()-1);
+        for(uint i = 1; i < waypoints.size(); i++)
         {
             waypoint &w = waypoints[i];
             f->put<float>(w.o.x);
@@ -1146,7 +1147,7 @@ namespace ai
             }
         }
         delete f;
-        conoutf("saved %d waypoints to %s", waypoints.length()-1, wptname);
+        conoutf("saved %u waypoints to %s", waypoints.size()-1, wptname);
     }
 
     ICOMMAND(savewaypoints, "s", (char *mname), savewaypoints(true, mname));
@@ -1161,7 +1162,7 @@ namespace ai
         vec o = vec(sel.o).sub(0.1f),
             s = vec(sel.s).mul(sel.grid).add(o).add(0.1f);
         int cleared = 0;
-        for(int i = 1; i < waypoints.length(); i++)
+        for(uint i = 1; i < waypoints.size(); i++)
         {
             waypoint &w = waypoints[i];
             if(w.o.x >= o.x && w.o.x <= s.x && w.o.y >= o.y && w.o.y <= s.y && w.o.z >= o.z && w.o.z <= s.z)
@@ -1196,7 +1197,7 @@ namespace ai
             return;
         }
         int cleared = 0;
-        for(int i = 1; i < waypoints.length(); i++)
+        for(uint i = 1; i < waypoints.size(); i++)
         {
             waypoint &w = waypoints[i];
             w.o.add(d);
