@@ -23,7 +23,7 @@ namespace ai
     {
         vec pos = o;
         pos.z += ai::jumpmin;
-        if(!insideworld(vec(pos.x, pos.y, min(pos.z, getworldsize() - 1e-3f))))
+        if(!insideworld(vec(pos.x, pos.y, min(pos.z, rootworld.mapsize() - 1e-3f))))
         {
             return -2;
         }
@@ -1198,7 +1198,7 @@ namespace ai
         {
             return;
         }
-        int worldsize = getworldsize();
+        int worldsize = rootworld.mapsize();
         if(d.x < -worldsize || d.x > worldsize || d.y < -worldsize || d.y > worldsize || d.z < -worldsize || d.z > worldsize)
         {
             clearwaypoints();

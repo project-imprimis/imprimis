@@ -542,7 +542,7 @@ namespace game
         sel.corner = (cor[R[d]]-(lu[R[d]]*2)/gridsize)+(cor[C[d]]-(lu[C[d]]*2)/gridsize)*2;
         selchildcount = 0;
         selchildmat = -1;
-        countselchild(rootworld.worldroot, ivec(0, 0, 0), worldsize/2);
+        countselchild(rootworld.worldroot, ivec(0, 0, 0), rootworld.mapsize()/2);
         if(mag>=1 && selchildcount==1)
         {
             selchildmat = c->material;
@@ -910,7 +910,7 @@ namespace game
                 {
                     for(int i = 0; i < 3; ++i)
                     {
-                        wdist = std::min(wdist, ((camdir[i] > 0 ? worldsize : 0) - player->o[i]) / camdir[i]);
+                        wdist = std::min(wdist, ((camdir[i] > 0 ? rootworld.mapsize() : 0) - player->o[i]) / camdir[i]);
                     }
                     w = vec(camdir).mul(wdist-0.05f).add(player->o);
                     if(!insideworld(w))
@@ -918,7 +918,7 @@ namespace game
                         wdist = 0;
                         for(int i = 0; i < 3; ++i)
                         {
-                            w[i] = std::clamp(player->o[i], 0.0f, float(worldsize));
+                            w[i] = std::clamp(player->o[i], 0.0f, float(rootworld.mapsize()));
                         }
                     }
                 }
@@ -984,7 +984,7 @@ namespace game
                 sel.corner = (cor[R[d]]-(lu[R[d]]*2)/gridsize)+(cor[C[d]]-(lu[C[d]]*2)/gridsize)*2;
                 selchildcount = 0;
                 selchildmat = -1;
-                countselchild(rootworld.worldroot, ivec(0, 0, 0), worldsize/2);
+                countselchild(rootworld.worldroot, ivec(0, 0, 0), rootworld.mapsize()/2);
                 if(mag>=1 && selchildcount==1)
                 {
                     selchildmat = c->material;

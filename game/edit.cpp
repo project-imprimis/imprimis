@@ -320,7 +320,7 @@ void mpeditface(int dir, int mode, selinfo &sel, bool local)
     if(mode==1)
     {
         int h = sel.o[d]+dc*sel.grid;
-        if(((dir>0) == dc && h<=0) || ((dir<0) == dc && h>=worldsize))
+        if(((dir>0) == dc && h<=0) || ((dir<0) == dc && h>=rootworld.mapsize()))
         {
             return;
         }
