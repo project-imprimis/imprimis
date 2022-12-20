@@ -88,26 +88,25 @@ namespace ai
 
                 obstacle(void *owner, float above = -1) : owner(owner), numwaypoints(0), above(above) {}
             };
-            vector<obstacle> obstacles;
+            std::vector<obstacle> obstacles;
             vector<int> waypoints;
 
             void clear()
             {
-                obstacles.setsize(0);
+                obstacles.clear();
                 waypoints.setsize(0);
             }
 
             void add(avoidset &avoid)
             {
                 waypoints.put(avoid.waypoints.getbuf(), avoid.waypoints.length());
-                for(int i = 0; i < avoid.obstacles.length(); i++)
+                for(obstacle& o : avoid.obstacles)
                 {
-                    obstacle &o = avoid.obstacles[i];
-                    if(obstacles.empty() || o.owner != obstacles.last().owner)
+                    if(obstacles.empty() || o.owner != obstacles.back().owner)
                     {
                         add(o.owner, o.above);
                     }
-                    obstacles.last().numwaypoints += o.numwaypoints;
+                    obstacles.back().numwaypoints += o.numwaypoints;
                 }
             }
 
@@ -115,7 +114,7 @@ namespace ai
                 if(!(v).obstacles.empty()) \
                 { \
                     int cur = 0; \
-                    for(int i = 0; i < (v).obstacles.length(); i++) \
+                    for(uint i = 0; i < (v).obstacles.size(); i++) \
                     { \
                         const ai::avoidset::obstacle &ob = (v).obstacles[i]; \
                         int next = cur + ob.numwaypoints; \
@@ -149,16 +148,16 @@ namespace ai
         private:
             void add(void *owner, float above)
             {
-                obstacles.add(obstacle(owner, above));
+                obstacles.push_back(obstacle(owner, above));
             }
 
             void add(void *owner, float above, int wp)
             {
-                if(obstacles.empty() || owner != obstacles.last().owner)
+                if(obstacles.empty() || owner != obstacles.back().owner)
                 {
                     add(owner, above);
                 }
-                obstacles.last().numwaypoints++;
+                obstacles.back().numwaypoints++;
                 waypoints.add(wp);
             }
     };
@@ -223,7 +222,7 @@ namespace ai
         public:
             int enemy, weappref, targnode, lastcheck;
             int prevnodes[numprevnodes];
-            vector<aistate> state;
+            std::vector<aistate> state;
             vec spot;
             gameent * aiplayer;
             aiinfo() {};
@@ -336,8 +335,8 @@ namespace ai
             bool istarget(aistate &b, int pursue = 0, bool force = false, float mindist = 0.f);
             int isgoodammo(int gun);
             bool hasgoodammo();
-            void assist(aistate &b, vector<interest> &interests, bool all = false, bool force = false);
-            bool parseinterests(aistate &b, vector<interest> &interests, bool override = false, bool ignore = false);
+            void assist(aistate &b, std::vector<interest> &interests, bool all = false, bool force = false);
+            bool parseinterests(aistate &b, std::vector<interest> &interests, bool override = false, bool ignore = false);
             bool find(aistate &b, bool override = false);
             void findorientation(vec &o, float yaw, float pitch, vec &pos);
             void setup();

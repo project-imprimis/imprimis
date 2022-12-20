@@ -35,7 +35,7 @@ namespace ai
     void waypointai::wipe(bool prev)
     {
         clear(prev);
-        state.setsize(0);
+        state.clear();
         addstate(AIState_Wait);
         trywipe = false;
     }
@@ -59,20 +59,21 @@ namespace ai
 
     aistate &waypointai::addstate(int t, int r, int v)
     {
-        return state.add(aistate(lastmillis, t, r, v));
+        state.push_back(aistate(lastmillis, t, r, v));
+        return state.back();
     }
 
     void waypointai::removestate(int index)
     {
         if(index < 0)
         {
-            state.pop();
+            state.pop_back();
         }
-        else if(state.inrange(index))
+        else if(state.size() > index)
         {
-            state.remove(index);
+            state.erase(state.begin() + index);
         }
-        if(!state.length())
+        if(!state.size())
         {
             addstate(AIState_Wait);
         }
@@ -80,11 +81,11 @@ namespace ai
 
     aistate &waypointai::getstate(int idx)
     {
-        if(state.inrange(idx))
+        if(state.size() > idx)
         {
             return state[idx];
         }
-        return state.last();
+        return state.back();
     }
 
     aistate &waypointai::switchstate(aistate &b, int t, int r, int v)
@@ -394,19 +395,20 @@ namespace ai
         }
     }
 
-    bool waypointai::parseinterests(aistate &b, vector<interest> &interests, bool override, bool ignore)
+    bool waypointai::parseinterests(aistate &b, std::vector<interest> &interests, bool override, bool ignore)
     {
         while(!interests.empty())
         {
-            int q = interests.length()-1;
-            for(int i = 0; i < interests.length()-1; ++i)
+            uint q = interests.size()-1;
+            for(uint i = 0; i < interests.size()-1; ++i)
             {
                 if(interests[i].score < interests[q].score)
                 {
                     q = i;
                 }
             }
-            interest n = interests.removeunordered(q);
+            interest n = interests.at(q);
+            interests.erase(interests.begin() + q);
             bool proceed = true;
             if(!ignore)
             {
@@ -433,8 +435,8 @@ namespace ai
 
     bool waypointai::find(aistate &b, bool override)
     {
-        static vector<interest> interests;
-        interests.setsize(0);
+        static std::vector<interest> interests;
+        interests.clear();
 
         if(cmode)
         {
@@ -920,7 +922,7 @@ namespace ai
         return false;
     }
 
-    void waypointai::assist(aistate &b, vector<interest> &interests, bool all, bool force)
+    void waypointai::assist(aistate &b, std::vector<interest> &interests, bool all, bool force)
     {
         for(int i = 0; i < players.length(); i++) //loop through all players
         {
@@ -930,7 +932,8 @@ namespace ai
             {
                 continue;
             }
-            interest &n = interests.add();
+            interests.emplace_back();
+            interest &n = interests.back();
             n.state = AIState_Defend;
             n.node = e->lastnode;
             n.target = e->clientnum;
@@ -1533,7 +1536,7 @@ namespace ai
         {
             addstate(AIState_Wait);
         }
-        for(int i = state.length(); --i >=0;) //note reverse iteration
+        for(int i = static_cast<int>(state.size()); --i >=0;) //note reverse iteration
         {
             aistate &c = state[i];
             if(cleannext)
@@ -1589,7 +1592,7 @@ namespace ai
                             }
                             case -1:
                             {
-                                i = state.length()-1;
+                                i = state.size()-1;
                                 break;
                             }
                         }

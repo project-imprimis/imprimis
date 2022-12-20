@@ -212,8 +212,8 @@ struct vector
     /**
      * @brief Removes and returns the last value.
      *
-     * Shortens the end of the array by one and returns the value previously
-     * stored at that location.
+     * Shortens the allocated end of the array by one and returns the value previously
+     * stored at that location. This does not actually delete the value stored.
      *
      * @return the element that was popped off the end
      */

@@ -584,7 +584,7 @@ namespace ai
         if(!obstacles.empty())
         {
             int cur = 0;
-            for(int i = 0; i < obstacles.length(); i++)
+            for(uint i = 0; i < obstacles.size(); i++)
             {
                 obstacle &ob = obstacles[i];
                 int next = cur + ob.numwaypoints;

@@ -84,7 +84,7 @@ namespace ai
                         pos.z += 2;
                     }
                     bool top = true;
-                    for(int i = d->ai->state.length(); --i >=0;) //note reverse iteration
+                    for(int i = static_cast<int>(d->ai->state.size()); --i >=0;) //note reverse iteration
                     {
                         aistate &b = d->ai->state[i];
                         DEF_FORMAT_STRING(s, "%s%s (%d ms) %s:%d",
@@ -123,9 +123,8 @@ namespace ai
             if(aidebug >= 4)
             {
                 int cur = 0;
-                for(int i = 0; i < obstacles.obstacles.length(); i++)
+                for(const avoidset::obstacle& ob : obstacles.obstacles)
                 {
-                    const avoidset::obstacle &ob = obstacles.obstacles[i];
                     int next = cur + ob.numwaypoints;
                     for(; cur < next; cur++)
                     {
