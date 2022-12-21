@@ -29,7 +29,7 @@ namespace ai
         {
             memset(prevnodes, -1, sizeof(prevnodes));
         }
-        route.setsize(0);
+        route.clear();
     }
 
     void waypointai::wipe(bool prev)
@@ -638,7 +638,7 @@ namespace ai
             node2 = -1;
         float mindist1 = closedist*closedist, //close_dist not closed_ist
               mindist2 = closedist*closedist;
-        for(int i = 0; i < route.length(); i++)
+        for(uint i = 0; i < route.size(); i++)
         {
             if(iswaypoint(route[i]))
             {
@@ -695,8 +695,8 @@ namespace ai
         if(iswaypoint(n) && waypoints[n].haslinks())
         {
             waypoint &w = waypoints[n];
-            static vector<int> linkmap;
-            linkmap.setsize(0);
+            static std::vector<int> linkmap;
+            linkmap.clear();
             for(int i = 0; i < maxwaypointlinks; ++i)
             {
                 if(!w.links[i])
@@ -704,14 +704,14 @@ namespace ai
                     break;
                 }
                 if(iswaypoint(w.links[i]) && !hasprevnode(w.links[i]) &&
-                   route.find(w.links[i]) < 0)
+                   std::find(linkmap.begin(), linkmap.end(), w.links[i]) != linkmap.end())
                 {
-                    linkmap.add(w.links[i]);
+                    linkmap.push_back(w.links[i]);
                 }
             }
             if(!linkmap.empty())
             {
-                return linkmap[randomint(linkmap.length())];
+                return linkmap[randomint(linkmap.size())];
             }
         }
         return -1;
@@ -727,14 +727,14 @@ namespace ai
                 int n = randomlink(aiplayer->lastnode);
                 if(wpspot(n))
                 {
-                    route.add(n);
-                    route.add(aiplayer->lastnode);
+                    route.push_back(n);
+                    route.push_back(aiplayer->lastnode);
                     for(int i = 0; i < len; ++i)
                     {
                         n = randomlink(n);
                         if(iswaypoint(n))
                         {
-                            route.insert(0, n);
+                            route.insert(route.begin(), n);
                         }
                         else
                         {
@@ -947,11 +947,11 @@ namespace ai
         if(!route.empty())
         {
             int n = closenode();
-            if(route.inrange(n) && checkroute(n))
+            if(route.size() > n && checkroute(n))
             {
                 n = closenode();
             }
-            if(route.inrange(n))
+            if(route.size() > n)
             {
                 if(!n)
                 {
@@ -975,12 +975,12 @@ namespace ai
                 }
                 else
                 {
-                    while(route.length() > n+1)
+                    while(route.size() > n+1)
                     {
-                        route.pop(); // waka-waka-waka-waka
+                        route.pop_back(); // waka-waka-waka-waka
                     }
                     int m = n-1; // next, please!
-                    if(route.inrange(m) && wpspot(route[m]))
+                    if(route.size() > m && wpspot(route[m]))
                     {
                         return true;
                     }
@@ -1616,7 +1616,7 @@ namespace ai
         {
             return false;
         }
-        if(changed && route.length() > 1 && route[0] == node)
+        if(changed && route.size() > 1 && route[0] == node)
         {
             return true;
         }
@@ -1641,7 +1641,7 @@ namespace ai
 
     bool waypointai::checkroute(int n)
     {
-        if(route.empty() || !route.inrange(n))
+        if(route.empty() || !route.size() > n)
         {
             return false;
         }
@@ -1669,16 +1669,16 @@ namespace ai
                     int t = route[i];
                     if(!hasprevnode(t) && !obstacles.find(t, aiplayer))
                     {
-                        remapping.setsize(0);
+                        remapping.clear();
                         if(wproute(aiplayer, w, t, remapping, obstacles))
                         { // kill what we don't want and put the remap in
-                            while(route.length() > i)
+                            while(route.size() > i)
                             {
-                                route.pop();
+                                route.pop_back();
                             }
-                            for(int k = 0; k < remapping.length(); k++)
+                            for(uint k = 0; k < remapping.size(); k++)
                             {
-                                route.add(remapping[k]);
+                                route.push_back(remapping[k]);
                             }
                             return true;
                         }
@@ -1694,9 +1694,9 @@ namespace ai
     void waypointai::drawroute(float amt)
     {
         int last = -1;
-        for(int i = route.length(); --i >=0;) //note reverse iteration
+        for(int i = static_cast<int>(route.size()); --i >=0;) //note reverse iteration
         {
-            if(route.inrange(last))
+            if(route.size() > last)
             {
                 int index = route[i],
                     prev = route[last];

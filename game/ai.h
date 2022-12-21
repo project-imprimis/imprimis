@@ -162,7 +162,7 @@ namespace ai
             }
     };
 
-    extern bool wproute(gameent *d, int node, int goal, vector<int> &route, const avoidset &obstacles, int retries = 0);
+    extern bool wproute(gameent *d, int node, int goal, std::vector<int> &route, const avoidset &obstacles, int retries = 0);
     extern void navigate();
     extern void clearwaypoints(bool full = false);
     extern void seedwaypoints();
@@ -241,7 +241,7 @@ namespace ai
     class waypointai : public aiinfo
     {
         public:
-            vector<int> route;
+            std::vector<int> route;
             waypointai()
             {
                 clearsetup();
@@ -300,7 +300,7 @@ namespace ai
                  trywipe;
             vec target;
             gameent *parent;
-            vector<int> remapping;
+            std::vector<int> remapping;
 
             void clearsetup();
             void clear(bool prev = false);

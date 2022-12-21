@@ -79,7 +79,7 @@ namespace ai
                         DEF_FORMAT_STRING(q, "node: %d route: %d (%d)",
                             d->lastnode,
                             !wpai->route.empty() ? wpai->route[0] : -1,
-                            wpai->route.length()
+                            static_cast<int>(wpai->route.size())
                         );
                         pos.z += 2;
                     }
