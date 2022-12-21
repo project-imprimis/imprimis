@@ -1078,7 +1078,6 @@ namespace game
     extern void initclient();
     extern int scaletime(int t);
     extern const char *getmapinfo();
-    extern const char *getclientmap();
     extern const char *gameident();
     extern const char *defaultconfig();
 }

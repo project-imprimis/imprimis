@@ -1258,7 +1258,8 @@ namespace game
         if(cleanup)
         {
             nextmode = gamemode = INT_MAX;
-            clientmap[0] = '\0';
+            const char * name = "\0";
+            setmapname(name);
         }
     }
 

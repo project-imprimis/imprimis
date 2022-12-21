@@ -136,21 +136,16 @@ namespace game
         }
     }
 
-    const char *getclientmap()
-    {
-        return clientmap;
-    }
-
     void mapname()
     {
-        result(game::getclientmap());
+        result(getclientmap());
     }
 
     COMMAND(mapname, "");
 
     void savecurrentmap()
     {
-        rootworld.save_world(game::getclientmap(), game::gameident());
+        rootworld.save_world(getclientmap(), game::gameident());
     }
 
     void savemap(char *mname)
@@ -794,7 +789,9 @@ namespace game
             findplayerspawn(player1, -1, modecheck(gamemode, Mode_Team) ? player1->team : 0);
         }
         entities::resetspawns();
-        copystring(clientmap, name ? name : "");
+        char buf[260];
+        copystring(buf, name ? name : "");
+        setmapname(buf);
 
         sendmapinfo();
     }
