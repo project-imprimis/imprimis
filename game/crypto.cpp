@@ -272,12 +272,12 @@ struct bigint
 
     void print(stream *out) const
     {
-        vector<char> buf;
+        std::vector<char> buf;
         printdigits(buf);
-        out->write(buf.getbuf(), buf.length());
+        out->write(buf.data(), buf.size());
     }
 
-    void printdigits(vector<char> &buf) const
+    void printdigits(std::vector<char> &buf) const
     {
         for(int i = 0; i < len; ++i)
         {
@@ -288,11 +288,11 @@ struct bigint
                 int val = (d >> shift) & 0xF;
                 if(val < 10)
                 {
-                    buf.add('0' + val);
+                    buf.push_back('0' + val);
                 }
                 else
                 {
-                    buf.add('a' + val - 10);
+                    buf.push_back('a' + val - 10);
                 }
             }
         }
@@ -1053,10 +1053,10 @@ struct ecjacobian
         return true;
     }
 
-    void print(vector<char> &buf)
+    void print(std::vector<char> &buf)
     {
         normalize();
-        buf.add(y.hasbit(0) ? '-' : '+');
+        buf.push_back(y.hasbit(0) ? '-' : '+');
         x.printdigits(buf);
     }
 
@@ -1078,16 +1078,16 @@ const ecjacobian ecjacobian::base(
     gfield("07192b95ffc8da78631011ed6b24cdd573f977a11e794811")
 );
 
-void calcpubkey(gfint privkey, vector<char> &pubstr)
+void calcpubkey(gfint privkey, std::vector<char> &pubstr)
 {
     ecjacobian c(ecjacobian::base);
     c.mul(privkey);
     c.normalize();
     c.print(pubstr);
-    pubstr.add('\0');
+    pubstr.push_back('\0');
 }
 
-bool calcpubkey(const char *privstr, vector<char> &pubstr)
+bool calcpubkey(const char *privstr, std::vector<char> &pubstr)
 {
     if(!privstr[0])
     {
@@ -1099,7 +1099,7 @@ bool calcpubkey(const char *privstr, vector<char> &pubstr)
     return true;
 }
 
-void genprivkey(const char *seed, vector<char> &privstr, vector<char> &pubstr)
+void genprivkey(const char *seed, std::vector<char> &privstr, std::vector<char> &pubstr)
 {
     tiger::hashval hash;
     tiger::hash(reinterpret_cast<const uchar *>(seed), static_cast<int>(std::strlen(seed)), hash);
@@ -1108,7 +1108,7 @@ void genprivkey(const char *seed, vector<char> &privstr, vector<char> &pubstr)
     privkey.len = 8*sizeof(hash.bytes)/bidigitbits;
     privkey.shrink();
     privkey.printdigits(privstr);
-    privstr.add('\0');
+    privstr.push_back('\0');
 
     calcpubkey(privkey, pubstr);
 }
@@ -1131,7 +1131,7 @@ bool hashstring(const char *str, char *result, int maxlen)
     return true;
 }
 
-void answerchallenge(const char *privstr, const char *challenge, vector<char> &answerstr)
+void answerchallenge(const char *privstr, const char *challenge, std::vector<char> &answerstr)
 {
     gfint privkey;
     privkey.parse(privstr);
@@ -1140,5 +1140,5 @@ void answerchallenge(const char *privstr, const char *challenge, vector<char> &a
     answer.mul(privkey);
     answer.normalize();
     answer.x.printdigits(answerstr);
-    answerstr.add('\0');
+    answerstr.push_back('\0');
 }

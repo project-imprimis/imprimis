@@ -297,7 +297,7 @@ const char * const mastermodeicons[] =  { "server", "server", "serverlock", "ser
  * @param privstr The private string to modify.
  * @param pubstr The public string to modify.
  */
-extern void genprivkey(const char *seed, vector<char> &privstr, vector<char> &pubstr);
+extern void genprivkey(const char *seed, std::vector<char> &privstr, std::vector<char> &pubstr);
 
 /**
  * @brief Verify a public key against a private key.
@@ -308,9 +308,9 @@ extern void genprivkey(const char *seed, vector<char> &privstr, vector<char> &pu
  * @return true If the strings match and make a private-public key pair.
  * @return false If the strings do not match and do not make a private-public key pair.
  */
-extern bool calcpubkey(const char *privstr, vector<char> &pubstr);
+extern bool calcpubkey(const char *privstr, std::vector<char> &pubstr);
 extern bool hashstring(const char *str, char *result, int maxlen);
-extern void answerchallenge(const char *privstr, const char *challenge, vector<char> &answerstr);
+extern void answerchallenge(const char *privstr, const char *challenge, std::vector<char> &answerstr);
 
 
 // hardcoded sounds, defined in sounds.cfg

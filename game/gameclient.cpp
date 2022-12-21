@@ -227,11 +227,11 @@ namespace game
             conoutf(Console_Error, "you must specify a secret password");
             return;
         }
-        vector<char> privkey, pubkey;
+        std::vector<char> privkey, pubkey;
         genprivkey(secret, privkey, pubkey);
-        conoutf("private key: %s", privkey.getbuf());
-        conoutf("public key: %s", pubkey.getbuf());
-        result(privkey.getbuf());
+        conoutf("private key: %s", privkey.data());
+        conoutf("public key: %s", pubkey.data());
+        result(privkey.data());
     }
     static bool dummy_genauthkey = addcommand("genauthkey", (identfun)genauthkey, "s", Id_Command);
 
@@ -250,13 +250,13 @@ namespace game
             }
             return;
         }
-        vector<char> pubkey;
+        std::vector<char> pubkey;
         if(!calcpubkey(k->key, pubkey))
         {
             conoutf("failed calculating pubkey");
             return;
         }
-        result(pubkey.getbuf());
+        result(pubkey.data());
     }
     static bool dummy_getpubkey = addcommand("getpubkey", (identfun)getpubkey, "s", Id_Command);
 
@@ -496,13 +496,14 @@ namespace game
 
     void listclients(bool local, bool bots)
     {
-        vector<char> buf;
+        std::vector<char> buf;
         string cn;
         int numclients = 0;
         if(local && connected)
         {
             formatstring(cn, "%d", player1->clientnum);
-            buf.put(cn, strlen(cn));
+            std::string cnstr = std::string(cn);
+            buf.insert(buf.end(), cnstr.begin(), cnstr.end());
             numclients++;
         }
         for(int i = 0; i < clients.length(); i++)
@@ -512,13 +513,14 @@ namespace game
                 formatstring(cn, "%d", clients[i]->clientnum);
                 if(numclients++)
                 {
-                    buf.add(' ');
+                    buf.push_back(' ');
                 }
-                buf.put(cn, strlen(cn));
+                std::string cnstr = std::string(cn);
+                buf.insert(buf.end(), cnstr.begin(), cnstr.end());
             }
         }
-        buf.add('\0');
-        result(buf.getbuf());
+        buf.push_back('\0');
+        result(buf.data());
     }
     bool _icmd_listclients = addcommand("listclients", reinterpret_cast<identfun>(+[] (int *local, int *bots) { listclients(*local>0, *bots!=0); }), "bb", Id_Command);
 
@@ -2705,14 +2707,14 @@ namespace game
                     getstring(text, p);
                     if(a && a->lastauth && lastmillis - a->lastauth < 60*1000)
                     {
-                        vector<char> buf;
+                        std::vector<char> buf;
                         answerchallenge(a->key, text, buf);
                         //conoutf(CON_DEBUG, "answering %u, challenge %s with %s", id, text, buf.getbuf());
                         packetbuf p(maxtrans, ENET_PACKET_FLAG_RELIABLE);
                         putint(p, NetMsg_AuthAnswer);
                         sendstring(a->desc, p);
                         putint(p, id);
-                        sendstring(buf.getbuf(), p);
+                        sendstring(buf.data(), p);
                         sendclientpacket(p.finalize(), 1);
                     }
                     break;
