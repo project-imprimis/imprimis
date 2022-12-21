@@ -646,7 +646,7 @@ namespace ai
         return q->score();
     }
 
-    bool wproute(gameent *d, int node, int goal, vector<int> &route, const avoidset &obstacles, int retries)
+    bool wproute(gameent *d, int node, int goal, std::vector<int> &route, const avoidset &obstacles, int retries)
     {
         if(waypoints.empty() || !iswaypoint(node) || !iswaypoint(goal) || goal == node || !waypoints[node].links[0])
         {
@@ -697,7 +697,7 @@ namespace ai
         waypoints[node].prev = 0;
         queue.clear();
         queue.push_back(&waypoints[node]);
-        route.setsize(0);
+        route.clear();
 
         int lowest = -1;
         std::make_heap(queue.begin(), queue.end());
@@ -752,7 +752,7 @@ namespace ai
         {
             for(waypoint *m = &waypoints[lowest]; m > &waypoints[0]; m = &waypoints[m->prev])
             {
-                route.add(m - &waypoints[0]); // just keep it stored backward
+                route.push_back(m - &waypoints[0]); // just keep it stored backward
             }
         }
 
