@@ -798,7 +798,7 @@ namespace ai
         {
             return true;
         }
-        for(int i = players.length(); --i >=0;) //note reverse iteration
+        for(int i = static_cast<int>(players.size()); --i >=0;) //note reverse iteration
         {
             if(players[i]->aitype != AI_None)
             {
@@ -904,7 +904,7 @@ namespace ai
     {
         if(shouldnavigate())
         {
-            for(int i = 0; i < players.length(); i++)
+            for(uint i = 0; i < players.size(); i++)
             {
                 ai::navigate(players[i]);
             }
@@ -1011,7 +1011,7 @@ namespace ai
         if(cleared)
         {
             player1->lastnode = -1;
-            for(int i = 0; i < players.length(); i++)
+            for(uint i = 0; i < players.size(); i++)
             {
                 if(players[i])
                 {

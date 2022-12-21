@@ -165,7 +165,7 @@ namespace ai
         //now check if the ray towards the target intersects any players on own team
         if(istarget)
         {
-            for(int i = 0; i < players.length(); ++i)
+            for(uint i = 0; i < players.size(); ++i)
             {
                 //select non-self team members to check against
                 if(players[i]->team == aiplayer->team && players[i] != aiplayer)
@@ -359,7 +359,7 @@ namespace ai
     {
         if(intermission)
         {
-            for(int i = 0; i < players.length(); i++)
+            for(uint i = 0; i < players.size(); i++)
             {
                 if(players[i]->ai)
                 {
@@ -381,7 +381,7 @@ namespace ai
                 itermillis = totalmillis;
             }
             int count = 0;
-            for(int i = 0; i < players.length(); i++)
+            for(uint i = 0; i < players.size(); i++)
             {
                 if(players[i]->ai)
                 {
@@ -777,7 +777,7 @@ namespace ai
         float mindist = guard*guard,
               bestdist = 1e16f;
         int atk = guns[aiplayer->gunselect].attacks[Act_Shoot];
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *e = players[i];
             if(e == aiplayer || !targetable(e))
@@ -866,17 +866,17 @@ namespace ai
 
     bool waypointai::istarget(aistate &b, int pursue, bool force, float mindist)
     {
-        static vector<gameent *> hastried; hastried.setsize(0);
+        std::vector<gameent *> hastried;
         vec dp = aiplayer->headpos();
         while(true)
         {
             float dist = 1e16f;
             gameent *t = nullptr;
             int atk = guns[aiplayer->gunselect].attacks[Act_Shoot];
-            for(int i = 0; i < players.length(); i++)
+            for(uint i = 0; i < players.size(); i++)
             {
                 gameent *e = players[i];
-                if(e == aiplayer || hastried.find(e) >= 0 || !targetable(e))
+                if(e == aiplayer || std::find(hastried.begin(), hastried.end(), e) != hastried.end() || !targetable(e))
                 {
                     continue;
                 }
@@ -894,7 +894,7 @@ namespace ai
                 {
                     return true;
                 }
-                hastried.add(t);
+                hastried.push_back(t);
             }
             else
             {
@@ -924,7 +924,7 @@ namespace ai
 
     void waypointai::assist(aistate &b, std::vector<interest> &interests, bool all, bool force)
     {
-        for(int i = 0; i < players.length(); i++) //loop through all players
+        for(uint i = 0; i < players.size(); i++) //loop through all players
         {
             gameent *e = players[i];
             //skip if player is a valid target (don't assist enemies)
@@ -1641,7 +1641,7 @@ namespace ai
 
     bool waypointai::checkroute(int n)
     {
-        if(route.empty() || !route.size() > n)
+        if(route.empty() || !(route.size() > n))
         {
             return false;
         }

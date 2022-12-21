@@ -466,14 +466,14 @@ namespace game
         int n = strtol(arg, &end, 10);
         if(*arg && !*end)
         {
-            if(n!=player1->clientnum && !clients.inrange(n))
+            if(n!=player1->clientnum && !(clients.size() > n))
             {
                 return -1;
             }
             return n;
         }
         // try case sensitive first
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *o = players[i];
             if(!strcmp(arg, o->name))
@@ -482,7 +482,7 @@ namespace game
             }
         }
         // nothing found, try case insensitive
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *o = players[i];
             if(!strcasecmp(arg, o->name))
@@ -506,7 +506,7 @@ namespace game
             buf.insert(buf.end(), cnstr.begin(), cnstr.end());
             numclients++;
         }
-        for(int i = 0; i < clients.length(); i++)
+        for(uint i = 0; i < clients.size(); i++)
         {
             if(clients[i] && (bots || clients[i]->aitype == AI_None))
             {
@@ -1393,14 +1393,14 @@ namespace game
 
     void sendpositions()
     {
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *d = players[i];
             if((d == player1 || d->ai) && (d->state == ClientState_Alive || d->state == ClientState_Editing))
             {
                 packetbuf q(100);
                 sendposition(d, q);
-                for(int j = i+1; j < players.length(); j++)
+                for(uint j = i+1; j < players.size(); j++)
                 {
                     gameent *d = players[j];
                     if((d == player1 || d->ai) && (d->state == ClientState_Alive || d->state == ClientState_Editing))
@@ -2575,7 +2575,7 @@ namespace game
                 {
                     int mm = getint(p), //mastermode
                         mn; //master[client]num
-                    for(int i = 0; i < players.length(); i++)
+                    for(uint i = 0; i < players.size(); i++)
                     {
                         players[i]->privilege = Priv_None;
                     }

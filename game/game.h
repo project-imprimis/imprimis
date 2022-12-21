@@ -938,7 +938,7 @@ namespace game
     extern bool intermission;
     extern int maptime, maprealtime, maplimit;
     extern gameent *player1;
-    extern vector<gameent *> players, clients;
+    extern std::vector<gameent *> players, clients;
     extern int lastspawnattempt;
     extern int lasthit;
     extern int following;
@@ -1029,7 +1029,7 @@ namespace game
     // scoreboard
     extern teaminfo teaminfos[maxteams];
     extern void showscores(bool on);
-    extern void getbestplayers(vector<gameent *> &best);
+    extern void getbestplayers(std::vector<gameent *> &best);
     extern void getbestteams(vector<int> &best);
     extern void clearteaminfo();
     extern void setteaminfo(int team, int frags);

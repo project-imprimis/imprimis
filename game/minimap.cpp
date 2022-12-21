@@ -92,7 +92,7 @@ namespace game
         }
         float scale = calcradarscale();
         int alive = 0, dead = 0;
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *o = players[i];
             if(o != d && o->state == ClientState_Alive && o->team == d->team)
@@ -111,7 +111,7 @@ namespace game
         {
             gle::end();
         }
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *o = players[i];
             if(o != d && o->state == ClientState_Dead && o->team == d->team)

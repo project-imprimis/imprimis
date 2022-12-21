@@ -1234,7 +1234,7 @@ namespace game
             lasttime = lastmillis;
             for(int i = 0; i<Gun_NumGuns; i++)
             {
-                for(int j = 0; j < players.length(); j++)
+                for(uint j = 0; j < players.size(); j++)
                 {
                     if(players[j]->ai)
                     {

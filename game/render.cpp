@@ -12,7 +12,7 @@ bool boxoutline = false;
 
 namespace game
 {
-    vector<gameent *> bestplayers;
+    std::vector<gameent *> bestplayers;
     vector<int> bestteams;
 
     VARP(ragdoll, 0, 1, 1);                 //enables ragdolls
@@ -25,7 +25,7 @@ namespace game
     VAR(gridlookup, 0, 0, 1);
     extern int playermodel;
 
-    vector<gameent *> ragdolls;
+    std::vector<gameent *> ragdolls;
 
     void saveragdoll(gameent *d)
     {
@@ -41,23 +41,29 @@ namespace game
         {
             r->playermodel = playermodel;
         }
-        ragdolls.add(r);
+        ragdolls.push_back(r);
         d->ragdoll = NULL;
     }
 
     void clearragdolls()
     {
-        ragdolls.deletecontents();
+        for(gameent * i : ragdolls)
+        {
+            delete i;
+        }
+        ragdolls.clear();
     }
 
     void moveragdolls()
     {
-        for(int i = 0; i < ragdolls.length(); i++)
+        for(uint i = 0; i < ragdolls.size(); i++)
         {
             gameent *d = ragdolls[i];
             if(lastmillis > d->lastupdate + ragdollmillis)
             {
-                delete ragdolls.remove(i--);
+                delete ragdolls.at(i);
+                ragdolls.erase(ragdolls.begin() + i);
+                i--;
                 continue;
             }
             moveragdoll(d);
@@ -194,7 +200,7 @@ namespace game
         {
             cleanragdoll(player1);
         }
-        for(int i = 0; i < ragdolls.length(); i++)
+        for(uint i = 0; i < ragdolls.size(); i++)
         {
             gameent *d = ragdolls[i];
             if(!d->ragdoll)
@@ -211,7 +217,7 @@ namespace game
             }
             cleanragdoll(d);
         }
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *d = players[i];
             if(d == player1 || !d->ragdoll)
@@ -298,7 +304,7 @@ namespace game
         if(intermission && d->state!=ClientState_Dead)
         {
             anim = attack = Anim_Lose | Anim_Loop;
-            if(validteam(team) ? bestteams.find(team)>=0 : bestplayers.find(d)>=0)
+            if(validteam(team) ? bestteams.find(team)>=0 : std::find(bestplayers.begin(), bestplayers.end(), d) != bestplayers.end())
             {
                 anim = attack = Anim_Win | Anim_Loop;
             }
@@ -585,7 +591,7 @@ namespace game
         if(intermission)
         {
             bestteams.shrink(0);
-            bestplayers.shrink(0);
+            bestplayers.clear();
             if(modecheck(gamemode, Mode_Team))
             {
                 getbestteams(bestteams);
@@ -599,7 +605,7 @@ namespace game
         bool third = isthirdperson();
         gameent *f = followingplayer(),
                 *exclude = third ? NULL : f;
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *d = players[i];
             if(   d == player1
@@ -622,7 +628,7 @@ namespace game
                 renderparachute(d);
             }
         }
-        for(int i = 0; i < ragdolls.length(); i++)
+        for(uint i = 0; i < ragdolls.size(); i++)
         {
             gameent *d = ragdolls[i];
             float fade = 1.0f;

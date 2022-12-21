@@ -65,20 +65,20 @@ namespace game
     }
 
     //takes a vector of gameents and returns the one with the most kills
-    void getbestplayers(vector<gameent *> &best)
+    void getbestplayers(std::vector<gameent *> &best)
     {
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *o = players[i];
             if(o->state!=ClientState_Spectator)
             {
-                best.add(o);
+                best.push_back(o);
             }
         }
-        std::sort(best.buf, best.buf + best.length(), playersort);
-        while(best.length() > 1 && best.last()->frags < best[0]->frags)
+        std::sort(best.begin(), best.end(), playersort);
+        while(best.size() > 1 && best.back()->frags < best[0]->frags)
         {
-            best.drop();
+            best.pop_back();
         }
     }
 
@@ -119,16 +119,16 @@ namespace game
         }
     }
 
-    static vector<gameent *> teamplayers[1+maxteams], spectators;
+    static std::vector<gameent *> teamplayers[1+maxteams], spectators;
 
     static void groupplayers()
     {
         for(int i = 0; i < 1+maxteams; ++i)
         {
-            teamplayers[i].setsize(0);
+            teamplayers[i].clear();
         }
-        spectators.setsize(0);
-        for(int i = 0; i < players.length(); i++)
+        spectators.clear();
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *o = players[i];
             if(!showconnecting && !o->name[0])
@@ -137,26 +137,34 @@ namespace game
             }
             if(o->state==ClientState_Spectator)
             {
-                spectators.add(o);
+                spectators.push_back(o);
                 continue;
             }
             int team = modecheck(gamemode, Mode_Team) && validteam(o->team) ? o->team : 0;
-            teamplayers[team].add(o);
+            teamplayers[team].push_back(o);
         }
         for(int i = 0; i < 1+maxteams; ++i)
         {
-            std::sort(teamplayers[i].buf, teamplayers[i].buf + teamplayers[i].length(), playersort);
+            std::sort(teamplayers[i].begin(), teamplayers[i].end(), playersort);
         }
-        std::sort(spectators.buf, spectators.buf + spectators.length(), playersort);
+        std::sort(spectators.begin(), spectators.end(), playersort);
     }
 
     void removegroupedplayer(gameent *d)
     {
         for(int i = 0; i < 1+maxteams; ++i)
         {
-            teamplayers[i].removeobj(d);
+            auto itr = std::find(teamplayers[i].begin(), teamplayers[i].end(), d);
+            if(itr != teamplayers[i].end())
+            {
+                teamplayers[i].erase(itr);
+            }
         }
-        spectators.removeobj(d);
+        auto itr = std::find(spectators.begin(), spectators.end(), d);
+        if(itr != spectators.end())
+        {
+            spectators.erase(itr);
+        }
     }
 
     void refreshscoreboard()
@@ -167,7 +175,7 @@ namespace game
     COMMAND(refreshscoreboard, "");
     void numscoreboard(int *team)
     {
-        intret(*team < 0 ? spectators.length() : (*team <= maxteams ? teamplayers[*team].length() : 0));
+        intret(*team < 0 ? spectators.size() : (*team <= maxteams ? teamplayers[*team].size() : 0));
     }
     COMMAND(numscoreboard, "i");
     void loopscoreboard(ident *id, int *team, uint *body)
@@ -177,8 +185,8 @@ namespace game
             return;
         }
         LOOP_START(id, stack);
-        vector<gameent *> &p = *team < 0 ? spectators : teamplayers[*team];
-        for(int i = 0; i < p.length(); i++)
+        std::vector<gameent *> &p = *team < 0 ? spectators : teamplayers[*team];
+        for(int i = 0; i < p.size(); i++)
         {
             loopiter(id, stack, p[i]->clientnum);
             execute(body);
@@ -258,7 +266,7 @@ namespace game
 
     void scoreboardhighlight(int *cn)
     {
-        intret(*cn == player1->clientnum && highlightscore && (multiplayer || demoplayback || players.length() > 1) ? 0x808080 : 0);
+        intret(*cn == player1->clientnum && highlightscore && (multiplayer || demoplayback || players.size() > 1) ? 0x808080 : 0);
     }
     COMMAND(scoreboardhighlight, "i");
 

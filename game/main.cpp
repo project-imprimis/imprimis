@@ -70,12 +70,12 @@ COMMAND(quit, "");
 //but are engine values defined in the global scope
 void updateenginevalues()
 {
-    numdynents = game::players.length();
+    numdynents = game::players.size();
     allowediting = game::allowedittoggle(false);
     multiplayer = curpeer;
     //pass players list
     std::vector<dynent *> dyns;
-    for(int i = 0; i < game::players.length(); ++i)
+    for(uint i = 0; i < game::players.size(); ++i)
     {
         dyns.push_back(game::players[i]);
     }

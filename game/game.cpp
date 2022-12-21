@@ -22,7 +22,7 @@ namespace game
         lastspawnattempt = 0;
 
     gameent *player1 = nullptr;         // our client
-    vector<gameent *> players;       // other clients
+    std::vector<gameent *> players;       // other clients
 
     int following = -1;
 
@@ -96,10 +96,10 @@ namespace game
         {
             return;
         }
-        int cur = following >= 0 ? following : (dir < 0 ? clients.length() - 1 : 0);
-        for(int i = 0; i < clients.length(); i++)
+        int cur = following >= 0 ? following : (dir < 0 ? clients.size() - 1 : 0);
+        for(int i = 0; i < clients.size(); i++)
         {
-            cur = (cur + dir + clients.length()) % clients.length();
+            cur = (cur + dir + clients.size()) % clients.size();
             if(clients[cur] && clients[cur]->state!=ClientState_Spectator)
             {
                 following = cur;
@@ -123,7 +123,7 @@ namespace game
         {
             if(following >= 0)
             {
-                gameent *d = clients.inrange(following) ? clients[following] : nullptr;
+                gameent *d = (clients.size() > following) ? clients[following] : nullptr;
                 if(!d || d->state == ClientState_Spectator)
                 {
                     stopfollowing();
@@ -179,7 +179,7 @@ namespace game
 
     gameent *pointatplayer()
     {
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             if(players[i] != player1 && intersect(players[i], player1->o, worldpos))
             {
@@ -279,7 +279,7 @@ namespace game
 
     void otherplayers(int curtime)
     {
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             gameent *d = players[i];
             if(d == player1 || d->ai)
@@ -652,7 +652,7 @@ namespace game
     ICOMMAND(gettotaldamage, "", (), intret(player1->totaldamage));
     ICOMMAND(gettotalshots, "", (), intret(player1->totalshots));
 
-    vector<gameent *> clients;
+    std::vector<gameent *> clients;
 
     gameent *newclient(int cn)   // ensure valid entity
     {
@@ -665,16 +665,16 @@ namespace game
         {
             return player1;
         }
-        while(cn >= clients.length())
+        while(cn >= clients.size())
         {
-            clients.add(nullptr);
+            clients.push_back(nullptr);
         }
         if(!clients[cn])
         {
             gameent *d = new gameent;
             d->clientnum = cn;
             clients[cn] = d;
-            players.add(d);
+            players.push_back(d);
         }
         return clients[cn];
     }
@@ -685,12 +685,12 @@ namespace game
         {
             return player1;
         }
-        return clients.inrange(cn) ? clients[cn] : nullptr;
+        return clients.size() > cn ? clients[cn] : nullptr;
     }
 
     void clientdisconnected(int cn, bool notify)
     {
-        if(!clients.inrange(cn))
+        if(!(clients.size() > cn))
         {
             return;
         }
@@ -706,7 +706,11 @@ namespace game
             removetrackedparticles(d);
             removetrackeddynlights(d);
             removegroupedplayer(d);
-            players.removeobj(d);
+            auto itr = std::find(players.begin(), players.end(), d);
+            if(itr != players.end())
+            {
+                players.erase(itr);
+            }
             delete clients[cn];
             clients[cn] = nullptr;
             cleardynentcache();
@@ -729,7 +733,7 @@ namespace game
 
     void clearclients(bool notify)
     {
-        for(int i = 0; i < clients.length(); i++)
+        for(uint i = 0; i < clients.size(); i++)
         {
             if(clients[i])
             {
@@ -742,7 +746,7 @@ namespace game
     {
         player1 = spawnstate(new gameent);
         filtertext(player1->name, "unnamed", false, false, maxnamelength);
-        players.add(player1);
+        players.push_back(player1);
     }
 
     VARP(showmodeinfo, 0, 1, 1);
@@ -754,7 +758,7 @@ namespace game
         clearragdolls();
         clearteaminfo();
         // reset perma-state
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             players[i]->startgame();
         }
@@ -854,7 +858,7 @@ namespace game
         {
             return true;
         }
-        for(int i = 0; i < players.length(); i++)
+        for(uint i = 0; i < players.size(); i++)
         {
             if(d!=players[i] && !strcmp(name, players[i]->name))
             {
