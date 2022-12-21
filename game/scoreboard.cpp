@@ -87,15 +87,15 @@ namespace game
     {
         if(cmode && cmode->hidefrags())
         {
-            vector<teamscore> teamscores;
+            std::vector<teamscore> teamscores;
             cmode->getteamscores(teamscores);
-            std::sort(teamscores.buf, teamscores.buf + teamscores.length(), teamscore::compare);
+            std::sort(teamscores.begin(), teamscores.end(), teamscore::compare);
             //loop through and drop teams
-            while(teamscores.length() > 1 && teamscores.last().score < teamscores[0].score)
+            while(teamscores.size() && teamscores.back().score < teamscores[0].score)
             {
-                teamscores.drop();
+                teamscores.pop_back();
             }
-            for(int i = 0; i < teamscores.length(); i++)
+            for(uint i = 0; i < teamscores.size(); i++)
             {
                 best.add(teamscores[i].team);
             }

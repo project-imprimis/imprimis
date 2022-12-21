@@ -923,7 +923,7 @@ namespace game
         virtual void gameover() {}
         virtual bool hidefrags() { return false; }
         virtual int getteamscore(int) { return 0; }
-        virtual void getteamscores(vector<teamscore> &) {}
+        virtual void getteamscores(std::vector<teamscore> &) {}
         virtual void aifind(gameent *, ai::aistate &, std::vector<ai::interest> &) {}
         virtual bool aicheck(gameent *, ai::aistate &) { return false; }
         virtual bool aidefend(gameent *, ai::aistate &) { return false; }

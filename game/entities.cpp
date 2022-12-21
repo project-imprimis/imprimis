@@ -1230,7 +1230,7 @@ void newent(char *what, int *a1, int *a2, int *a3, int *a4, int *a5)
 }
 
 int entcopygrid;
-vector<entity> entcopybuf;
+std::vector<entity> entcopybuf;
 
 void entcopy()
 {
@@ -1239,11 +1239,11 @@ void entcopy()
         return;
     }
     entcopygrid = sel.grid;
-    entcopybuf.shrink(0);
+    entcopybuf.clear();
     ADD_IMPLICIT({
         for(uint i = 0; i < entgroup.size(); i++)
         {
-            ENT_FOCUS(entgroup[i], entcopybuf.add(e).o.sub(vec(sel.o)));
+            ENT_FOCUS(entgroup[i], entcopybuf.push_back(e); entcopybuf.back().o.sub(vec(sel.o)));
         }
     });
 }
@@ -1256,7 +1256,7 @@ void entpaste()
     }
     entcancel();
     float m = static_cast<float>(sel.grid)/static_cast<float>(entcopygrid);
-    for(int i = 0; i < entcopybuf.length(); i++)
+    for(int i = 0; i < entcopybuf.size(); i++)
     {
         const entity &c = entcopybuf[i];
         vec o = vec(c.o).mul(m).add(vec(sel.o));

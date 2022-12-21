@@ -955,11 +955,11 @@ namespace ai
 
     void remapwaypoints()
     {
-        vector<ushort> remap;
+        std::vector<ushort> remap;
         int total = 0;
         for(uint i = 0; i < waypoints.size(); i++)
         {
-            remap.add(waypoints[i].links[1] == 0xFFFF ? 0 : total++);
+            remap.push_back(waypoints[i].links[1] == 0xFFFF ? 0 : total++);
         }
         total = 0;
         for(uint j = 0; j < waypoints.size(); j++)
