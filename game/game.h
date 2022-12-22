@@ -9,7 +9,6 @@
 #include <enet/enet.h>
 
 #include "nettools.h"
-#include "vector.h"
 
 constexpr float stairheight = 4.1f; //max height in cubits of an allowable step (4 = 0.5m)
 constexpr float floorz = 0.867f; //to be considered a level floor, slope is below this
