@@ -1038,7 +1038,7 @@ namespace game
     ICOMMAND(servinfoicon, "i", (int *i),
         GETSERVINFO(*i, si,
         {
-            int mm = si->attr.inrange(2) ? si->attr[2] : MasterMode_Invalid;
+            int mm = si->attr.size() > 2 ? si->attr[2] : MasterMode_Invalid;
             result(si->maxplayers > 0 && si->numplayers >= si->maxplayers ? "serverfull" : mastermodeicon(mm, "serverunk"));
         })
     );

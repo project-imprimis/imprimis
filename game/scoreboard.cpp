@@ -83,7 +83,7 @@ namespace game
     }
 
     //taes a vector of team numbers and returns the one with the most frags
-    void getbestteams(vector<int> &best)
+    void getbestteams(std::vector<int> &best)
     {
         if(cmode && cmode->hidefrags())
         {
@@ -97,7 +97,7 @@ namespace game
             }
             for(uint i = 0; i < teamscores.size(); i++)
             {
-                best.add(teamscores[i].team);
+                best.push_back(teamscores[i].team);
             }
         }
         else
@@ -113,7 +113,7 @@ namespace game
                 teaminfo &t = teaminfos[i];
                 if(t.frags >= bestfrags)
                 {
-                    best.add(1+i);
+                    best.push_back(1+i);
                 }
             }
         }

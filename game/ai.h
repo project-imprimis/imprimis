@@ -74,7 +74,7 @@ namespace ai
 
     extern int showwaypoints, dropwaypoints;
     extern int closestwaypoint(const vec &pos, float mindist, bool links, gameent *d = NULL);
-    extern void findwaypointswithin(const vec &pos, float mindist, float maxdist, vector<int> &results);
+    extern void findwaypointswithin(const vec &pos, float mindist, float maxdist, std::vector<int> &results);
     extern void inferwaypoints(gameent *d, const vec &o, const vec &v, float mindist = ai::closedist);
 
     class avoidset
@@ -89,17 +89,17 @@ namespace ai
                 obstacle(void *owner, float above = -1) : owner(owner), numwaypoints(0), above(above) {}
             };
             std::vector<obstacle> obstacles;
-            vector<int> waypoints;
+            std::vector<int> waypoints;
 
             void clear()
             {
                 obstacles.clear();
-                waypoints.setsize(0);
+                waypoints.clear();
             }
 
             void add(avoidset &avoid)
             {
-                waypoints.put(avoid.waypoints.getbuf(), avoid.waypoints.length());
+                waypoints.insert(waypoints.begin(), avoid.waypoints.begin(), avoid.waypoints.end());
                 for(obstacle& o : avoid.obstacles)
                 {
                     if(obstacles.empty() || o.owner != obstacles.back().owner)
@@ -158,7 +158,7 @@ namespace ai
                     add(owner, above);
                 }
                 obstacles.back().numwaypoints++;
-                waypoints.add(wp);
+                waypoints.push_back(wp);
             }
     };
 

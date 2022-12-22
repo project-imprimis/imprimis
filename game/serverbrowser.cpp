@@ -369,7 +369,7 @@ struct serverinfo : servinfo, pingattempts
         clearpings();
         protocol = -1;
         numplayers = maxplayers = 0;
-        attr.setsize(0);
+        attr.clear();
     }
 
     void reset()
@@ -726,7 +726,7 @@ void checkpings()
         si->numplayers = getint(p);
         si->maxplayers = getint(p);
         int numattr = getint(p);
-        si->attr.setsize(0);
+        si->attr.clear();
         for(int j = 0; j < numattr; ++j)
         {
             int attr = getint(p);
@@ -734,7 +734,7 @@ void checkpings()
             {
                 break;
             }
-            si->attr.add(attr);
+            si->attr.push_back(attr);
         }
         getstring(text, p);
         filtertext(si->map, text, false);
@@ -818,7 +818,7 @@ ICOMMAND(servinfoplayers, "i", (int *i),
             result(tempformatstring(si.numplayers >= si.maxplayers ? "\f3%d/%d" : "%d/%d", si.numplayers, si.maxplayers));
         }
     }));
-ICOMMAND(servinfoattr, "ii", (int *i, int *n), GETSERVERINFO(*i, si, { if(si.attr.inrange(*n)) intret(si.attr[*n]); }));
+ICOMMAND(servinfoattr, "ii", (int *i, int *n), GETSERVERINFO(*i, si, { if(si.attr.size() > *n) intret(si.attr[*n]); }));
 
 ICOMMAND(connectservinfo, "is", (int *i, char *pw), GETSERVERINFO_(*i, si, connectserv(si.name, si.address.port, pw[0] ? pw : si.password)));
 

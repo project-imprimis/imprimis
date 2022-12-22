@@ -273,7 +273,7 @@ struct servinfo
 {
     string name, map, desc;
     int protocol, numplayers, maxplayers, ping;
-    vector<int> attr;
+    std::vector<int> attr;
 
     servinfo() : protocol(INT_MIN), numplayers(0), maxplayers(0)
     {
@@ -1030,7 +1030,7 @@ namespace game
     extern teaminfo teaminfos[maxteams];
     extern void showscores(bool on);
     extern void getbestplayers(std::vector<gameent *> &best);
-    extern void getbestteams(vector<int> &best);
+    extern void getbestteams(std::vector<int> &best);
     extern void clearteaminfo();
     extern void setteaminfo(int team, int frags);
     extern void removegroupedplayer(gameent *d);
@@ -1167,7 +1167,7 @@ extern servinfo *getservinfo(int i);
 #define GETSERVINFOATTR(idx, aidx, aval, body) \
     GETSERVINFO(idx, si, \
     { \
-        if(si->attr.inrange(aidx)) \
+        if(si->attr.size() > aidx) \
         { \
             int aval = si->attr[aidx]; \
             body; \

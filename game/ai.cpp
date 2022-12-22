@@ -14,8 +14,6 @@ namespace ai
     ICOMMAND(botlimit, "i", (int *n), addmsg(NetMsg_BotLimit, "ri", *n));
     ICOMMAND(botbalance, "i", (int *n), addmsg(NetMsg_BotBalance, "ri", *n));
 
-    static vector<int> targets;
-
     void avoid()
     {
         // guess as to the radius of ai and other critters relying on the avoid set for now
@@ -140,12 +138,12 @@ namespace ai
         }
         if(showwaypoints || aidebug >= 6)
         {
-            vector<int> close;
+            std::vector<int> close;
             size_t len = waypoints.size();
             if(showwaypointsradius)
             {
                 findwaypointswithin(camera1->o, 0, showwaypointsradius, close);
-                len = close.length();
+                len = close.size();
             }
             for(int i = 0; i < len; ++i)
             {

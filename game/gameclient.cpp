@@ -554,7 +554,7 @@ namespace game
     bool _icmd_sauthkick = addcommand("sauthkick", reinterpret_cast<identfun>(+[] (const char *victim, const char *reason) { if(servauth[0]) authkick(servauth, victim, reason); }), "ss", Id_Command);
     bool _icmd_dauthkick = addcommand("dauthkick", reinterpret_cast<identfun>(+[] (const char *desc, const char *victim, const char *reason) { if(desc[0]) authkick(desc, victim, reason); }), "sss", Id_Command);
 
-    vector<int> ignores;
+    std::vector<int> ignores;
 
     void ignore(int cn)
     {
@@ -564,15 +564,15 @@ namespace game
             return;
         }
         conoutf("ignoring %s", d->name);
-        if(ignores.find(cn) < 0)
+        if(std::find(ignores.begin(), ignores.end(), cn) == ignores.end())
         {
-            ignores.add(cn);
+            ignores.push_back(cn);
         }
     }
 
     void unignore(int cn)
     {
-        if(ignores.find(cn) < 0)
+        if(std::find(ignores.begin(), ignores.end(), cn) == ignores.end())
         {
             return;
         }
@@ -581,10 +581,17 @@ namespace game
         {
             conoutf("stopped ignoring %s", d->name);
         }
-        ignores.removeobj(cn);
+        auto itr = std::find(ignores.begin(), ignores.end(), cn);
+        if(itr != ignores.end())
+        {
+            ignores.erase(itr);
+        }
     }
 
-    bool isignored(int cn) { return ignores.find(cn) >= 0; }
+    bool isignored(int cn)
+    {
+        return std::find(ignores.begin(), ignores.end(), cn) != ignores.end();
+    }
 
     bool _icmd_ignore = addcommand("ignore", reinterpret_cast<identfun>(+[] (char *arg) { ignore(parseplayer(arg)); }), "s", Id_Command);
     bool _icmd_unignore = addcommand("unignore", reinterpret_cast<identfun>(+[] (char *arg) { unignore(parseplayer(arg)); }), "s", Id_Command);
@@ -1236,7 +1243,7 @@ namespace game
         {
             stopfollowing();
         }
-        ignores.setsize(0);
+        ignores.clear();
         connected = remote = false;
         player1->clientnum = -1;
         if(editmode)

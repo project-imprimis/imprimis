@@ -750,13 +750,14 @@ namespace ai
 
     bool waypointai::randomnode(aistate &b, const vec &pos, float guard, float wander)
     {
-        static vector<int> candidates;
-        candidates.setsize(0);
+        static std::vector<int> candidates;
+        candidates.clear();
         findwaypointswithin(pos, guard, wander, candidates);
         while(!candidates.empty())
         {
-            int w = randomint(candidates.length()),
-                n = candidates.removeunordered(w);
+            int w = randomint(candidates.size()),
+                n = candidates.at(w);
+                candidates.erase(candidates.begin() + w);
             if(n != aiplayer->lastnode && !hasprevnode(n) && !obstacles.find(n, aiplayer) && makeroute(b, n))
             {
                 return true;

@@ -46,7 +46,7 @@ ENetPacket *sendfile(int cn, int chan, stream *file, const char *format, ...)
     if(cn < 0)
     {
     }
-    else if(!clients.size() > cn)
+    else if(!(clients.size() > cn))
     {
         return nullptr;
     }

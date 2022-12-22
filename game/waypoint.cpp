@@ -397,7 +397,7 @@ namespace ai
 #undef CHECKCLOSEST
 //==============================================================================
 
-    void findwaypointswithin(const vec &pos, float mindist, float maxdist, vector<int> &results)
+    void findwaypointswithin(const vec &pos, float mindist, float maxdist, std::vector<int> &results)
     {
         if(waypoints.empty())
         {
@@ -419,7 +419,7 @@ namespace ai
                 float dist = w.o.squaredist(pos); \
                 if(dist > mindist2 && dist < maxdist2) \
                 { \
-                    results.add(n); \
+                    results.push_back(n); \
                 } \
             } \
         } while(0)
@@ -573,7 +573,7 @@ namespace ai
                 }
             }
         }
-        for(int i = lastwpcache; i < waypoints.length(); i++)
+        for(uint i = lastwpcache; i < waypoints.size(); i++)
         {
             CHECKNEAR(i);
         }

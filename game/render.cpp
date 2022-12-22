@@ -13,7 +13,7 @@ bool boxoutline = false;
 namespace game
 {
     std::vector<gameent *> bestplayers;
-    vector<int> bestteams;
+    std::vector<int> bestteams;
 
     VARP(ragdoll, 0, 1, 1);                 //enables ragdolls
     VARP(ragdollmillis, 0, 10000, 300000);  //ragdoll lifetime
@@ -304,7 +304,7 @@ namespace game
         if(intermission && d->state!=ClientState_Dead)
         {
             anim = attack = Anim_Lose | Anim_Loop;
-            if(validteam(team) ? bestteams.find(team)>=0 : std::find(bestplayers.begin(), bestplayers.end(), d) != bestplayers.end())
+            if(validteam(team) ? std::find(bestteams.begin(), bestteams.end(), team) != bestteams.end() : std::find(bestplayers.begin(), bestplayers.end(), d) != bestplayers.end())
             {
                 anim = attack = Anim_Win | Anim_Loop;
             }
@@ -590,7 +590,7 @@ namespace game
         ai::render();
         if(intermission)
         {
-            bestteams.shrink(0);
+            bestteams.clear();
             bestplayers.clear();
             if(modecheck(gamemode, Mode_Team))
             {
