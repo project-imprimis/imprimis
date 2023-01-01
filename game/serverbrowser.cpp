@@ -156,6 +156,7 @@ bool resolverwait(const char *name, ENetAddress *address)
 {
     if(resolverthreads.empty())
     {
+        resolverthreads.reserve(numresolverthreads); //to avoid invalidating iterators
         resolverinit();
     }
     DEF_FORMAT_STRING(text, "resolving %s... (esc to abort)", name);
