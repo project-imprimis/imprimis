@@ -220,12 +220,16 @@ namespace ai
     class aiinfo
     {
         public:
+            static constexpr int statereservedsize = 100; //pre-allocate to avoid pointer invalidation
             int enemy, weappref, targnode, lastcheck;
             int prevnodes[numprevnodes];
             std::vector<aistate> state;
             vec spot;
             gameent * aiplayer;
-            aiinfo() {};
+            aiinfo()
+            {
+                state.reserve(statereservedsize);
+            };
             virtual ~aiinfo() {};
 
             virtual bool hasprevnode(int n) const = 0;
