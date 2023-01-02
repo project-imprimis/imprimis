@@ -20,6 +20,7 @@ apps:
       - wayland
       - desktop
       - desktop-legacy
+      - process-control
 parts:
   imprimis-game:
     plugin: nil
