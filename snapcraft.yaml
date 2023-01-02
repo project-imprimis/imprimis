@@ -21,6 +21,7 @@ apps:
       - desktop
       - desktop-legacy
       - process-control
+      - home
 parts:
   imprimis-game:
     plugin: nil
