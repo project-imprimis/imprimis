@@ -826,7 +826,6 @@ namespace game
             case Edit_Copy:
             case Edit_Paste:
             case Edit_DelCube:
-            case Edit_AddCube:
             {
                 switch(op)
                 {
@@ -852,6 +851,7 @@ namespace game
                    sel.corner);               //13
                 break;
             }
+            case Edit_AddCube:
             case Edit_Rotate:
             {
                 addmsg(NetMsg_EditFace + op, "ri9i5",
