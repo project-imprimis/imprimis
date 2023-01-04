@@ -825,8 +825,6 @@ namespace game
             case Edit_Flip:
             case Edit_Copy:
             case Edit_Paste:
-            case Edit_DelCube:
-            case Edit_AddCube:
             {
                 switch(op)
                 {
@@ -982,21 +980,19 @@ namespace game
                 break;
             }
         }
-        else //world edits allowed outside edit mode
-        {
-            switch(op)
-                case Edit_AddCube:
-                case Edit_DelCube:
-                {
-                    addmsg(NetMsg_EditFace + op, "ri9i5",
-                       sel.o.x, sel.o.y, sel.o.z, //1-3
-                       sel.s.x, sel.s.y, sel.s.z, //4-6
-                       sel.grid, sel.orient,      //7,8
-                       sel.cx, sel.cxs,           //9,10
-                       sel.cy, sel.cys,           //11,12
-                       sel.corner, arg1);         //13, 14
-                    break;
-            }
+        //non edit-specific codes
+        switch(op)
+            case Edit_AddCube:
+            case Edit_DelCube:
+            {
+                addmsg(NetMsg_EditFace + op, "ri9i5",
+                   sel.o.x, sel.o.y, sel.o.z, //1-3
+                   sel.s.x, sel.s.y, sel.s.z, //4-6
+                   sel.grid, sel.orient,      //7,8
+                   sel.cx, sel.cxs,           //9,10
+                   sel.cy, sel.cys,           //11,12
+                   sel.corner, arg1);         //13, 14
+                break;
         }
     }
 
