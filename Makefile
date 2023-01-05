@@ -25,6 +25,7 @@ CLIENT_OBJS= \
 	game/scoreboard.o \
 	game/server.o \
 	game/serverbrowser.o \
+	game/sound.o \
 	game/waypoint.o \
 	game/waypointai.o \
 	game/weapon.o

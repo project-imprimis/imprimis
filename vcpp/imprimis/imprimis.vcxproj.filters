@@ -110,6 +110,9 @@
     <ClCompile Include="..\..\game\serverbrowser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\game\sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\game\waypoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

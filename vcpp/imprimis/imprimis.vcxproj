@@ -89,6 +89,7 @@
     <ClCompile Include="..\..\game\scoreboard.cpp" />
     <ClCompile Include="..\..\game\server.cpp" />
     <ClCompile Include="..\..\game\serverbrowser.cpp" />
+    <ClCompile Include="..\..\game\sound.cpp" />
     <ClCompile Include="..\..\game\waypoint.cpp" />
     <ClCompile Include="..\..\game\waypointai.cpp" />
     <ClCompile Include="..\..\game\weapon.cpp" />
