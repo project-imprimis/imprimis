@@ -1,4 +1,5 @@
 #include "game.h"
+#include "sound.h"
 
 //player model rendering (both hud player and 3p player rendering)
 //for "real" rendering, see /src/engine/render*
@@ -822,7 +823,7 @@ namespace game
     {
         for(int i = Sound_Jump; i <= Sound_Die2; i++)
         {
-            preloadsound(i);
+            soundmain.preloadsound(i);
         }
     }
 
@@ -838,7 +839,7 @@ namespace game
         preloadsounds();
         //externs from engine below
         flushpreloadedmodels();
-        preloadmapsounds();
+        soundmain.preloadmapsounds();
         rootworld.entitiesinoctanodes();
         attachentities();
         rootworld.allchanged(true);

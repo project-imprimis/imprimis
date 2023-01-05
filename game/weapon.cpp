@@ -1,5 +1,6 @@
 // weapon.cpp: all shooting and effects code, projectile management
 #include "game.h"
+#include "sound.h"
 #include <random>
 
 namespace game
@@ -89,7 +90,7 @@ namespace game
         if(gun!=d->gunselect)
         {
             addmsg(NetMsg_GunSelect, "rci", d, gun);
-            playsound(Sound_WeapLoad, d == player1 ? nullptr : &d->o);
+            soundmain.playsound(Sound_WeapLoad, d == player1 ? nullptr : &d->o);
         }
         d->gunselect = gun;
     }
@@ -544,7 +545,7 @@ namespace game
             extern int hitsound;
             if(hitsound && lasthit != lastmillis)
             {
-                playsound(Sound_Hit);
+                soundmain.playsound(Sound_Hit);
             }
             lasthit = lastmillis;
         }
@@ -629,7 +630,7 @@ namespace game
     void explode(bool local, gameent *owner, const vec &v, const vec &vel, dynent *safe, int damage, int atk)
     {
         particle_splash(Part_Spark, 200, 300, v, 0x50CFE5, 0.45f);
-        playsound(Sound_PulseExplode, &v);
+        soundmain.playsound(Sound_PulseExplode, &v);
         particle_fireball(v, 1.15f*attacks[atk].exprad, Part_PulseBurst, static_cast<int>(attacks[atk].exprad*20), 0x50CFE5, 4.0f);
         vec debrisorigin = vec(v).sub(vec(vel).mul(5));
         adddynlight(safe ? v : debrisorigin, 2*attacks[atk].exprad, vec(1.0f, 3.0f, 4.0f), 350, 40, 0, attacks[atk].exprad, vec(0.5f, 1.5f, 2.0f));
@@ -971,11 +972,11 @@ namespace game
 
         if(d==hudplayer())
         {
-            playsound(attacks[atk].hudsound, nullptr);
+            soundmain.playsound(attacks[atk].hudsound, nullptr);
         }
         else
         {
-            playsound(attacks[atk].sound, &d->o);
+            soundmain.playsound(attacks[atk].sound, &d->o);
         }
     }
 

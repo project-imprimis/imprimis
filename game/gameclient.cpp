@@ -1,4 +1,5 @@
 #include "game.h"
+#include "sound.h"
 
 //handles information taken from the server, minimap, and radar
 //includes:
@@ -1826,7 +1827,7 @@ namespace game
                     {
                         return;
                     }
-                    playsound(getint(p), &d->o);
+                    soundmain.playsound(getint(p), &d->o);
                     break;
                 }
                 case NetMsg_Text:
@@ -2203,7 +2204,7 @@ namespace game
                         return;
                     }
                     d->gunselect = gun;
-                    playsound(Sound_WeapLoad, &d->o);
+                    soundmain.playsound(Sound_WeapLoad, &d->o);
                     break;
                 }
                 case NetMsg_Resume:

@@ -1,4 +1,5 @@
 #include "game.h"
+#include "sound.h"
 
 //for activites that can take place ingame, such as shooting, spectating, etc;
 //also for:
@@ -493,7 +494,7 @@ namespace game
         {
             if(hitsound && lasthit != lastmillis)
             {
-                playsound(Sound_Hit);
+                soundmain.playsound(Sound_Hit);
             }
             lasthit = lastmillis;
         }
@@ -538,14 +539,14 @@ namespace game
             d->attacking = Act_Idle;
             //d->pitch = 0;
             d->roll = 0;
-            playsound(Sound_Die2);
+            soundmain.playsound(Sound_Die2);
         }
         else
         {
             d->move = d->strafe = 0;
             d->resetinterp();
             d->smoothmillis = 0;
-            playsound(Sound_Die1, &d->o);
+            soundmain.playsound(Sound_Die1, &d->o);
         }
     }
 
@@ -809,11 +810,11 @@ namespace game
     {
         if(waterlevel>0)
         {
-            playsound(Sound_SplashOut, d==player1 ? nullptr : &d->o);
+            soundmain.playsound(Sound_SplashOut, d==player1 ? nullptr : &d->o);
         }
         else if(waterlevel<0)
         {
-            playsound(Sound_SplashIn, d==player1 ? nullptr : &d->o);
+            soundmain.playsound(Sound_SplashIn, d==player1 ? nullptr : &d->o);
         }
         if(floorlevel>0)
         {
@@ -836,7 +837,7 @@ namespace game
         if(!d || d==player1)
         {
             addmsg(NetMsg_Sound, "ci", d, n);
-            playsound(n);
+            soundmain.playsound(n);
         }
         else
         {
@@ -844,7 +845,7 @@ namespace game
             {
                 addmsg(NetMsg_Sound, "ci", d, n);
             }
-            playsound(n, &d->o);
+            soundmain.playsound(n, &d->o);
         }
     }
 
@@ -910,7 +911,7 @@ namespace game
 
     void teamsound(bool sameteam, int n, const vec *loc)
     {
-        playsound(n, loc, nullptr, teamsounds ? (Mode_Team && sameteam ? Music_UseAlt : Music_NoAlt) : 0);
+        soundmain.playsound(n, loc, nullptr, teamsounds ? (Mode_Team && sameteam ? Music_UseAlt : Music_NoAlt) : 0);
     }
 
     void teamsound(gameent *d, int n, const vec *loc)

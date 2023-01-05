@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include "game.h"
+#include "sound.h"
 
 void writeinitcfg()
 {
@@ -14,11 +15,7 @@ void writeinitcfg()
     {
         // Import all variables to write out to the config file
         extern char *audiodriver;
-        extern int fullscreen,
-            sound,
-            soundchans,
-            soundfreq,
-            soundbufferlen;
+        extern int fullscreen;
 
         cfgfile << "// This file is written automatically on exit.\n"
             << "// Any changes to this file WILL be overwritten.\n\n"
@@ -26,14 +23,8 @@ void writeinitcfg()
             << "fullscreen " << fullscreen << "\n"
             << "screenw " << scr_w << "\n"
             << "screenh " << scr_h << "\n"
-            << "sound " << sound << "\n"
-            << "soundchans " << soundchans << "\n"
-            << "soundfreq " << soundfreq << "\n"
-            << "soundbufferlen " << soundbufferlen << "\n";
-        if(audiodriver[0]) // Omit line if no audio driver is present
-        {
-            cfgfile << "audiodriver " << escapestring(audiodriver) << "\n"; // Replace call to ``escapestring`` with C++ standard method?
-        }
+            << "sound " << soundmain.getsound() << "\n"
+            << "soundchans " << soundmain.getsoundchans() << "\n";
         cfgfile.close();
     }
 }
@@ -58,7 +49,7 @@ void quit()
     clear_command();
     clear_console();
     clear_models();
-    clear_sound();
+    soundmain.clear_sound();
     closelogfile();
     SDL_Quit();
     exit(EXIT_SUCCESS);
@@ -221,8 +212,7 @@ int main(int argc, char **argv)
     rootworld.emptymap(0, true, false);
     game::startmap(nullptr);
     logoutf("init: sound");
-    initsound();
-    initsoundcmds();
+    soundmain.initsound();
     logoutf("init: ui");
     UI::inituicmds();
     logoutf("init: cfg");
@@ -331,7 +321,7 @@ int main(int argc, char **argv)
         // miscellaneous general game effects
         recomputecamera();
         rootworld.updateparticles();
-        updatesounds();
+        soundmain.updatesounds();
 
         if(minimized)
         {
