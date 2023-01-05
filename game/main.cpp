@@ -137,6 +137,8 @@ int main(int argc, char **argv)
     {
         fatal("Unable to initialize SDL: %s", SDL_GetError());
     }
+    SDL_GameController* stick = SDL_GameControllerOpen(0);
+    printf("%s found\n", SDL_GameControllerName(stick));
     //init enet networking library
     logoutf("init: net");
     if(enet_initialize()<0)
