@@ -9,6 +9,12 @@ struct vslotref
     ~vslotref() { editingvslots.pop_back(); }
 };
 
+void mapsize()
+{
+    intret(rootworld.mapsize());
+}
+COMMAND(mapsize, "");
+
 static const struct
 {
     const char *name;
@@ -712,7 +718,7 @@ void vshaderparam(const char *name, float *x, float *y, float *z, float *w)
     ds.changed = 1 << VSlot_ShParam;
     if(name[0])
     {
-        SlotShaderParam p = { getshaderparamname(name), -1, 0, {*x, *y, *z, *w} };
+        SlotShaderParam p = { getshaderparamname(name), SIZE_MAX, 0, {*x, *y, *z, *w} };
         ds.params.push_back(p);
     }
     mpeditvslot(usevdelta, ds, allfaces, sel, true);
