@@ -56,7 +56,7 @@ void pasteundo(undoblock *u)
     }
 }
 
-void swapundo(undolist &a, undolist &b, int op)
+void swapundo(std::deque<undoblock *>& a, std::deque<undoblock *>& b, int op)
 {
     if(noedit())
     {
@@ -67,13 +67,14 @@ void swapundo(undolist &a, undolist &b, int op)
         conoutf(Console_Warn, "nothing more to %s", op == Edit_Redo ? "redo" : "undo");
         return;
     }
-    int ts = a.last->timestamp;
+    int ts = a.back()->timestamp;
     if(multiplayer)
     {
         int n   = 0,
             ops = 0;
-        for(undoblock *u = a.last; u && ts==u->timestamp; u = u->prev)
+        for(auto i = a.rbegin(); i != a.rend() && ts == (*i)->timestamp; ++i)
         {
+            undoblock* u = *i;
             ++ops;
             n += u->numents ? u->numents : countblock(u->block());
             if(ops > 10 || n > 2500)
@@ -90,13 +91,15 @@ void swapundo(undolist &a, undolist &b, int op)
         }
     }
     selinfo l = sel;
-    while(!a.empty() && ts==a.last->timestamp)
+    while(!a.empty() && ts==a.back()->timestamp)
     {
         if(op >= 0)
         {
             game::edittrigger(sel, op);
         }
-        undoblock *u = a.poplast(), *r;
+        undoblock *u = a.back();
+        a.pop_back();
+        undoblock *r;
         if(u->numents)
         {
             r = copyundoents(u);
@@ -114,7 +117,7 @@ void swapundo(undolist &a, undolist &b, int op)
         {
             r->size = u->size;
             r->timestamp = totalmillis;
-            b.add(r);
+            b.push_back(r);
         }
         pasteundo(u);
         if(!u->numents)
