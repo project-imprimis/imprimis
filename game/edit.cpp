@@ -767,7 +767,7 @@ static int unpacktex(int &tex, ucharbuf &buf, bool insert = true)
 
 int shouldpacktex(int index)
 {
-    if(vslots.size() > index)
+    if(vslots.size() > static_cast<size_t>(index))
     {
         VSlot &vs = *vslots[index];
         if(vs.changed)
@@ -790,7 +790,7 @@ bool mpedittex(int tex, int allfaces, selinfo &sel, ucharbuf &buf)
 
 static void filltexlist()
 {
-    if(static_cast<int>(texmru.size())!=vslots.size())
+    if(texmru.size() != vslots.size())
     {
         for(int i = texmru.size(); --i >=0;) //note reverse iteration
         {
@@ -912,7 +912,7 @@ void gettexname(int *tex, int *subslot)
     }
     VSlot &vslot = lookupvslot(*tex, false);
     Slot &slot = *vslot.slot;
-    if(slot.sts.size() <= *subslot)
+    if(static_cast<int>(slot.sts.size()) <= *subslot)
     {
         return;
     }
@@ -921,7 +921,7 @@ void gettexname(int *tex, int *subslot)
 
 void getslottex(int *idx)
 {
-    if(*idx < 0 || !(slots.size() > (*idx)))
+    if(*idx < 0 || !(static_cast<int>(slots.size()) > (*idx)))
     {
         intret(-1);
         return;
@@ -933,7 +933,7 @@ void getslottex(int *idx)
 COMMANDN(edittex, edittex_, "i");
 ICOMMAND(settex, "i", (int *tex),
 {
-    if(!(vslots.size() > (*tex)) || noedit())
+    if(!(static_cast<int>(vslots.size()) > (*tex)) || noedit())
     {
         return;
     }
