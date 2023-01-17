@@ -145,7 +145,7 @@ namespace ai
                 findwaypointswithin(camera1->o, 0, showwaypointsradius, close);
                 len = close.size();
             }
-            for(int i = 0; i < len; ++i)
+            for(size_t i = 0; i < len; ++i)
             {
                 waypoint &w = waypoints[showwaypointsradius ? close[i] : i];
                 for(int j = 0; j < maxwaypointlinks; ++j)
