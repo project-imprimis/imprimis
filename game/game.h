@@ -1088,6 +1088,7 @@ extern void updateenginevalues();
 // game
 extern int thirdperson;
 extern bool isthirdperson();
+extern void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curtime);
 
 // server
 extern ENetAddress masteraddress;
