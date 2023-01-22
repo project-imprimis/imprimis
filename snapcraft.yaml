@@ -1,5 +1,5 @@
 name: imprimis-game
-base: core18
+base: core20
 architectures:
   - build-on: amd64
 summary: Imprims, the destroyable world FPS
