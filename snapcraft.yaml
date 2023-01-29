@@ -47,7 +47,6 @@ parts:
       - libglu1-mesa
       - libgl1-mesa-dri
       - libglew2.1
-      - pulseaudio
       - libpulse0
       - libselinux1
       - libz3-4
