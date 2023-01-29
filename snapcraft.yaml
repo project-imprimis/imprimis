@@ -38,7 +38,7 @@ parts:
       - libsdl2-mixer-dev
       - libsdl2-ttf-dev
       - libglew-dev
-      - libstdc++-8-dev
+      - libstdc++-10-dev
     stage-packages:
       - libsdl2-2.0-0
       - libsdl2-image-2.0-0
@@ -46,13 +46,13 @@ parts:
       - libsdl2-ttf-2.0-0
       - libglu1-mesa
       - libgl1-mesa-dri
-      - libglew2.1
+      - libglew2.2
       - libpulse0
       - libselinux1
       - libz3-4
       - liblzma5
       - libapparmor1
-      - libstdc++-8-dev
+      - libstdc++-10-dev
     override-build: |
       cd libprimis
       cd src
