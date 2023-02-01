@@ -11,7 +11,7 @@ adopt-info: imprimis-game
 
 apps:
   imprimis-game:
-    command: cd imprimis && ../bin/desktop-launch $SNAP/imprimis/native_client -u$SNAP/imprimis
+    command: bin/desktop-launch $SNAP/imprimis/native_client -u$SNAP/imprimis
     plugs:
       - network
       - opengl
@@ -63,10 +63,13 @@ parts:
       make -j8
       chmod 777 imprimis_unix
       cd ..
-      cp imprimis -r ../install
+      cp imprimis/config -r ../install/config
+      cp imprimis/media -r ../install/media
+      cp imprimis/native_client ../install/native_client
       cp imprimis/libprimis.so ../install/lib/x86_64-linux-gnu/libprimis.so
       cp ../install/usr/lib/x86_64-linux-gnu/pulseaudio/*.so ../install/usr/lib/x86_64-linux-gnu/
       chmod 777 ../install/imprimis/imprimis_unix
+
     after:
       - desktop-glib-only
   desktop-glib-only:
