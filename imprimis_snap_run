@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd $SNAP
+$SNAP/native_client -u$SNAP
