@@ -68,7 +68,7 @@ parts:
       cp imprimis/native_client ../install/native_client
       cp imprimis/libprimis.so ../install/lib/x86_64-linux-gnu/libprimis.so
       cp ../install/usr/lib/x86_64-linux-gnu/pulseaudio/*.so ../install/usr/lib/x86_64-linux-gnu/
-      chmod 777 ../install/imprimis/imprimis_unix
+      chmod 777 ../install/imprimis_unix
 
     after:
       - desktop-glib-only
