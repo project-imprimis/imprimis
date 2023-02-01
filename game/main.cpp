@@ -117,6 +117,7 @@ int main(int argc, char **argv)
         if(argv[i][0]=='-' && argv[i][1] == 'u')
         {
             sethomedir(&argv[i][2]);
+            logoutf("Setting home folder: %s", &argv[i][2]);
             break;
         }
     }
