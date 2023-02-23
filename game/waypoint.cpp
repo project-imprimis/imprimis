@@ -312,7 +312,7 @@ namespace ai
         }
 //==================================================================CHECKCLOSEST
         #define CHECKCLOSEST(index) do { \
-            if(index < waypoints.size()) \
+            if(index < static_cast<int>(waypoints.size())) \
             { \
                 const waypoint &w = waypoints[index]; \
                 if(!links || w.links[0]) \
@@ -413,7 +413,7 @@ namespace ai
         #define CHECKWITHIN(index) \
         do { \
             int n = (index); \
-            if(n < waypoints.size()) \
+            if(n < static_cast<int>(waypoints.size())) \
             { \
                 const waypoint &w = waypoints[n]; \
                 float dist = w.o.squaredist(pos); \
@@ -504,7 +504,7 @@ namespace ai
         #define CHECKNEAR(index) \
         do { \
             int n = (index); \
-            if(n < ai::waypoints.size()) \
+            if(n < static_cast<int>(ai::waypoints.size())) \
             { \
                 const waypoint &w = ai::waypoints[n]; \
                 if(w.o.squaredist(pos) < limit2) \
@@ -1147,7 +1147,7 @@ namespace ai
             }
         }
         delete f;
-        conoutf("saved %u waypoints to %s", waypoints.size()-1, wptname);
+        conoutf("saved %lu waypoints to %s", waypoints.size()-1, wptname);
     }
 
     ICOMMAND(savewaypoints, "s", (char *mname), savewaypoints(true, mname));
