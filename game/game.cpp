@@ -98,7 +98,7 @@ namespace game
             return;
         }
         int cur = following >= 0 ? following : (dir < 0 ? clients.size() - 1 : 0);
-        for(int i = 0; i < clients.size(); i++)
+        for(uint i = 0; i < clients.size(); i++)
         {
             cur = (cur + dir + clients.size()) % clients.size();
             if(clients[cur] && clients[cur]->state!=ClientState_Spectator)
@@ -124,7 +124,7 @@ namespace game
         {
             if(following >= 0)
             {
-                gameent *d = (clients.size() > following) ? clients[following] : nullptr;
+                gameent *d = (static_cast<int>(clients.size()) > following) ? clients[following] : nullptr;
                 if(!d || d->state == ClientState_Spectator)
                 {
                     stopfollowing();
@@ -666,7 +666,7 @@ namespace game
         {
             return player1;
         }
-        while(cn >= clients.size())
+        while(cn >= static_cast<int>(clients.size()))
         {
             clients.push_back(nullptr);
         }
@@ -686,12 +686,12 @@ namespace game
         {
             return player1;
         }
-        return clients.size() > cn ? clients[cn] : nullptr;
+        return static_cast<int>(clients.size()) > cn ? clients[cn] : nullptr;
     }
 
     void clientdisconnected(int cn, bool notify)
     {
-        if(!(clients.size() > cn))
+        if(!(static_cast<int>(clients.size()) > cn))
         {
             return;
         }
