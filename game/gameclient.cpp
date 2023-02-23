@@ -467,7 +467,7 @@ namespace game
         int n = strtol(arg, &end, 10);
         if(*arg && !*end)
         {
-            if(n!=player1->clientnum && !(clients.size() > n))
+            if(n!=player1->clientnum && !(static_cast<int>(clients.size()) > n))
             {
                 return -1;
             }
