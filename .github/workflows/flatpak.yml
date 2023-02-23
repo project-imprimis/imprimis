@@ -14,6 +14,19 @@ jobs:
         repository: project-imprimis/org.imprimis.Imprimis.flatpak
         submodules: true
 
+    - name: Flatpak builder cache
+      id: cache-flatpak
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-flatpak
+      with:
+        path: .flatpak-builder
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/org.imprimis.Imprimis.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
     - name: Update package list
       run: sudo apt-get update
 
