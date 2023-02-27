@@ -36,7 +36,7 @@ install: client emplace
 
 #cleanup build files and executable
 clean:
-	-$(RM) -r $(CLIENT_OBJS) tess_client
+	-$(RM) -r $(CLIENT_OBJS) native_client
 
 #remove all of the assets required to build, just leaves what is needed to run program
 remove-build-files:
