@@ -686,7 +686,15 @@ namespace game
         {
             return player1;
         }
-        return static_cast<int>(clients.size()) > cn ? clients[cn] : nullptr;
+        else if (cn < 0)
+        {
+            return nullptr;
+        }
+        else
+        {
+            //uint cast is no problem now, cn < 0 check above
+            return (clients.size() > static_cast<uint>(cn)) ? clients.at(cn) : nullptr;
+        }
     }
 
     void clientdisconnected(int cn, bool notify)
