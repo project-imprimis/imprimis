@@ -71,7 +71,7 @@ namespace ai
         }
         else if(state.size() > index)
         {
-            state.erase(state.begin() + index);
+            state.erase(std::next(state.begin(), index));
         }
         if(!state.size())
         {
@@ -83,7 +83,7 @@ namespace ai
     {
         if(state.size() > idx)
         {
-            return state[idx];
+            return *std::next(state.begin(), idx);
         }
         return state.back();
     }
@@ -1537,13 +1537,12 @@ namespace ai
         {
             addstate(AIState_Wait);
         }
-        for(int i = static_cast<int>(state.size()); --i >=0;) //note reverse iteration
+        for(auto c = state.rbegin(); c != state.rend(); ++c)
         {
-            aistate &c = state[i];
             if(cleannext)
             {
-                c.millis = lastmillis;
-                c.override = false;
+                (*c).millis = lastmillis;
+                (*c).override = false;
                 cleannext = false;
             }
             if(aiplayer->state == ClientState_Dead && aiplayer->respawned!=aiplayer->lifesequence && (!cmode || cmode->respawnwait(d) <= 0) && lastmillis - aiplayer->lastpain >= 500)
@@ -1554,22 +1553,22 @@ namespace ai
             else if(aiplayer->state == ClientState_Alive && run)
             {
                 int result = 0;
-                c.idle = 0;
-                switch(c.type)
+                (*c).idle = 0;
+                switch((*c).type)
                 {
                     case AIState_Wait:
                     {
-                        result = dowait(c);
+                        result = dowait(*c);
                         break;
                     }
                     case AIState_Defend:
                     {
-                        result = dodefend(c);
+                        result = dodefend(*c);
                         break;
                     }
                     case AIState_Pursue:
                     {
-                        result = dopursue(c);
+                        result = dopursue(*c);
                         break;
                     }
                     default:
@@ -1580,20 +1579,20 @@ namespace ai
                 }
                 if(result <= 0)
                 {
-                    if(c.type != AIState_Wait)
+                    if((*c).type != AIState_Wait)
                     {
                         switch(result)
                         {
                             case 0:
                             default:
                             {
-                                removestate(i);
+                                removestate(std::distance(c, state.rend()));
                                 cleannext = true;
                                 break;
                             }
                             case -1:
                             {
-                                i = state.size()-1;
+                                c = state.rbegin();
                                 break;
                             }
                         }
@@ -1601,7 +1600,7 @@ namespace ai
                     }
                 }
             }
-            logic(c, run);
+            logic(*c, run);
             break;
         }
         if(trywipe)

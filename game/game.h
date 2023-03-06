@@ -7,6 +7,8 @@
 #include "../libprimis-headers/consts.h"
 #include "../libprimis-headers/sound.h"
 
+#include <list>
+
 #include <enet/enet.h>
 
 #include "nettools.h"

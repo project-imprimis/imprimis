@@ -82,14 +82,13 @@ namespace ai
                         pos.z += 2;
                     }
                     bool top = true;
-                    for(int i = static_cast<int>(d->ai->state.size()); --i >=0;) //note reverse iteration
+                    for(auto i = d->ai->state.rbegin(); i != d->ai->state.rend(); ++i)
                     {
-                        aistate &b = d->ai->state[i];
                         DEF_FORMAT_STRING(s, "%s%s (%d ms) %s:%d",
                             top ? "^fg" : "^fy",
-                            stnames[b.type],
-                            lastmillis-b.millis,
-                            sttypes[b.targtype+1], b.target
+                            stnames[(*i).type],
+                            lastmillis-(*i).millis,
+                            sttypes[(*i).targtype+1], (*i).target
                         );
                         pos.z += 2;
                         if(top)
