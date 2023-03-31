@@ -1,8 +1,13 @@
 #include "game.h"
 
 editinfo *localedit = nullptr;
+
+int lasttex = 0;
 int lasttexmillis = -1;
 bool hmapsel = false;
+selinfo repsel;
+int texpaneltimer = 0;
+
 struct vslotref
 {
     vslotref(int &index) { editingvslots.push_back(&index); }
