@@ -63,22 +63,6 @@ namespace ai
         return state.back();
     }
 
-    void waypointai::removestate(int index)
-    {
-        if(index < 0)
-        {
-            state.pop_back();
-        }
-        else if(state.size() > index)
-        {
-            state.erase(std::next(state.begin(), index));
-        }
-        if(!state.size())
-        {
-            addstate(AIState_Wait);
-        }
-    }
-
     aistate &waypointai::getstate(int idx)
     {
         if(state.size() > idx)
@@ -1533,12 +1517,17 @@ namespace ai
         // others spawn new commands to the stack the ai reads the top command from the stack and executes
         // it or pops the stack and goes back along the history until it finds a suitable command to execute
         bool cleannext = false;
+
         if(state.empty())
         {
             addstate(AIState_Wait);
         }
         for(auto c = state.rbegin(); c != state.rend(); ++c)
         {
+            if(!(&c))
+            {
+                continue;
+            }
             if(cleannext)
             {
                 (*c).millis = lastmillis;
@@ -1586,7 +1575,18 @@ namespace ai
                             case 0:
                             default:
                             {
-                                removestate(std::distance(c, state.rend()));
+                                if(std::distance(c, state.rend()) < 0)
+                                {
+                                    state.pop_back();
+                                }
+                                else if(state.size() > std::distance(c, state.rend()))
+                                {
+                                    state.erase(std::next(c).base());
+                                }
+                                if(!state.size())
+                                {
+                                    addstate(AIState_Wait);
+                                }
                                 cleannext = true;
                                 break;
                             }
