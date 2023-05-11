@@ -105,6 +105,20 @@ void startupconstants()
     entnames = std::vector<std::string>(std::begin(entnamelist), std::end(entnamelist));
 }
 
+void menuprocess()
+{
+    static int lastmainmenu = -1;
+    if(lastmainmenu != mainmenu)
+    {
+        lastmainmenu = mainmenu;
+        execident("mainmenutoggled");
+    }
+    if(mainmenu && !multiplayer && !UI::hascursor())
+    {
+        UI::showui("main");
+    }
+}
+
 int main(int argc, char **argv)
 {
     initidents();
