@@ -36,7 +36,7 @@ void quit()
     writeservercfg();
     abortconnect();
     disconnect();
-    writecfg(game::defaultconfig());
+    writecfg((std::string(homedir) + std::string(game::defaultconfig())).c_str());
     SDL_ShowCursor(SDL_TRUE);
     SDL_SetRelativeMouseMode(SDL_FALSE);
     if(screen)
@@ -252,7 +252,7 @@ int main(int argc, char **argv)
     identflags |= Idf_Persist;
     //personal configs
     execfile(game::defaultconfig());
-    writecfg(game::defaultconfig());
+    writecfg((std::string(homedir) + std::string(game::defaultconfig())).c_str());
     identflags &= ~Idf_Persist;
     initing = Init_Game;
     game::loadconfigs();

@@ -979,8 +979,9 @@ void writeservercfg()
     {
         return;
     }
-    std::fstream f;
-    f.open(copypath(game::savedservers()));
+    std::ofstream f;
+    std::string serverpath = std::string(homedir) + std::string(game::savedservers());
+    f.open(copypath(serverpath.c_str()));
     if(!f.is_open())
     {
         return;
