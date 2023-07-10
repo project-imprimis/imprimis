@@ -183,6 +183,7 @@ int main(int argc, char **argv)
     initsoundcmds();
     initheightmapcmds();
     initmenuscmds();
+    initworldiocmds();
     initzipcmds();
 
     logoutf("init: game");
