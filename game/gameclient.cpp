@@ -1079,7 +1079,22 @@ namespace game
         }
     }
     bool _icmd_pausegame = addcommand("pausegame", reinterpret_cast<identfun>(+[] (int *val) { pausegame(*val > 0); }), "i", Id_Command);
-    bool _icmd_paused = addcommand("paused", reinterpret_cast<identfun>(+[] (int *val, int *numargs, ident *id) { { if(*numargs > 0) { pausegame(clampvar(id, *val, 0, 1) > 0); } else if(*numargs < 0) { intret(gamepaused ? 1 : 0); } else { printvar(id, gamepaused ? 1 : 0); } }; }), "iN$", Id_Command);
+    bool _icmd_paused = addcommand("paused",
+        reinterpret_cast<identfun>(+[] (int *val, int *numargs, ident *id)
+        {
+            if(*numargs > 0)
+            {
+                pausegame(clampvar(id->flags&Idf_Hex, id->name, *val, 0, 1) > 0);
+            }
+            else if(*numargs < 0)
+            {
+                intret(gamepaused ? 1 : 0);
+            }
+            else
+            {
+                printvar(id, gamepaused ? 1 : 0);
+            }
+        }), "iN$", Id_Command);
 
     bool ispaused() { return gamepaused; }
 
@@ -1098,7 +1113,7 @@ namespace game
     {
         if(*numargs > 0)
         {
-            changegamespeed(clampvar(id, *val, 10, 1000));
+            changegamespeed(clampvar(id->flags&Idf_Hex, id->name, *val, 10, 1000));
         }
         else if(*numargs < 0)
         {
