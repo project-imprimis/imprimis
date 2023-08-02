@@ -514,7 +514,7 @@ namespace game
         int entorient = 0,
             ent = -1;
 
-        wdist = rayent(player->o, camdir, 1e16f,
+        wdist = rayent(player->o, camdir(), 1e16f,
                        (editmode && showmat ? Ray_EditMat : 0)   // select cubes first
                        | (!dragging && entediting ? Ray_Ents : 0)
                        | Ray_SkipFirst
@@ -525,14 +525,14 @@ namespace game
             return; //upon checking range, if it is larger than the eng's max placement distance, don't bother rendering
         }
 
-        vec w = vec(camdir).mul(wdist+0.05f).add(player->o);
+        vec w = camdir().mul(wdist+0.05f).add(player->o);
         cube *c = &rootworld.lookupcube(ivec(w));
         gridsize = 8;
         int mag = lusize / gridsize;
         normalizelookupcube(ivec(w));
         if(sdist == 0 || sdist > wdist)
         {
-            rayboxintersect(vec(lu), vec(gridsize), player->o, camdir, t=0, orient); // just getting orient
+            rayboxintersect(vec(lu), vec(gridsize), player->o, camdir(), t=0, orient); // just getting orient
         }
         cur = lu;
         cor = ivec(vec(w).mul(2).div(gridsize));
@@ -780,12 +780,12 @@ namespace game
         offset.add(vec(to).sub(from).normalize().mul(2));
         if(hudgun)
         {
-            offset.sub(vec(camup).mul(1.0f));
-            offset.add(vec(camright).mul(0.8f));
+            offset.sub(camup().mul(1.0f));
+            offset.add(camright().mul(0.8f));
         }
         else
         {
-            offset.sub(vec(camup).mul(0.8f));
+            offset.sub(camup().mul(0.8f));
         }
         return offset;
     }
@@ -858,7 +858,7 @@ namespace game
         if(moving)
         {
             static vec dest, handle;
-            if(editmoveplane(vec(sel.o), camdir, od, sel.o[D[od]]+odc*sel.grid*sel.s[D[od]], handle, dest, moving==1))
+            if(editmoveplane(vec(sel.o), camdir(), od, sel.o[D[od]]+odc*sel.grid*sel.s[D[od]], handle, dest, moving==1))
             {
                 if(moving==1)
                 {
@@ -874,7 +874,7 @@ namespace game
         }
         else if(entmoving)
         {
-            entdrag(camdir);
+            entdrag(camdir());
         }
         else
         {
@@ -885,14 +885,14 @@ namespace game
             int entorient = 0,
                 ent = -1;
 
-            wdist = rayent(player->o, camdir, 1e16f,
+            wdist = rayent(player->o, camdir(), 1e16f,
                            (editmode && showmat ? Ray_EditMat : 0)   // select cubes first
                            | (!dragging && entediting ? Ray_Ents : 0)
                            | Ray_SkipFirst
                            | (passthroughcube==1 ? Ray_Pass : 0), gridsize, entorient, ent);
 
             if((havesel || dragging) && !passthroughsel && !hmapedit)     // now try selecting the selection
-                if(rayboxintersect(vec(sel.o), vec(sel.s).mul(sel.grid), player->o, camdir, sdist, orient))
+                if(rayboxintersect(vec(sel.o), vec(sel.s).mul(sel.grid), player->o, camdir(), sdist, orient))
                 {   // and choose the nearest of the two
                     if(sdist < wdist)
                     {
@@ -912,14 +912,14 @@ namespace game
             }
             else
             {
-                vec w = vec(camdir).mul(wdist+0.05f).add(player->o);
+                vec w = camdir().mul(wdist+0.05f).add(player->o);
                 if(!insideworld(w))
                 {
                     for(int i = 0; i < 3; ++i)
                     {
-                        wdist = std::min(wdist, ((camdir[i] > 0 ? rootworld.mapsize() : 0) - player->o[i]) / camdir[i]);
+                        wdist = std::min(wdist, ((camdir()[i] > 0 ? rootworld.mapsize() : 0) - player->o[i]) / camdir()[i]);
                     }
-                    w = vec(camdir).mul(wdist-0.05f).add(player->o);
+                    w = camdir().mul(wdist-0.05f).add(player->o);
                     if(!insideworld(w))
                     {
                         wdist = 0;
@@ -938,14 +938,14 @@ namespace game
                 normalizelookupcube(ivec(w));
                 if(sdist == 0 || sdist > wdist)
                 {
-                    rayboxintersect(vec(lu), vec(gridsize), player->o, camdir, t=0, orient); // just getting orient
+                    rayboxintersect(vec(lu), vec(gridsize), player->o, camdir(), t=0, orient); // just getting orient
                 }
                 cur = lu;
                 cor = ivec(vec(w).mul(2).div(gridsize));
                 od = DIMENSION(orient);
                 d = DIMENSION(sel.orient);
 
-                if(hmapedit==1 && DIM_COORD(horient) == (camdir[DIMENSION(horient)]<0))
+                if(hmapedit==1 && DIM_COORD(horient) == (camdir()[DIMENSION(horient)]<0))
                 {
                     hmapsel = isheightmap(horient, false, *c);
                     if(hmapsel)
@@ -1011,7 +1011,7 @@ namespace game
 
         setldrnotexture();
 
-        renderentselection(player->o, camdir, entmoving!=0);
+        renderentselection(player->o, camdir(), entmoving!=0);
 
         boxoutline = outline!=0;
 
