@@ -163,6 +163,7 @@ int main(int argc, char **argv)
     atexit(enet_deinitialize);
     enet_time_set(0);
     logoutf("init: cubescript");
+    initaacmds();
     initcscmds();
     initmathcmds();
     initcontrolcmds();
