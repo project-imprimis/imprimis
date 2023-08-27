@@ -549,7 +549,7 @@ namespace game
         sel.corner = (cor[R[d]]-(lu[R[d]]*2)/gridsize)+(cor[C[d]]-(lu[C[d]]*2)/gridsize)*2;
         selchildcount = 0;
         selchildmat = -1;
-        countselchild(rootworld.worldroot, ivec(0, 0, 0), rootworld.mapsize()/2);
+        countselchild(*rootworld.worldroot, ivec(0, 0, 0), rootworld.mapsize()/2);
         if(mag>=1 && selchildcount==1)
         {
             selchildmat = c->material;
@@ -991,7 +991,7 @@ namespace game
                 sel.corner = (cor[R[d]]-(lu[R[d]]*2)/gridsize)+(cor[C[d]]-(lu[C[d]]*2)/gridsize)*2;
                 selchildcount = 0;
                 selchildmat = -1;
-                countselchild(rootworld.worldroot, ivec(0, 0, 0), rootworld.mapsize()/2);
+                countselchild(*rootworld.worldroot, ivec(0, 0, 0), rootworld.mapsize()/2);
                 if(mag>=1 && selchildcount==1)
                 {
                     selchildmat = c->material;

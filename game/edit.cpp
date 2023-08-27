@@ -956,7 +956,7 @@ void replacetexcube(cube &c, int oldtex, int newtex)
     {
         for(int i = 0; i < 8; ++i)
         {
-            replacetexcube(c.children[i], oldtex, newtex);
+            replacetexcube((*c.children)[i], oldtex, newtex);
         }
     }
 }
@@ -976,7 +976,7 @@ void mpreplacetex(int oldtex, int newtex, bool insel, selinfo &sel, bool local)
     {
         for(int i = 0; i < 8; ++i)
         {
-            replacetexcube(rootworld.worldroot[i], oldtex, newtex);
+            replacetexcube((*rootworld.worldroot)[i], oldtex, newtex);
         }
     }
     rootworld.allchanged();
@@ -1060,7 +1060,7 @@ void flipcube(cube &c, int d)
         }
         for(int i = 0; i < 8; ++i)
         {
-            flipcube(c.children[i], d);
+            flipcube((*c.children)[i], d);
         }
     }
 }
@@ -1100,17 +1100,16 @@ void rotatecube(cube &c, int d)
     {
         int row = octadim(R[d]);
         int col = octadim(C[d]);
-        for(int i=0; i<=octadim(d); i+=octadim(d)) rotatequad
-        (
-            c.children[i+row],
-            c.children[i],
-            c.children[i+col],
-            c.children[i+col+row]
+        for(int i=0; i<=octadim(d); i+=octadim(d))
+        rotatequad ((*c.children)[i+row],
+                    (*c.children)[i],
+                    (*c.children)[i+col],
+                    (*c.children)[i+col+row]
         );
         //recursively apply to children
         for(int i = 0; i < 8; ++i)
         {
-            rotatecube(c.children[i], d);
+            rotatecube((*c.children)[i], d);
         }
     }
 }
