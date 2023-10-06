@@ -114,16 +114,16 @@
     ADD_IMPLICIT(GROUP_EDIT_UNDO(f)); \
 }
 
-int entlooplevel = 0;
-int efocus    = -1,
-    enthover  = -1,
-    entorient = -1,
-    oldhover  = -1;
-bool undonext = true;
+static int entlooplevel = 0;
+static int efocus    = -1,
+           entorient = -1;
+static bool undonext = true;
+static uint enthover = 0,
+            oldhover  = -1;
 
 //=== ent modification functions ===//
 
-void entadd(int id)
+void entadd(uint id)
 {
     undonext = true;
     entgroup.push_back(id);
@@ -345,7 +345,7 @@ void entattr(int *attr, int *val, int *numargs)
 COMMAND(enttype, "sN");
 COMMAND(entattr, "iiN");
 
-extern int findentity(int type, int index = 0, int attr1 = -1, int attr2 = -1)
+int findentity(int type, uint index = 0, int attr1 = -1, int attr2 = -1)
 {
     const std::vector<extentity *> &ents = entities::getents();
     if(index > ents.size())
@@ -360,7 +360,7 @@ extern int findentity(int type, int index = 0, int attr1 = -1, int attr2 = -1)
             return i;
         }
     }
-    for(int j = 0; j < index; ++j)
+    for(uint j = 0; j < index; ++j)
     {
         extentity &e = *ents[j];
         if(e.type==type && (attr1<0 || e.attr1==attr1) && (attr2<0 || e.attr2==attr2))
@@ -473,7 +473,7 @@ undoblock *copyundoents(undoblock *u)
     return c;
 }
 
-void pasteundoent(int idx, const entity &ue)
+void pasteundoent(uint idx, const entity &ue)
 {
     if(idx < 0 || idx >= maxents)
     {
@@ -1116,9 +1116,9 @@ void attachent()
 
 COMMAND(attachent, "");
 
-static int keepents = 0;
+static uint keepents = 0;
 
-extentity *newentity(bool local, const vec &o, int type, int v1, int v2, int v3, int v4, int v5, int &idx, bool fix = true)
+extentity *newentity(bool local, const vec &o, int type, int v1, int v2, int v3, int v4, int v5, uint &idx, bool fix = true)
 {
     std::vector<extentity *> &ents = entities::getents();
     if(local)
@@ -1202,7 +1202,7 @@ extentity *newentity(bool local, const vec &o, int type, int v1, int v2, int v3,
 
 void newentity(int type, int a1, int a2, int a3, int a4, int a5, bool fix = true)
 {
-    int idx;
+    uint idx;
     extentity *t = newentity(true, player->o, type, a1, a2, a3, a4, a5, idx, fix);
     if(!t)
     {
@@ -1256,11 +1256,11 @@ void entpaste()
     }
     entcancel();
     float m = static_cast<float>(sel.grid)/static_cast<float>(entcopygrid);
-    for(int i = 0; i < entcopybuf.size(); i++)
+    for(size_t i = 0; i < entcopybuf.size(); i++)
     {
         const entity &c = entcopybuf[i];
         vec o = vec(c.o).mul(m).add(vec(sel.o));
-        int idx;
+        uint idx;
         extentity *e = newentity(true, o, EngineEnt_Empty, c.attr1, c.attr2, c.attr3, c.attr4, c.attr5, idx);
         if(!e)
         {
@@ -1298,7 +1298,7 @@ void entreplace()
     }
 }
 
-void mpeditent(int i, const vec &o, int type, int attr1, int attr2, int attr3, int attr4, int attr5, bool local)
+void mpeditent(uint i, const vec &o, int type, int attr1, int attr2, int attr3, int attr4, int attr5, bool local)
 {
     if(i < 0 || i >= maxents)
     {
@@ -1414,7 +1414,7 @@ namespace entities
         }
     }
 
-    void setspawn(int i, bool on)
+    void setspawn(uint i, bool on)
     {
         if(ents.size() > i)
         {
