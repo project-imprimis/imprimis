@@ -84,7 +84,7 @@ namespace ai
         return addstate(t, r, v);
     }
 
-    float waypointai::viewdist(int skill)
+    float waypointai::viewdist(int skill) const
     {
         if(skill <= 100)
         {
@@ -96,7 +96,7 @@ namespace ai
         }
     }
 
-    float waypointai::viewfieldx(int skill)
+    float waypointai::viewfieldx(int skill) const
     {
         if(skill <= 100)
         {
@@ -108,29 +108,29 @@ namespace ai
         }
     }
 
-    float waypointai::viewfieldy(int skill)
+    float waypointai::viewfieldy(int skill) const
     {
         return viewfieldx(skill)*3.f/4.f;
     }
 
-    bool waypointai::canmove()
+    bool waypointai::canmove() const
     {
         return aiplayer->state != ClientState_Dead && !intermission;
         conoutf(ConsoleMsg_GameInfo, "%d", aiplayer->state);
         return true;
     }
 
-    float waypointai::attackmindist(int atk)
+    float waypointai::attackmindist(int atk) const
     {
         return max(int(attacks[atk].exprad), 2);
     }
 
-    float waypointai::attackmaxdist(int atk)
+    float waypointai::attackmaxdist(int atk) const
     {
         return attacks[atk].time + 4;
     }
 
-    bool waypointai::attackrange(int atk, float dist)
+    bool waypointai::attackrange(int atk, float dist) const
     {
         float mindist = attackmindist(atk),
               maxdist = attackmaxdist(atk);
@@ -138,7 +138,7 @@ namespace ai
     }
 
     //check if a player is alive and can be a valid target for another player (don't shoot up teammates)
-    bool waypointai::targetable(gameent *e)
+    bool waypointai::targetable(gameent *e) const
     {
         if(aiplayer == e || !canmove())
         {
@@ -164,7 +164,7 @@ namespace ai
         return istarget;
     }
 
-    bool waypointai::getsight(vec &o, float yaw, float pitch, vec &q, vec &v, float mdist, float fovx, float fovy)
+    bool waypointai::getsight(vec &o, float yaw, float pitch, vec &q, vec &v, float mdist, float fovx, float fovy) const
     {
         float dist = o.dist(q);
 
@@ -182,7 +182,7 @@ namespace ai
 
     bool waypointai::cansee(vec &x, vec &y, vec &targ)
     {
-        aistate &b = getstate();
+        const aistate &b = getstate();
         if(canmove() && b.type != AIState_Wait)
         {
             return getsight(x, aiplayer->yaw, aiplayer->pitch, y, targ, views[2], views[0], views[1]);
@@ -190,7 +190,7 @@ namespace ai
         return false;
     }
 
-    bool waypointai::canshoot(int atk, gameent *e)
+    bool waypointai::canshoot(int atk, gameent *e) const
     {
         if(attackrange(atk, e->o.squaredist(aiplayer->o)) && targetable(e))
         {
@@ -199,7 +199,7 @@ namespace ai
         return false;
     }
 
-    bool waypointai::canshoot(int atk)
+    bool waypointai::canshoot(int atk) const
     {
         return !becareful && aiplayer->ammo[attacks[atk].gun] > 0 && lastmillis - aiplayer->lastaction >= aiplayer->gunwait;
     }
@@ -889,12 +889,12 @@ namespace ai
         return false;
     }
 
-    int waypointai::isgoodammo(int gun)
+    int waypointai::isgoodammo(int gun) const
     {
         return gun == Gun_Pulse || gun == Gun_Rail;
     }
 
-    bool waypointai::hasgoodammo()
+    bool waypointai::hasgoodammo() const
     {
         static const int goodguns[] = { Gun_Pulse, Gun_Rail, Gun_Eng, Gun_Carbine };
         for(int i = 0; i < static_cast<int>(sizeof(goodguns)/sizeof(goodguns[0])); ++i)
@@ -945,8 +945,8 @@ namespace ai
                         case 2:
                         {
                             clear(false);
+                            break;
                         }
-                        [[fallthrough]];
                         case 1:
                         {
                             return true; // not close enough to pop it yet
@@ -1003,7 +1003,7 @@ namespace ai
         }
     }
 
-    void waypointai::fixfullrange(float &yaw, float &pitch, float &roll, bool full)
+    void waypointai::fixfullrange(float &yaw, float &pitch, float &roll, bool full) const
     {
         if(full) //modulus check if full range allowed
         {
@@ -1053,7 +1053,7 @@ namespace ai
         }
     }
 
-    void waypointai::fixrange(float &yaw, float &pitch)
+    void waypointai::fixrange(float &yaw, float &pitch) const
     {
         float r = 0.f;
         fixfullrange(yaw, pitch, r, false);
