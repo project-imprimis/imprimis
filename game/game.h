@@ -866,7 +866,7 @@ namespace entities
     extern void editent(int i, bool local);
     extern void resetspawns();
     extern void putitems(packetbuf &p);
-    extern void setspawn(uint i, bool on);
+    extern void setspawn(int i, bool on);
 }
 
 enum
@@ -890,7 +890,7 @@ enum
 
 extern bool boxoutline;
 
-extern void mpeditent(uint i, const vec &o, int type, int attr1, int attr2, int attr3, int attr4, int attr5, bool local);
+extern void mpeditent(int i, const vec &o, int type, int attr1, int attr2, int attr3, int attr4, int attr5, bool local);
 extern void entdrag(const vec &ray);
 
 extern void modifygravity(gameent *pl, bool water, int curtime);
@@ -1152,7 +1152,7 @@ extern bool checkcubefill(cube c);
 
 extern undoblock *copyundoents(undoblock *u);
 extern void pasteundoents(undoblock *u);
-extern void pasteundoent(uint idx, const entity &ue);
+extern void pasteundoent(int idx, const entity &ue);
 extern bool hoveringonent(int ent, int orient);
 extern void renderentselection(const vec &o, const vec &ray, bool entmoving);
 
