@@ -37,7 +37,7 @@ jobs:
       run: sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
       
     - name: Install flatpak SDK/dependencies
-      run: sudo flatpak install --assumeyes flathub org.freedesktop.Platform/x86_64/21.08 org.freedesktop.Sdk/x86_64/21.08 org.freedesktop.Platform.GL.default/x86_64/21.08
+      run: sudo flatpak install --assumeyes flathub org.freedesktop.Platform/x86_64/23.08 org.freedesktop.Sdk/x86_64/23.08 org.freedesktop.Platform.GL.default/x86_64/23.08
 
     - name: Configure git
       run: git config --global protocol.file.allow always
