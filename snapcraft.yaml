@@ -68,6 +68,7 @@ parts:
       cp imprimis/native_client ../install/native_client
       cp imprimis/imprimis_snap_run ../install/imprimis_snap_run
       cp imprimis/libprimis.so ../install/lib/x86_64-linux-gnu/libprimis.so
+      cp imprimis/org.imprimis.Imprimis.desktop ../install/org.imprimis.Imprimis.desktop
       cp ../install/usr/lib/x86_64-linux-gnu/pulseaudio/*.so ../install/usr/lib/x86_64-linux-gnu/
       chmod 777 ../install/imprimis_snap_run
     after:
