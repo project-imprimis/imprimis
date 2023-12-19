@@ -12,6 +12,7 @@ adopt-info: imprimis-game
 apps:
   imprimis-game:
     command: bin/desktop-launch $SNAP/imprimis_snap_run
+    desktop: org.imprimis.Imprimis.desktop
     plugs:
       - network
       - opengl
