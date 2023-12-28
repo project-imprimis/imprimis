@@ -69,6 +69,9 @@
     <ClInclude Include="..\..\libprimis-headers\world.h">
       <Filter>Local Dependencies</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\game\ai.cpp">
@@ -135,5 +138,15 @@
     <Library Include="..\..\libprimis-headers\3rdparty\bin\zdll.lib" />
     <Library Include="..\..\libprimis.lib" />
     <Library Include="..\..\libprimis-headers\3rdparty\bin\glew32.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="imprimis.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

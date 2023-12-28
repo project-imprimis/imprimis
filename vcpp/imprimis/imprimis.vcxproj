@@ -73,6 +73,7 @@
     <ClInclude Include="..\..\libprimis-headers\texture.h" />
     <ClInclude Include="..\..\libprimis-headers\tools.h" />
     <ClInclude Include="..\..\libprimis-headers\world.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\game\ai.cpp" />
@@ -103,6 +104,12 @@
     <Library Include="..\..\libprimis-headers\3rdparty\bin\zdll.lib" />
     <Library Include="..\..\libprimis-headers\lib\enet.lib" />
     <Library Include="..\..\libprimis.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="imprimis.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
