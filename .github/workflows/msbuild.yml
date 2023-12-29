@@ -57,7 +57,7 @@ jobs:
       run: makensis ./vcpp/imprimis.nsi
 
     - name: Upload Imprimis Windows binary artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: imprimis-windows
         path: |
@@ -69,7 +69,7 @@ jobs:
           ./media/
 
     - name: Upload Imprimis Windows installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: imprimis-windows-installer
         path: ./vcpp/imprimis_windows.exe
