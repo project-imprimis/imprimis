@@ -30,6 +30,15 @@ jobs:
         repo: project-imprimis/libprimis
         branch: main
 
+    - name: Install NSIS
+      #uses ci from nsis-dev/ci-examples
+      run: |
+        iwr -useb get.scoop.sh -outfile 'install.ps1'
+        .\install.ps1 -RunAsAdmin
+        scoop update
+        scoop bucket add extras
+        scoop install nsis
+
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
 
@@ -43,7 +52,10 @@ jobs:
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
-      
+
+    - name: Create NSIS Installer
+      run: makensis ./vcpp/imprimis.nsi
+
     - name: Upload Imprimis Windows binary artifact
       uses: actions/upload-artifact@v2
       with:
@@ -55,3 +67,9 @@ jobs:
           ./config/
           ./doc/
           ./media/
+
+    - name: Upload Imprimis Windows installer
+      uses: actions/upload-artifact@v2
+      with:
+        name: imprimis-windows-installer
+        path: ./vcpp/imprimis_windows.exe
