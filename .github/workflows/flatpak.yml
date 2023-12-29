@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - name: Checkout flatpak build templates
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: project-imprimis/org.imprimis.Imprimis.flatpak
         submodules: true
