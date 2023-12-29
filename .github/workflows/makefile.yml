@@ -19,7 +19,7 @@ jobs:
       run: sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libglew-dev
       
     - name: Download libprimis.lib artifact
-      uses: dawidd6/action-download-artifact@v2.18.0
+      uses: dawidd6/action-download-artifact@v3.0.0
       with:
         workflow: makefile.yml
         name: libprimis-linux
