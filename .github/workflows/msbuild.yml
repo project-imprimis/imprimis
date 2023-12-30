@@ -17,12 +17,12 @@ jobs:
 
     steps:
     - name: Clone repository and submodules
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         submodules: true
 
     - name: Download libprimis.lib artifact
-      uses: dawidd6/action-download-artifact@v2.18.0
+      uses: dawidd6/action-download-artifact@v3.0.0
       with:
         workflow: msbuild.yml
         name: libprimis-windows
@@ -40,7 +40,7 @@ jobs:
         scoop install nsis
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v1.3.1
 
 #     afaik this isnt necessary
 #    - name: Restore NuGet packages
@@ -57,7 +57,7 @@ jobs:
       run: makensis ./vcpp/imprimis.nsi
 
     - name: Upload Imprimis Windows binary artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: imprimis-windows
         path: |
@@ -69,7 +69,7 @@ jobs:
           ./media/
 
     - name: Upload Imprimis Windows installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: imprimis-windows-installer
         path: ./vcpp/imprimis_windows.exe
