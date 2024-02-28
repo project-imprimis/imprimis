@@ -1737,8 +1737,6 @@ namespace game
         }
     }
 
-    extern int deathscore;
-
     void parsemessages(int cn, gameent *d, ucharbuf &p)
     {
         static char text[maxtrans];

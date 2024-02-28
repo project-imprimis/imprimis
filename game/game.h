@@ -1029,6 +1029,7 @@ namespace game
     extern void createrays(int atk, const vec &from, const vec &to);
 
     // scoreboard
+    extern int deathscore;
     extern teaminfo teaminfos[maxteams];
     extern void showscores(bool on);
     extern void getbestplayers(std::vector<gameent *> &best);

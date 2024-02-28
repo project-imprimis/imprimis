@@ -345,7 +345,7 @@ void entattr(int *attr, int *val, int *numargs)
 COMMAND(enttype, "sN");
 COMMAND(entattr, "iiN");
 
-extern int findentity(int type, int index = 0, int attr1 = -1, int attr2 = -1)
+static int findentity(int type, int index = 0, int attr1 = -1, int attr2 = -1)
 {
     const std::vector<extentity *> &ents = entities::getents();
     if(index > ents.size())
@@ -528,9 +528,6 @@ void entrotate(int *cw)
 }
 
 VAR(entselsnap, 0, 0, 1);
-
-extern void boxs(int orient, vec o, const vec &s, float size);
-
 VAR(showentradius, 0, 1, 1);
 
 //draws a circle around a point with a given radius in the world
