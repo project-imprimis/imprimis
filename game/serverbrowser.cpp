@@ -591,12 +591,12 @@ void pingservers()
     ENetBuffer buf;
     uchar ping[maxtrans];
 
-    static int lastping = 0;
+    static uint lastping = 0;
     if(lastping >= servers.size())
     {
         lastping = 0;
     }
-    for(int i = 0; i < (maxservpings ? std::min(static_cast<int>(servers.size()), maxservpings) : servers.size()); ++i)
+    for(uint i = 0; i < (maxservpings ? std::min(static_cast<int>(servers.size()), maxservpings) : servers.size()); ++i)
     {
         serverinfo &si = *servers[lastping];
         if(++lastping >= servers.size())
@@ -785,7 +785,7 @@ void refreshservers()
 ICOMMAND(numservers, "", (), intret(servers.size()))
 
 #define GETSERVERINFO_(idx, si, body) \
-    if(servers.size() > idx) \
+    if(static_cast<int>(servers.size()) > idx) \
     { \
         serverinfo &si = *servers[idx]; \
         body; \
@@ -819,13 +819,13 @@ ICOMMAND(servinfoplayers, "i", (int *i),
             result(tempformatstring(si.numplayers >= si.maxplayers ? "\f3%d/%d" : "%d/%d", si.numplayers, si.maxplayers));
         }
     }));
-ICOMMAND(servinfoattr, "ii", (int *i, int *n), GETSERVERINFO(*i, si, { if(si.attr.size() > *n) intret(si.attr[*n]); }));
+ICOMMAND(servinfoattr, "ii", (int *i, int *n), GETSERVERINFO(*i, si, { if(static_cast<int>(si.attr.size()) > *n) intret(si.attr[*n]); }));
 
 ICOMMAND(connectservinfo, "is", (int *i, char *pw), GETSERVERINFO_(*i, si, connectserv(si.name, si.address.port, pw[0] ? pw : si.password)));
 
 servinfo *getservinfo(int i)
 {
-    return servers.size() > i && servers[i]->valid() ? servers[i] : nullptr;
+    return static_cast<int>(servers.size()) > i && servers[i]->valid() ? servers[i] : nullptr;
 }
 
 void clearservers(bool full = false)
