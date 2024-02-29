@@ -936,14 +936,11 @@ namespace game
     extern void setclientmode();
 
     // game
-    extern int nextmode;
     extern bool intermission;
-    extern int maptime, maprealtime, maplimit;
+    extern int maptime, maplimit;
     extern gameent *player1;
     extern std::vector<gameent *> players, clients;
-    extern int lastspawnattempt;
     extern int lasthit;
-    extern int following;
     extern int smoothmove, smoothdist;
 
     extern bool allowedittoggle(bool message = true);
@@ -985,9 +982,8 @@ namespace game
     extern void updateminimap();
 
     // client
-    extern bool connected, remote, demoplayback;
+    extern bool connected, demoplayback;
     extern string servdesc;
-    extern std::vector<uchar> messages;
 
     extern int parseplayer(const char *arg);
     extern void ignore(int cn);

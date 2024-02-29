@@ -19,8 +19,7 @@ namespace game
     int maptime = 0,
         maprealtime = 0,
         maplimit = -1;
-    int lasthit = 0,
-        lastspawnattempt = 0;
+    int lasthit = 0;
 
     gameent *player1 = nullptr;         // our client
     std::vector<gameent *> players;       // other clients

@@ -14,8 +14,6 @@ void writeinitcfg()
     if(cfgfile.is_open())
     {
         // Import all variables to write out to the config file
-        extern char *audiodriver;
-        extern int fullscreen;
 
         cfgfile << "// This file is written automatically on exit.\n"
             << "// Any changes to this file WILL be overwritten.\n\n"

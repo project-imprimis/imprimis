@@ -792,6 +792,7 @@ namespace game
     static bool dummy_mapenlarge = addcommand("mapenlarge", (identfun)mapenlarge, "", Id_Command);
 
     int needclipboard = -1;
+    std::vector<uchar> messages;
 
     void sendclipboard()
     {
@@ -1132,7 +1133,6 @@ namespace game
     }
 
     // collect c2s messages conveniently
-    std::vector<uchar> messages;
     int messagecn = -1,
         messagereliable = false;
 
