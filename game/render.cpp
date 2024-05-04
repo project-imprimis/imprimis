@@ -489,7 +489,7 @@ namespace game
         renderplayer(d, getplayermodelinfo(d), getplayercolor(d, team), team, fade, flags);
     }
 
-    static void renderparachute(gameent *d)
+    static void renderparachute(const gameent *d)
     {
         vec loc = vec(0,0,24).add(d->o); //three meters above player
         rendermodel(parachutemodel, Anim_Mapmodel | Anim_Loop, loc, atan2(d->vel.y,d->vel.x)*RAD, 0, 0);
