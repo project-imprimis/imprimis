@@ -929,7 +929,7 @@ namespace game
                         }
                     }
                 }
-                cube *c = &rootworld.lookupcube(ivec(w));
+                const cube *c = &rootworld.lookupcube(ivec(w));
                 if(gridlookup && !dragging && !moving && !havesel && hmapedit!=1)
                 {
                     gridsize = lusize;
