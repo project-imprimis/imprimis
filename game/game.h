@@ -792,7 +792,7 @@ struct gameent : dynent, gamestate
         if(ai) delete ai;
     }
 
-    void hitpush(int damage, const vec &dir, gameent *actor, int atk)
+    void hitpush(int damage, const vec &dir, const gameent *actor, int atk)
     {
         vec push(dir);
         push.mul((actor==this && attacks[atk].exprad ? EXP_SELFPUSH : 1.0f)*attacks[atk].hitpush*damage/weight);
