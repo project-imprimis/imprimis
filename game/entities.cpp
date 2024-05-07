@@ -704,7 +704,7 @@ void renderentbox(const extentity &e, const vec &center, const vec &radius, int 
     xtraverts += gle::end();
 }
 
-void renderentradius(extentity &e, bool color)
+void renderentradius(const extentity &e, bool color)
 {
     switch(e.type)
     {
