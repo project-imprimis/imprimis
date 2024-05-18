@@ -322,7 +322,7 @@ namespace ai
             float attackmaxdist(int atk) const;
             bool attackrange(int atk, float dist) const;
             bool targetable(gameent *e) const;
-            bool getsight(vec &o, float yaw, float pitch, vec &q, vec &v, float mdist, float fovx, float fovy) const;
+            bool getsight(const vec &o, float yaw, float pitch, const vec &q, vec &v, float mdist, float fovx, float fovy) const;
             bool cansee(vec &x, vec &y, vec &targ = aitarget);
             bool canshoot(int atk, gameent *e) const;
             bool canshoot(int atk) const;

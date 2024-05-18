@@ -164,7 +164,7 @@ namespace ai
         return istarget;
     }
 
-    bool waypointai::getsight(vec &o, float yaw, float pitch, vec &q, vec &v, float mdist, float fovx, float fovy) const
+    bool waypointai::getsight(const vec &o, float yaw, float pitch, const vec &q, vec &v, float mdist, float fovx, float fovy) const
     {
         float dist = o.dist(q);
 
