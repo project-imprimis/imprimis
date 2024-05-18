@@ -180,7 +180,7 @@ namespace ai
         return false;
     }
 
-    bool waypointai::cansee(vec &x, vec &y, vec &targ)
+    bool waypointai::cansee(const vec &x, const vec &y, vec &targ)
     {
         const aistate &b = getstate();
         if(canmove() && b.type != AIState_Wait)
