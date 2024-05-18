@@ -204,7 +204,7 @@ namespace ai
         return !becareful && aiplayer->ammo[attacks[atk].gun] > 0 && lastmillis - aiplayer->lastaction >= aiplayer->gunwait;
     }
 
-    bool waypointai::hastarget(int atk, aistate &b, gameent *e, float yaw, float pitch, float dist)
+    bool waypointai::hastarget(int atk, const aistate &b, const gameent *e, float yaw, float pitch, float dist)
     { // add margins of error
         if(attackrange(atk, dist) || (aiplayer->skill <= 100 && !randomint(aiplayer->skill)))
         {
