@@ -11,7 +11,7 @@ blocks:
         - name: 'Job #1'
           commands:
             - checkout
-            - sem-version cpp 8
+            - sem-version cpp 9
             - sudo apt-get update
             - sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libglew-dev
             - git clone --recurse-submodules https://github.com/project-imprimis/libprimis.git
