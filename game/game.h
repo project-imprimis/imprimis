@@ -1005,7 +1005,7 @@ namespace game
     extern void shoot(gameent *d, const vec &targ);
     extern void shoteffects(int atk, const vec &from, const vec &to, gameent *d, bool local, int id, int prevaction);
     extern void explode(bool local, gameent *owner, const vec &v, const vec &vel, dynent *safe, int dam, int atk);
-    extern void explodeeffects(int atk, gameent *d, bool local, int id = 0);
+    extern void explodeeffects(int atk, const gameent *d, bool local, int id = 0);
     extern void damageeffect(int damage, gameent *d, bool thirdperson = true);
     extern float intersectdist;
     extern bool intersect(dynent *d, const vec &from, const vec &to, float margin = 0, float &dist = intersectdist);

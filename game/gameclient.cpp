@@ -2124,7 +2124,7 @@ namespace game
                 case NetMsg_ExplodeFX:
                 {
                     int ecn = getint(p), atk = getint(p), id = getint(p);
-                    gameent *e = getclient(ecn);
+                    const gameent *e = getclient(ecn);
                     if(!e || !validattack(atk))
                     {
                         break;

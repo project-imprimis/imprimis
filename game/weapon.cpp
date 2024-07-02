@@ -664,7 +664,7 @@ namespace game
         pulsestain(p, v);
     }
 
-    void explodeeffects(int atk, gameent *d, bool local, int id)
+    void explodeeffects(int atk, const gameent *d, bool local, int id)
     {
         if(local)
         {
