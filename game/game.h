@@ -947,8 +947,8 @@ namespace game
     extern void edittrigger(const selinfo &sel, int op, int arg1 = 0, int arg2 = 0, int arg3 = 0, const VSlot *vs = nullptr);
     extern gameent *getclient(int cn);
     extern gameent *newclient(int cn);
-    extern const char *colorname(gameent *d, const char *name = nullptr, const char *alt = nullptr, const char *color = "");
-    extern const char *teamcolorname(gameent *d, const char *alt = "you");
+    extern const char *colorname(const gameent *d, const char *name = nullptr, const char *alt = nullptr, const char *color = "");
+    extern const char *teamcolorname(const gameent *d, const char *alt = "you");
     extern const char *teamcolor(const char *prefix, const char *suffix, int team, const char *alt);
     extern void teamsound(bool sameteam, int n, const vec *loc = nullptr);
     extern void teamsound(gameent *d, int n, const vec *loc = nullptr);
@@ -964,7 +964,7 @@ namespace game
     extern void spawnplayer(gameent *);
     extern void deathstate(gameent *d, bool restore = false);
     extern void damaged(int damage, gameent *d, gameent *actor, bool local = true);
-    extern void killed(gameent *d, gameent *actor);
+    extern void killed(gameent *d, const gameent *actor);
     extern void timeupdate(int timeremain);
     extern void msgsound(int n, physent *d = nullptr);
     extern void drawicon(int icon, float x, float y, float sz = 120);

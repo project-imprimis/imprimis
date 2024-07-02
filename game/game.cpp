@@ -551,7 +551,7 @@ namespace game
 
     VARP(teamcolorfrags, 0, 1, 1);
 
-    void killed(gameent *d, gameent *actor)
+    void killed(gameent *d, const gameent *actor)
     {
         vec dloc = d->o; //need to make a local copy of d->o because sub() is a destructive operation
         int fragdist = static_cast<int>(dloc.sub(actor->o).magnitude()/8);
@@ -856,7 +856,7 @@ namespace game
         }
     }
 
-    bool duplicatename(gameent *d, const char *name = nullptr, const char *alt = nullptr)
+    bool duplicatename(const gameent *d, const char *name = nullptr, const char *alt = nullptr)
     {
         if(!name)
         {
@@ -876,7 +876,7 @@ namespace game
         return false;
     }
 
-    const char *colorname(gameent *d, const char *name, const char * alt, const char *color)
+    const char *colorname(const gameent *d, const char *name, const char * alt, const char *color)
     {
         if(!name)
         {
@@ -896,7 +896,7 @@ namespace game
 
     VARP(teamcolortext, 0, 1, 1);
 
-    const char *teamcolorname(gameent *d, const char *alt)
+    const char *teamcolorname(const gameent *d, const char *alt)
     {
         if(!teamcolortext || modecheck(gamemode, Mode_Team) || !validteam(d->team) || d->state == ClientState_Spectator)
         {

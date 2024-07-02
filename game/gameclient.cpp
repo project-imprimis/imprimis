@@ -1285,7 +1285,7 @@ namespace game
     }
 
     VARP(teamcolorchat, 0, 1, 1);
-    const char *chatcolorname(gameent *d)
+    const char *chatcolorname(const gameent *d)
     {
         return teamcolorchat ? teamcolorname(d, nullptr) : colorname(d);
     }
@@ -1861,7 +1861,7 @@ namespace game
                 case NetMsg_SayTeam:
                 {
                     int tcn = getint(p);
-                    gameent *t = getclient(tcn);
+                    const gameent *t = getclient(tcn);
                     getstring(text, p);
                     filtertext(text, text, true, true);
                     if(!t || isignored(t->clientnum))
