@@ -2267,7 +2267,7 @@ namespace game
                     int cn = getint(p),
                         unpacklen = getint(p),
                         packlen = getint(p);
-                    gameent *d = getclient(cn);
+                    const gameent *d = getclient(cn);
                     ucharbuf q = p.subbuf(max(packlen, 0));
                     if(d)
                     {
