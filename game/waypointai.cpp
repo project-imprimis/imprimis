@@ -138,7 +138,7 @@ namespace ai
     }
 
     //check if a player is alive and can be a valid target for another player (don't shoot up teammates)
-    bool waypointai::targetable(gameent *e) const
+    bool waypointai::targetable(const gameent *e) const
     {
         if(aiplayer == e || !canmove())
         {
@@ -190,7 +190,7 @@ namespace ai
         return false;
     }
 
-    bool waypointai::canshoot(int atk, gameent *e) const
+    bool waypointai::canshoot(int atk, const gameent *e) const
     {
         if(attackrange(atk, e->o.squaredist(aiplayer->o)) && targetable(e))
         {
@@ -433,7 +433,7 @@ namespace ai
         return parseinterests(b, interests, override);
     }
 
-    void waypointai::damaged(gameent *e)
+    void waypointai::damaged(const gameent *e)
     {
         if(aiplayer && canmove() && targetable(e)) // see if this ai is interested in a grudge
         {
@@ -824,7 +824,7 @@ namespace ai
         return patrol(b, pos, guard, wander, walk);
     }
 
-    bool waypointai::violence(aistate &b, gameent *e, int pursue)
+    bool waypointai::violence(aistate &b, const gameent *e, int pursue)
     {
         if(e && targetable(e))
         {

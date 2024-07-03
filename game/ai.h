@@ -235,7 +235,7 @@ namespace ai
             virtual void addprevnode(int n) = 0;
             virtual bool init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team) = 0;
             virtual void spawned(gameent *d) = 0;
-            virtual void damaged(gameent *e) = 0;
+            virtual void damaged(const gameent *e) = 0;
             virtual void killed() = 0;
             virtual void think(gameent *d, bool run) = 0;
     };
@@ -279,7 +279,7 @@ namespace ai
 
             bool init(gameent *d, int at, int ocn, int sk, int bn, int pm, int col, const char *name, int team);
             void spawned(gameent *d);
-            void damaged(gameent *e);
+            void damaged(const gameent *e);
             void killed();
             void think(gameent *d, bool run);
             void drawroute(float amt);
@@ -321,10 +321,10 @@ namespace ai
             float attackmindist(int atk) const;
             float attackmaxdist(int atk) const;
             bool attackrange(int atk, float dist) const;
-            bool targetable(gameent *e) const;
+            bool targetable(const gameent *e) const;
             bool getsight(const vec &o, float yaw, float pitch, const vec &q, vec &v, float mdist, float fovx, float fovy) const;
             bool cansee(const vec &x, const vec &y, vec &targ = aitarget);
-            bool canshoot(int atk, gameent *e) const;
+            bool canshoot(int atk, const gameent *e) const;
             bool canshoot(int atk) const;
             bool hastarget(int atk, const aistate &b, const gameent *e, float yaw, float pitch, float dist);
             vec getaimpos(int atk, gameent *e);
@@ -333,7 +333,7 @@ namespace ai
             bool isenemy(aistate &b, const vec &pos, float guard = sightmin, int pursue = 0);
             bool patrol(aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax, int walk = 1, bool retry = false);
             bool defend(aistate &b, const vec &pos, float guard = sightmin, float wander = sightmax, int walk = 1);
-            bool violence(aistate &b, gameent *e, int pursue = 0);
+            bool violence(aistate &b, const gameent *e, int pursue = 0);
             bool istarget(aistate &b, int pursue = 0, bool force = false, float mindist = 0.f);
             int isgoodammo(int gun) const;
             bool hasgoodammo() const;
