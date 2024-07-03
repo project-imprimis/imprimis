@@ -964,7 +964,7 @@ namespace game
     extern void startgame();
     extern void spawnplayer(gameent *);
     extern void deathstate(gameent *d, bool restore = false);
-    extern void damaged(int damage, gameent *d, gameent *actor, bool local = true);
+    extern void damaged(int damage, gameent *d, const gameent *actor, bool local = true);
     extern void killed(gameent *d, const gameent *actor);
     extern void timeupdate(int timeremain);
     extern void msgsound(int n, physent *d = nullptr);
@@ -1007,7 +1007,7 @@ namespace game
     extern void shoteffects(int atk, const vec &from, const vec &to, gameent *d, bool local, int id, int prevaction);
     extern void explode(bool local, gameent *owner, const vec &v, const vec &vel, dynent *safe, int dam, int atk);
     extern void explodeeffects(int atk, const gameent *d, bool local, int id = 0);
-    extern void damageeffect(int damage, gameent *d, bool thirdperson = true);
+    extern void damageeffect(int damage, const gameent *d, bool thirdperson = true);
     extern float intersectdist;
     extern bool intersect(dynent *d, const vec &from, const vec &to, float margin = 0, float &dist = intersectdist);
     extern dynent *intersectclosest(const vec &from, const vec &to, gameent *at, float margin = 0, float &dist = intersectdist);

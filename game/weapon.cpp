@@ -515,7 +515,7 @@ namespace game
 
     VARP(blood, 0, 1, 1);
 
-    void damageeffect(int damage, gameent *d, bool thirdperson)
+    void damageeffect(int damage, const gameent *d, bool thirdperson)
     {
         vec p = d->o;
         p.z += 0.6f*(d->eyeheight + d->aboveeye) - d->eyeheight;

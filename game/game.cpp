@@ -474,7 +474,7 @@ namespace game
 
     VARP(hitsound, 0, 0, 1);
 
-    void damaged(int damage, gameent *d, gameent *actor, bool local)
+    void damaged(int damage, gameent *d, const gameent *actor, bool local)
     {
         if((d->state!=ClientState_Alive && d->state != ClientState_Lagged && d->state != ClientState_Spawning) || intermission)
         {
