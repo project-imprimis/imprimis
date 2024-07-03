@@ -227,7 +227,7 @@ namespace ai
         return false;
     }
 
-    vec waypointai::getaimpos(int atk, gameent *e)
+    vec waypointai::getaimpos(int atk, const gameent *e)
     {
         vec o = e->o;
         if(atk == Attack_PulseShoot)
@@ -851,16 +851,16 @@ namespace ai
 
     bool waypointai::istarget(aistate &b, int pursue, bool force, float mindist)
     {
-        std::vector<gameent *> hastried;
+        std::vector<const gameent *> hastried;
         vec dp = aiplayer->headpos();
         while(true)
         {
             float dist = 1e16f;
-            gameent *t = nullptr;
+            const gameent *t = nullptr;
             int atk = guns[aiplayer->gunselect].attacks[Act_Shoot];
             for(uint i = 0; i < players.size(); i++)
             {
-                gameent *e = players[i];
+                const gameent *e = players[i];
                 if(e == aiplayer || std::find(hastried.begin(), hastried.end(), e) != hastried.end() || !targetable(e))
                 {
                     continue;

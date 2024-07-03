@@ -327,7 +327,7 @@ namespace ai
             bool canshoot(int atk, const gameent *e) const;
             bool canshoot(int atk) const;
             bool hastarget(int atk, const aistate &b, const gameent *e, float yaw, float pitch, float dist);
-            vec getaimpos(int atk, gameent *e);
+            vec getaimpos(int atk, const gameent *e);
             bool randomnode(aistate &b, const vec &pos, float guard, float wander);
             bool randomnode(aistate &b, float guard, float wander);
             bool isenemy(aistate &b, const vec &pos, float guard = sightmin, int pursue = 0);
