@@ -942,6 +942,7 @@ namespace game
     extern std::vector<gameent *> players, clients;
     extern int lasthit;
     extern int smoothmove, smoothdist;
+    extern int hitsound;
 
     extern bool allowedittoggle(bool message = true);
     extern void edittrigger(const selinfo &sel, int op, int arg1 = 0, int arg2 = 0, int arg3 = 0, const VSlot *vs = nullptr);

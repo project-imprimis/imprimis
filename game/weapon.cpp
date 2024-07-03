@@ -542,7 +542,6 @@ namespace game
     {
         if(at==player1 && d!=at)
         {
-            extern int hitsound;
             if(hitsound && lasthit != lastmillis)
             {
                 soundmain.playsound(Sound_Hit);
