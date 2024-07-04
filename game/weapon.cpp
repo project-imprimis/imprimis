@@ -333,7 +333,7 @@ namespace game
         int lifetime, bounces;
         float lastyaw, roll;
         bool local;
-        gameent *owner;
+        const gameent *owner;
         int bouncetype, variant;
         vec offset;
         int offsetmillis;
@@ -347,7 +347,7 @@ namespace game
 
     static std::vector<bouncer *> bouncers;
 
-    void newbouncer(const vec &from, const vec &to, bool local, int id, gameent *owner, int type, int lifetime, int speed)
+    void newbouncer(const vec &from, const vec &to, bool local, int id, const gameent *owner, int type, int lifetime, int speed)
     {
         bouncers.push_back(new bouncer);
         bouncer &bnc = *bouncers.back();
@@ -525,7 +525,7 @@ namespace game
         }
     }
 
-    void spawnbouncer(const vec &p, const vec &vel, gameent *d, int type)
+    void spawnbouncer(const vec &p, const vec &vel, const gameent *d, int type)
     {
         vec to(randomint(100)-50, randomint(100)-50, randomint(100)-50); //x,y,z = [-50,50] to get enough steps to create a good random vector
         if(to.iszero())
