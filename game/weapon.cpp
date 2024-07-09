@@ -345,12 +345,12 @@ namespace game
         }
     };
 
-    static std::vector<bouncer *> bouncers;
+    static std::vector<bouncer> bouncers;
 
     void newbouncer(const vec &from, const vec &to, bool local, int id, const gameent *owner, int type, int lifetime, int speed)
     {
-        bouncers.push_back(new bouncer);
-        bouncer &bnc = *bouncers.back();
+        bouncers.emplace_back();
+        bouncer &bnc = bouncers.back();
         bnc.o = from;
         bnc.radius = bnc.xradius = bnc.yradius = type==Bouncer_Debris ? 0.5f : 1.5f;
         bnc.eyeheight = bnc.radius;
@@ -408,7 +408,7 @@ namespace game
     {
         for(uint i = 0; i < bouncers.size(); i++) //∀ bouncers currently in the game
         {
-            bouncer &bnc = *bouncers[i];
+            bouncer &bnc = bouncers[i];
             vec old(bnc.o);
             bool stopped = false;
             // cheaper variable rate physics for debris, gibs, etc.
@@ -425,7 +425,6 @@ namespace game
             }
             if(stopped) //kill bouncer object if above check passes
             {
-                delete bouncers[i];
                 bouncers.erase(bouncers.begin() + i);
                 i--;
             }
@@ -441,9 +440,8 @@ namespace game
     {
         for(uint i = 0; i < bouncers.size(); i++)
         {
-            if(bouncers[i]->owner==owner)
+            if(bouncers[i].owner==owner)
             {
-                delete bouncers[i];
                 bouncers.erase(bouncers.begin() + i);
                 i--;
             }
@@ -452,10 +450,6 @@ namespace game
 
     void clearbouncers()
     {
-        for(bouncer * i : bouncers)
-        {
-            delete i;
-        }
         bouncers.clear();
     }
 
@@ -1187,7 +1181,7 @@ namespace game
         float yaw, pitch;
         for(uint i = 0; i < bouncers.size(); i++)
         {
-            bouncer &bnc = *bouncers[i];
+            bouncer &bnc = bouncers[i];
             vec pos(bnc.o);
             pos.add(vec(bnc.offset).mul(bnc.offsetmillis/static_cast<float>(offsetmillis)));
             vec vel(bnc.vel);
