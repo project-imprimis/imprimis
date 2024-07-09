@@ -30,26 +30,8 @@ void setlogfile(const char *fname)
     }
 }
 
-struct client                   // server side version of "dynent" type
+ENetPacket *sendfile(int chan, stream *file, const char *format, ...)
 {
-    int type;
-    int num;
-    ENetPeer *peer;
-    string hostname;
-    void *info;
-};
-
-std::vector<client *> clients;
-
-ENetPacket *sendfile(int cn, int chan, stream *file, const char *format, ...)
-{
-    if(cn < 0)
-    {
-    }
-    else if(!(clients.size() > cn))
-    {
-        return nullptr;
-    }
     int len = static_cast<int>(min(file->size(), stream::offset(INT_MAX)));
     if(len <= 0 || len > 16<<20)
     {
@@ -88,14 +70,8 @@ ENetPacket *sendfile(int cn, int chan, stream *file, const char *format, ...)
     file->read(p.subbuf(len).buf, len);
 
     ENetPacket *packet = p.finalize();
-    if(cn >= 0)
-    {
-        enet_peer_send(clients[cn]->peer, chan, packet);
-    }
-    else
-    {
-        sendclientpacket(packet, chan);
-    }
+    sendclientpacket(packet, chan);
+
     return packet->referenceCount > 0 ? packet : nullptr;
 }
 

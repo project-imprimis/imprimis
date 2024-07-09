@@ -1097,7 +1097,7 @@ extern void updatetime();
 
 extern ENetSocket connectmaster(bool wait);
 
-extern ENetPacket *sendfile(int cn, int chan, stream *file, const char *format = "", ...);
+extern ENetPacket *sendfile(int chan, stream *file, const char *format = "", ...);
 extern const char *disconnectreason(int reason);
 extern void closelogfile();
 extern void setlogfile(const char *fname);

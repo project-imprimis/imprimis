@@ -2962,7 +2962,7 @@ namespace game
             }
             else
             {
-                sendfile(-1, 2, map);
+                sendfile(2, map);
                 if(needclipboard >= 0)
                 {
                     needclipboard++;
