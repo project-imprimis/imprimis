@@ -901,7 +901,6 @@ extern vec getselpos();
 extern void recomputecamera();
 extern void findplayerspawn(dynent *d, int forceent, int tag);
 extern void crouchplayer(physent *pl, int moveres, bool local);
-extern bool bounce(physent *d, float secs, float elasticity, float waterfric, float grav);
 extern void updatephysstate(physent *d);
 
 namespace game
@@ -972,7 +971,6 @@ namespace game
     const char *mastermodecolor(int n, const char *unknown);
     const char *mastermodeicon(int n, const char *unknown);
     extern void suicide(physent *d);
-    extern void bounced(physent *d, const vec &surface);
     extern void vartrigger(ident *id);
 
     //minimap

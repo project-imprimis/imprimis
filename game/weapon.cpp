@@ -389,19 +389,74 @@ namespace game
         bnc.resetinterp();
     }
 
-    void bounced(physent *d, const vec &surface)
+    void bounced(bouncer &b, const vec &surface)
     {
-        if(d->type != physent::PhysEnt_Bounce)
+        if(b.type != physent::PhysEnt_Bounce)
         {
             return;
         }
-        bouncer *b = (bouncer *)d;
-        if(b->bouncetype != Bouncer_Gibs || b->bounces >= 2)
+        if(b.bouncetype != Bouncer_Gibs || b.bounces >= 2)
         {
             return;
         }
-        b->bounces++;
-        addstain(Stain_Blood, vec(b->o).sub(vec(surface).mul(b->radius)), surface, 2.96f/b->bounces, bvec(0x60, 0xFF, 0xFF), randomint(4));
+        b.bounces++;
+        addstain(Stain_Blood, vec(b.o).sub(vec(surface).mul(b.radius)), surface, 2.96f/b.bounces, bvec(0x60, 0xFF, 0xFF), randomint(4));
+    }
+
+    bool bounce(bouncer &b, float secs, float elasticity, float waterfric, float grav)
+    {
+        // make sure bouncers don't start inside geometry
+        if(b.physstate!=PhysEntState_Bounce && collide(&b, vec(0, 0, 0), 0, false))
+        {
+            return true;
+        }
+        int mat = rootworld.lookupmaterial(vec(b.o.x, b.o.y, b.o.z + (b.aboveeye - b.eyeheight)/2));
+        bool water = IS_LIQUID(mat);
+        if(water)
+        {
+            b.vel.z -= grav*gravity/16*secs;
+            b.vel.mul(max(1.0f - secs/waterfric, 0.0f));
+        }
+        else
+        {
+            b.vel.z -= grav*gravity*secs;
+        }
+        vec old(b.o);
+        for(int i = 0; i < 2; ++i)
+        {
+            vec dir(b.vel);
+            dir.mul(secs);
+            b.o.add(dir);
+            if(!collide(&b, dir, 0, true, true))
+            {
+                if(collideinside)
+                {
+                    b.o = old;
+                    b.vel.mul(-elasticity);
+                }
+                break;
+            }
+            else if(collideplayer)
+            {
+                break;
+            }
+            b.o = old;
+            game::bounced(b, collidewall);
+            float c = collidewall.dot(b.vel),
+                  k = 1.0f + (1.0f-elasticity)*c/b.vel.magnitude();
+            b.vel.mul(k);
+            b.vel.sub(vec(collidewall).mul(elasticity*2.0f*c));
+        }
+        if(b.physstate!=PhysEntState_Bounce)
+        {
+            // make sure bouncers don't start inside geometry
+            if(b.o == old)
+            {
+                return !collideplayer;
+            }
+            b.physstate = PhysEntState_Bounce;
+        }
+        return collideplayer!=nullptr;
     }
 
     void updatebouncers(int time)
@@ -417,7 +472,7 @@ namespace game
                 int qtime = min(30, rtime);
                 rtime -= qtime;
                 //if bouncer has run out of lifetime, or bounce fxn returns true, turn on the stopping flag
-                if((bnc.lifetime -= qtime)<0 || bounce(&bnc, qtime/1000.0f, 0.6f, 0.5f, 1))
+                if((bnc.lifetime -= qtime)<0 || bounce(bnc, qtime/1000.0f, 0.6f, 0.5f, 1))
                 {
                     stopped = true;
                     break;

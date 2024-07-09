@@ -1507,62 +1507,6 @@ void crouchplayer(physent *pl, int moveres, bool local)
     }
 }
 
-bool bounce(physent *d, float secs, float elasticity, float waterfric, float grav)
-{
-    // make sure bouncers don't start inside geometry
-    if(d->physstate!=PhysEntState_Bounce && collide(d, vec(0, 0, 0), 0, false))
-    {
-        return true;
-    }
-    int mat = rootworld.lookupmaterial(vec(d->o.x, d->o.y, d->o.z + (d->aboveeye - d->eyeheight)/2));
-    bool water = IS_LIQUID(mat);
-    if(water)
-    {
-        d->vel.z -= grav*gravity/16*secs;
-        d->vel.mul(max(1.0f - secs/waterfric, 0.0f));
-    }
-    else
-    {
-        d->vel.z -= grav*gravity*secs;
-    }
-    vec old(d->o);
-    for(int i = 0; i < 2; ++i)
-    {
-        vec dir(d->vel);
-        dir.mul(secs);
-        d->o.add(dir);
-        if(!collide(d, dir, 0, true, true))
-        {
-            if(collideinside)
-            {
-                d->o = old;
-                d->vel.mul(-elasticity);
-            }
-            break;
-        }
-        else if(collideplayer)
-        {
-            break;
-        }
-        d->o = old;
-        game::bounced(d, collidewall);
-        float c = collidewall.dot(d->vel),
-              k = 1.0f + (1.0f-elasticity)*c/d->vel.magnitude();
-        d->vel.mul(k);
-        d->vel.sub(vec(collidewall).mul(elasticity*2.0f*c));
-    }
-    if(d->physstate!=PhysEntState_Bounce)
-    {
-        // make sure bouncers don't start inside geometry
-        if(d->o == old)
-        {
-            return !collideplayer;
-        }
-        d->physstate = PhysEntState_Bounce;
-    }
-    return collideplayer!=nullptr;
-}
-
 static const int physframetimestd = 8;
 
 // main physics routine, moves a player/monster for a curtime step
