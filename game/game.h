@@ -1049,7 +1049,7 @@ namespace game
     extern int chooserandomplayermodel(int seed);
     extern void syncplayer();
     extern void swayhudgun(int curtime);
-    extern vec hudgunorigin(int gun, const vec &from, const vec &to, gameent *d);
+    extern vec hudgunorigin(int gun, const vec &from, const vec &to, const gameent *d);
     extern void rendergame();
     extern void renderavatar();
     extern void rendereditcursor();
