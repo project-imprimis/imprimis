@@ -509,7 +509,7 @@ void entflip()
     GROUP_EDIT_UNDO(e.o[d] -= (e.o[d]-mid)*2);
 }
 
-void entrotate(int *cw)
+void entrotate(const int *cw)
 {
     if(noentedit())
     {
@@ -942,7 +942,7 @@ ICOMMAND(enttoggle, "", (),
     }
 });
 
-ICOMMAND(entmoving, "b", (int *n),
+ICOMMAND(entmoving, "b", (const int *n),
 {
     if(*n >= 0)
     {
@@ -966,7 +966,7 @@ ICOMMAND(entmoving, "b", (int *n),
     intret(entmoving);
 });
 
-void entpush(int *dir)
+void entpush(const int *dir)
 {
     if(noentedit())
     {
@@ -985,7 +985,7 @@ void entpush(int *dir)
 }
 
 VAR(entautoviewdist, 0, 25, 100);
-void entautoview(int *dir)
+void entautoview(const int *dir)
 {
     if(!haveselent())
     {
