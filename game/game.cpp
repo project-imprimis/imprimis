@@ -1869,7 +1869,7 @@ void updatephysstate(physent *d)
  * sprint: allows sprinting in this direction
  */
 
-#define DIR(name,v,d,s,os, sprint) ICOMMAND(name, "D", (int *down), \
+#define DIR(name,v,d,s,os, sprint) ICOMMAND(name, "D", (const int *down), \
 { \
     game::player1->s = *down!=0; \
     game::player1->v = player->s ? d : (player->os ? -(d) : 0); \
