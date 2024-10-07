@@ -55,7 +55,7 @@ void mpremip(bool local)
 
 ICOMMAND(remip, "", (), mpremip(true));
 
-void pasteundo(undoblock *u)
+static void pasteundo(undoblock *u)
 {
     if(u->numents)
     {
@@ -67,7 +67,7 @@ void pasteundo(undoblock *u)
     }
 }
 
-void swapundo(std::deque<undoblock *>& a, std::deque<undoblock *>& b, int op)
+static void swapundo(std::deque<undoblock *> &a, std::deque<undoblock *> &b, int op)
 {
     if(noedit())
     {
@@ -146,8 +146,8 @@ void swapundo(std::deque<undoblock *>& a, std::deque<undoblock *>& b, int op)
     forcenextundo();
 }
 
-void editundo() { swapundo(undos, redos, Edit_Undo); }
-void editredo() { swapundo(redos, undos, Edit_Redo); }
+static void editundo() { swapundo(undos, redos, Edit_Undo); }
+static void editredo() { swapundo(redos, undos, Edit_Redo); }
 
 void mpcopy(editinfo *&e, selinfo &sel, bool local)
 {
