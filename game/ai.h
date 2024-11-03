@@ -349,7 +349,7 @@ namespace ai
             int closenode();
             int wpspot(int n, bool check = false);
             int randomlink(int n);
-            bool anynode(aistate &b, int len = numprevnodes);
+            bool anynode(int len = numprevnodes);
             bool hunt(aistate &b);
             void jumpto(aistate &b, const vec &pos);
             void fixfullrange(float &yaw, float &pitch, float &roll, bool full) const;

@@ -701,7 +701,7 @@ namespace ai
         return -1;
     }
 
-    bool waypointai::anynode(aistate &b, int len)
+    bool waypointai::anynode(int len)
     {
         if(iswaypoint(aiplayer->lastnode))
         {
@@ -973,7 +973,7 @@ namespace ai
             }
         }
         b.override = false;
-        return anynode(b);
+        return anynode();
     }
 
     void waypointai::jumpto(aistate &b, const vec &pos)
