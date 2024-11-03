@@ -302,7 +302,6 @@ namespace ai
                  tryreset,
                  trywipe;
             vec target;
-            gameent *parent;
             std::vector<int> remapping;
 
             void clearsetup();
