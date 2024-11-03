@@ -1747,7 +1747,9 @@ void modifygravity(gameent *pl, bool water, int curtime)
     }
 }
 
-int physsteps = 0, physframetime = physframetimestd, lastphysframe = 0;
+int physsteps = 0,
+    physframetime = physframetimestd,
+    lastphysframe = 0;
 
 void physicsframe()          // optimally schedule physics frames inside the graphics frames
 {
@@ -1939,7 +1941,8 @@ void recomputecamera()
         orient.rotate_around_z(camera1->yaw/RAD);
         orient.rotate_around_x(camera1->pitch/RAD);
         orient.rotate_around_y(camera1->roll/RAD);
-        vec dir = vec(orient.b).neg(), side = vec(orient.a).neg(), up = orient.c;
+        vec dir = vec(orient.b).neg(),
+            side = vec(orient.a).neg(), up = orient.c;
 
         if(game::collidecamera())
         {
@@ -1982,5 +1985,3 @@ void recomputecamera()
         }
     }
 }
-
-// engineer gun specific edit functions //
