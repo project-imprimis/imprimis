@@ -1011,7 +1011,7 @@ namespace game
     extern dynent *intersectclosest(const vec &from, const vec &to, gameent *at, float margin = 0, float &dist = intersectdist);
     extern void clearbouncers();
     extern void updatebouncers(int curtime);
-    extern void removebouncers(gameent *owner);
+    extern void removebouncers(const gameent *owner);
     extern void renderbouncers();
     extern void clearprojectiles();
     extern void updateprojectiles(int curtime);

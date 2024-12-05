@@ -491,7 +491,7 @@ namespace game
         }
     }
 
-    void removebouncers(gameent *owner)
+    void removebouncers(const gameent *owner)
     {
         for(uint i = 0; i < bouncers.size(); i++)
         {
