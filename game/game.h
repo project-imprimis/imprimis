@@ -1016,7 +1016,7 @@ namespace game
     extern void clearprojectiles();
     extern void updateprojectiles(int curtime);
     extern void removeprojectiles(const gameent *owner);
-    extern void removeweapons(gameent *owner);
+    extern void removeweapons(const gameent *owner);
     extern void updateweapons(int curtime);
     extern void gunselect(int gun, gameent *d);
     extern void weaponswitch(gameent *d);

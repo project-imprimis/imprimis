@@ -1268,7 +1268,7 @@ namespace game
             rendermodel(mdl, Anim_Mapmodel | Anim_Loop, pos, yaw, pitch, 0, cull, nullptr, nullptr, 0, 0, fade);
         }
     }
-    void removeweapons(gameent *d)
+    void removeweapons(const gameent *d)
     {
         removebouncers(d);
         removeprojectiles(d);
