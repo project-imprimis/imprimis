@@ -548,7 +548,7 @@ namespace game
         p.gravity = pgravity;
     }
 
-    void removeprojectiles(gameent *owner)
+    void removeprojectiles(const gameent *owner)
     {
         int len = projs.size();
         for(int i = 0; i < len; ++i)
