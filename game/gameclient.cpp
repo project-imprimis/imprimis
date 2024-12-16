@@ -1006,13 +1006,13 @@ namespace game
             {
                 case Id_Var:
                 {
-                    int val = *id->storage.i;
+                    int val = *id->val.storage.i;
                     string str;
                     if(val < 0)
                     {
                         formatstring(str, "%d", val);
                     }
-                    else if(id->flags&Idf_Hex && id->maxval==0xFFFFFF)
+                    else if(id->flags&Idf_Hex && id->val.i.max==0xFFFFFF)
                     {
                         formatstring(str, "0x%.6X (%d, %d, %d)", val, (val>>16)&0xFF, (val>>8)&0xFF, val&0xFF);
                     }
@@ -1025,12 +1025,12 @@ namespace game
                 }
                 case Id_FloatVar:
                 {
-                    conoutf("%s set map var \"%s\" to %s", colorname(d), id->name, floatstr(*id->storage.f));
+                    conoutf("%s set map var \"%s\" to %s", colorname(d), id->name, floatstr(*id->val.storage.f));
                     break;
                 }
                 case Id_StringVar:
                 {
-                    conoutf("%s set map var \"%s\" to \"%s\"", colorname(d), id->name, *id->storage.s);
+                    conoutf("%s set map var \"%s\" to \"%s\"", colorname(d), id->name, *id->val.storage.s);
                     break;
                 }
             }
@@ -1047,17 +1047,17 @@ namespace game
         {
             case Id_Var:
             {
-                addmsg(NetMsg_EditVar, "risi", Id_Var, id->name, *id->storage.i);
+                addmsg(NetMsg_EditVar, "risi", Id_Var, id->name, *id->val.storage.i);
                 break;
             }
             case Id_FloatVar:
             {
-                addmsg(NetMsg_EditVar, "risf", Id_FloatVar, id->name, *id->storage.f);
+                addmsg(NetMsg_EditVar, "risf", Id_FloatVar, id->name, *id->val.storage.f);
                 break;
             }
             case Id_StringVar:
             {
-                addmsg(NetMsg_EditVar, "riss", Id_StringVar, id->name, *id->storage.s);
+                addmsg(NetMsg_EditVar, "riss", Id_StringVar, id->name, *id->val.storage.s);
                 break;
             }
             default:
