@@ -438,7 +438,7 @@ struct serverinfo : servinfo, pingattempts
 
     bool valid() const { return !status(); }
 
-    static bool compare(serverinfo *a, serverinfo *b)
+    static bool compare(const std::unique_ptr<serverinfo> &a, const std::unique_ptr<serverinfo> &b)
     {
         if(a->protocol == currentprotocol)
         {
@@ -492,13 +492,13 @@ struct serverinfo : servinfo, pingattempts
     }
 };
 
-std::vector<serverinfo *> servers;
+std::vector<std::unique_ptr<serverinfo>> servers;
 ENetSocket pingsock = ENET_SOCKET_NULL;
 int lastinfo = 0;
 
-static serverinfo *newserver(const char *name, int port, uint ip = ENET_HOST_ANY)
+static std::unique_ptr<serverinfo> newserver(const char *name, int port, uint ip = ENET_HOST_ANY)
 {
-    serverinfo *si = new serverinfo;
+    std::unique_ptr<serverinfo> si = std::make_unique<serverinfo>();
     si->address.host = ip;
     si->address.port = port;
     if(ip!=ENET_HOST_ANY)
@@ -511,11 +511,9 @@ static serverinfo *newserver(const char *name, int port, uint ip = ENET_HOST_ANY
     }
     else if(ip==ENET_HOST_ANY || enet_address_get_host_ip(&si->address, si->name, sizeof(si->name)) < 0)
     {
-        delete si;
         return nullptr;
-
     }
-    servers.push_back(si);
+    servers.push_back(std::move(si));
     return si;
 }
 
@@ -527,7 +525,7 @@ void addserver(const char *name, int port, const char *password, bool keep)
     }
     for(uint i = 0; i < servers.size(); i++)
     {
-        serverinfo *s = servers[i];
+        std::unique_ptr<serverinfo> &s = servers[i];
         if(strcmp(s->name, name) || s->address.port != port)
         {
             continue;
@@ -543,7 +541,7 @@ void addserver(const char *name, int port, const char *password, bool keep)
         }
         return;
     }
-    serverinfo *s = newserver(name, port);
+    std::unique_ptr<serverinfo> s = newserver(name, port);
     if(!s)
     {
         return;
@@ -692,12 +690,12 @@ void checkpings()
         }
         ucharbuf p(ping, len);
         int millis = getint(p);
-        serverinfo *si = nullptr;
+        serverinfo *si = nullptr; //non owning pointer to unique ptr in the servers vector
         for(uint i = 0; i < servers.size(); i++)
         {
             if(addr.host == servers[i]->address.host && addr.port == servers[i]->address.port)
             {
-                si = servers[i];
+                si = servers[i].get();
                 break;
             }
         }
@@ -715,7 +713,7 @@ void checkpings()
         }
         else
         {
-            si = newserver(nullptr, addr.port, addr.host);
+            si = newserver(nullptr, addr.port, addr.host).get();
             millis = lanpings.decodeping(millis);
         }
         int rtt = std::clamp(totalmillis - millis, 0, min(servpingdecay, totalmillis));
@@ -825,7 +823,7 @@ ICOMMAND(connectservinfo, "is", (int *i, char *pw), GETSERVERINFO_(*i, si, conne
 
 servinfo *getservinfo(int i)
 {
-    return static_cast<int>(servers.size()) > i && servers[i]->valid() ? servers[i] : nullptr;
+    return static_cast<int>(servers.size()) > i && servers[i]->valid() ? servers[i].get() : nullptr;
 }
 
 void clearservers(bool full = false)
@@ -833,10 +831,6 @@ void clearservers(bool full = false)
     resolverclear();
     if(full)
     {
-        for(serverinfo* i : servers)
-        {
-            delete i;
-        }
         servers.clear();
     }
     else
@@ -845,7 +839,6 @@ void clearservers(bool full = false)
         {
             if(!servers[i]->keep)
             {
-                delete servers.at(i);
                 servers.erase(servers.begin()+i);
             }
         }
@@ -989,20 +982,20 @@ void writeservercfg()
     int kept = 0;
     for(uint i = 0; i < servers.size(); i++)
     {
-        serverinfo *s = servers[i];
-        if(s->keep)
+        const serverinfo &s = *(servers[i].get());
+        if(s.keep)
         {
             if(!kept)
             {
                 f << "// servers that should never be cleared from the server list\n\n";
             }
-            if(s->password)
+            if(s.password)
             {
-                f << "keepserver " << escapeid(s->name) << " " << s->address.port << " " << escapestring(s->password) << std::endl;
+                f << "keepserver " << escapeid(s.name) << " " << s.address.port << " " << escapestring(s.password) << std::endl;
             }
             else
             {
-                f << "keepserver " << escapeid(s->name) << " " << s->address.port << std::endl;
+                f << "keepserver " << escapeid(s.name) << " " << s.address.port << std::endl;
             }
             kept++;
         }
@@ -1014,16 +1007,16 @@ void writeservercfg()
     f << "// servers connected to are added here automatically\n\n";
     for(uint i = 0; i < servers.size(); i++)
     {
-        serverinfo *s = servers[i];
-        if(!s->keep)
+        const serverinfo &s = *(servers[i].get());
+        if(!s.keep)
         {
-            if(s->password)
+            if(s.password)
             {
-                f << "addserver " << escapeid(s->name) << " " << s->address.port << " " << escapestring(s->password);
+                f << "addserver " << escapeid(s.name) << " " << s.address.port << " " << escapestring(s.password);
             }
             else
             {
-                f << "addserver " << escapeid(s->name) << " " << s->address.port << std::endl;
+                f << "addserver " << escapeid(s.name) << " " << s.address.port << std::endl;
             }
         }
     }

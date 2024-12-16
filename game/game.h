@@ -8,6 +8,7 @@
 #include "../libprimis-headers/sound.h"
 
 #include <list>
+#include <memory>
 
 #include <enet/enet.h>
 
