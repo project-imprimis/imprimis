@@ -1039,7 +1039,7 @@ namespace game
             gle::colorub(200,0,0);    // 0 reference
             boxs3D(vec(sel.o).sub(0.5f*std::min(gridsize*0.25f, 2.0f)), vec(std::min(gridsize*0.25f, 2.0f)), 1, boxoutline);
             gle::colorub(200,200,200);// 2D selection box
-            vec co(sel.o.v), cs(sel.s.v);
+            vec co(sel.o.x, sel.o.y, sel.o.z), cs(sel.s.x, sel.s.y, sel.s.z);
             co[R[d]] += 0.5f*(sel.cx*gridsize);
             co[C[d]] += 0.5f*(sel.cy*gridsize);
             cs[R[d]]  = 0.5f*(sel.cxs*gridsize);

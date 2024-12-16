@@ -518,7 +518,7 @@ void entrotate(const int *cw)
     int d  = DIMENSION(sel.orient),
         dd = (*cw<0) == DIM_COORD(sel.orient) ? R[d] : C[d];
     float mid = sel.s[dd]*sel.grid/2+sel.o[dd];
-    vec s(sel.o.v);
+    vec s(sel.o.x, sel.o.y, sel.o.z);
     GROUP_EDIT_UNDO(
         e.o[dd] -= (e.o[dd]-mid)*2;
         e.o.sub(s);
