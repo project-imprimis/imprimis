@@ -163,22 +163,22 @@ namespace game
             delete[] desc;
         }
     };
-    static std::vector<authkey *> authkeys;
+    static std::vector<authkey> authkeys;
 
     authkey *findauthkey(const char *desc = "")
     {
-        for(uint i = 0; i < authkeys.size(); i++)
+        for(authkey &a : authkeys)
         {
-            if(!strcmp(authkeys[i]->desc, desc) && !strcasecmp(authkeys[i]->name, player1->name))
+            if(!strcmp(a.desc, desc) && !strcasecmp(a.name, player1->name))
             {
-                return authkeys[i];
+                return &a;
             }
         }
-        for(uint i = 0; i < authkeys.size(); i++)
+        for(authkey &a : authkeys)
         {
-            if(!strcmp(authkeys[i]->desc, desc))
+            if(!strcmp(a.desc, desc))
             {
-                return authkeys[i];
+                return &a;
             }
         }
         return nullptr;
@@ -190,15 +190,14 @@ namespace game
     {
         for(int i = static_cast<int>(authkeys.size()); --i >=0;) //note reverse iteration
         {
-            if(!strcmp(authkeys[i]->desc, desc) && !strcmp(authkeys[i]->name, name))
+            if(!strcmp(authkeys[i].desc, desc) && !strcmp(authkeys[i].name, name))
             {
-                delete authkeys[i];
                 authkeys.erase(authkeys.begin() + i);
             }
         }
         if(name[0] && key[0])
         {
-            authkeys.push_back(new authkey(name, key, desc));
+            authkeys.emplace_back(name, key, desc);
         }
     }
     bool _icmd_authkey = addcommand("authkey", reinterpret_cast<identfun>(+[] (char *name, char *key, char *desc) { addauthkey(name, key, desc); }), "sss", Id_Command);
@@ -211,7 +210,7 @@ namespace game
         }
         for(int i = static_cast<int>(authkeys.size()); --i >=0;) //note reverse iteration
         {
-            if(!strcmp(authkeys[i]->desc, desc) && !strcmp(authkeys[i]->name, name))
+            if(!strcmp(authkeys[i].desc, desc) && !strcmp(authkeys[i].name, name))
             {
                 return true;
             }
@@ -270,10 +269,9 @@ namespace game
             conoutf(Console_Error, "failed to open %s for writing", fname);
             return;
         }
-        for(uint i = 0; i < authkeys.size(); i++)
+        for(const authkey &a : authkeys)
         {
-            authkey *a = authkeys[i];
-            f->printf("authkey %s %s %s\n", escapestring(a->name), escapestring(a->key), escapestring(a->desc));
+            f->printf("authkey %s %s %s\n", escapestring(a.name), escapestring(a.key), escapestring(a.desc));
         }
         conoutf("saved authkeys to %s", fname);
         delete f;
