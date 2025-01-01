@@ -173,7 +173,7 @@ void makeundoent()
     }
 }
 
-int findtype(char *what)
+int findtype(const char *what)
 {
     for(int i = 0; *getentname(i); i++)
     {
