@@ -987,7 +987,7 @@ namespace ai
         {
             vec old = aiplayer->o;
             aiplayer->o = vec(pos).addz(aiplayer->eyeheight);
-            if(collide(aiplayer, vec(0, 0, 1)))
+            if(collide(aiplayer, nullptr, vec(0, 0, 1)))
             {
                 jump = false;
             }

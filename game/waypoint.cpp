@@ -620,7 +620,7 @@ namespace ai
                             {
                                 vec old = d->o;
                                 d->o = vec(above).addz(d->eyeheight);
-                                bool col = collide(d, vec(0, 0, 1));
+                                bool col = collide(d, nullptr, vec(0, 0, 1));
                                 d->o = old;
                                 if(!col)
                                 {

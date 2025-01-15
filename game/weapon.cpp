@@ -405,8 +405,9 @@ namespace game
 
     bool bounce(bouncer &b, float secs, float elasticity, float waterfric, float grav)
     {
+        vec cwall(0,0,0);
         // make sure bouncers don't start inside geometry
-        if(b.physstate!=PhysEntState_Bounce && collide(&b, vec(0, 0, 0), 0, false))
+        if(b.physstate!=PhysEntState_Bounce && collide(&b, &cwall, vec(0, 0, 0), 0, false))
         {
             return true;
         }
@@ -427,7 +428,7 @@ namespace game
             vec dir(b.vel);
             dir.mul(secs);
             b.o.add(dir);
-            if(!collide(&b, dir, 0, true, true))
+            if(!collide(&b, nullptr, dir, 0, true, true))
             {
                 if(collideinside)
                 {
@@ -441,11 +442,11 @@ namespace game
                 break;
             }
             b.o = old;
-            game::bounced(b, collidewall);
-            float c = collidewall.dot(b.vel),
+            game::bounced(b, cwall);
+            float c = cwall.dot(b.vel),
                   k = 1.0f + (1.0f-elasticity)*c/b.vel.magnitude();
             b.vel.mul(k);
-            b.vel.sub(vec(collidewall).mul(elasticity*2.0f*c));
+            b.vel.sub(vec(cwall).mul(elasticity*2.0f*c));
         }
         if(b.physstate!=PhysEntState_Bounce)
         {
