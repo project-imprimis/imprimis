@@ -296,7 +296,10 @@ namespace game
 
     void renderplayer(gameent *d, const playermodelinfo &mdl, int color, int team, float fade, int flags = 0, bool mainpass = true)
     {
-        int lastaction = d->lastaction, anim = Anim_Idle | Anim_Loop, attack = 0, delay = 0;
+        int lastaction = d->lastaction,
+            anim = +Anim_Idle | +Anim_Loop,
+            attack = 0,
+            delay = 0;
         if(d->lastattack >= 0)
         {
             attack = attacks[d->lastattack].anim;
@@ -304,17 +307,18 @@ namespace game
         }
         if(intermission && d->state!=ClientState_Dead)
         {
-            anim = attack = Anim_Lose | Anim_Loop;
+            anim = attack = +Anim_Lose | +Anim_Loop;
             if(validteam(team) ? std::find(bestteams.begin(), bestteams.end(), team) != bestteams.end() : std::find(bestplayers.begin(), bestplayers.end(), d) != bestplayers.end())
             {
-                anim = attack = Anim_Win | Anim_Loop;
+                anim = attack = +Anim_Win | +Anim_Loop;
             }
         }
         modelattach a[5];
         int ai = 0;
         if(guns[d->gunselect].vwep)
         {
-            int vanim = Anim_VWepIdle | Anim_Loop, vtime = 0;
+            int vanim = +Anim_VWepIdle | +Anim_Loop,
+                vtime = 0;
             if(lastaction && d->lastattack >= 0 && attacks[d->lastattack].gun==d->gunselect && lastmillis < lastaction + delay)
             {
                 vanim = attacks[d->lastattack].vwepanim;
@@ -341,7 +345,7 @@ namespace game
         }
         else if(d->state==ClientState_Dead)
         {
-            anim = Anim_Dying | Anim_NoPitch;
+            anim = +Anim_Dying | +Anim_NoPitch;
             basetime = d->lastpain;
             if(ragdoll && mdl.ragdoll)
             {
@@ -349,16 +353,16 @@ namespace game
             }
             else if(lastmillis-basetime>1000)
             {
-                anim = Anim_Dead | Anim_Loop | Anim_NoPitch;
+                anim = +Anim_Dead | +Anim_Loop | +Anim_NoPitch;
             }
         }
         else if(d->state==ClientState_Editing || d->state==ClientState_Spectator)
         {
-            anim = Anim_Edit | Anim_Loop;
+            anim = +Anim_Edit | +Anim_Loop;
         }
         else if(d->state==ClientState_Lagged)
         {
-            anim = Anim_Lag | Anim_Loop;
+            anim = +Anim_Lag | +Anim_Loop;
         }
         else if(!intermission)
         {
@@ -375,7 +379,7 @@ namespace game
 
             if(d->inwater && d->physstate<=PhysEntState_Fall)
             {
-                anim |= ((d->move || d->strafe || d->vel.z+d->falling.z>0 ? Anim_Swim : Anim_Sink) | Anim_Loop) << Anim_Secondary;
+                anim |= ((d->move || d->strafe || d->vel.z+d->falling.z>0 ? +Anim_Swim : +Anim_Sink) | +Anim_Loop) << +Anim_Secondary;
             }
             else
             {
@@ -425,7 +429,7 @@ namespace game
                     }
                     case 0:
                     {
-                        anim |= (Anim_Crouch | Anim_Loop) << Anim_Secondary;
+                        anim |= (+Anim_Crouch | +Anim_Loop) << Anim_Secondary;
                         break;
                     }
                     case Anim_RunN:
@@ -461,7 +465,7 @@ namespace game
         }
         if(!((anim >> Anim_Secondary) & Anim_Index))
         {
-            anim |= (Anim_Idle | Anim_Loop) << Anim_Secondary;
+            anim |= (+Anim_Idle | +Anim_Loop) << Anim_Secondary;
         }
         if(d!=player1)
         {
@@ -492,7 +496,7 @@ namespace game
     static void renderparachute(const gameent *d)
     {
         vec loc = vec(0,0,24).add(d->o); //three meters above player
-        rendermodel(parachutemodel, Anim_Mapmodel | Anim_Loop, loc, atan2(d->vel.y,d->vel.x)*RAD, 0, 0);
+        rendermodel(parachutemodel, +Anim_Mapmodel | +Anim_Loop, loc, atan2(d->vel.y,d->vel.x)*RAD, 0, 0);
     }
 
     void renderengineercursor()
@@ -745,7 +749,8 @@ namespace game
             return;
         }
 
-        int anim = Anim_GunIdle | Anim_Loop, basetime = 0;
+        int anim = +Anim_GunIdle | +Anim_Loop,
+            basetime = 0;
         if(d->lastaction && d->lastattack >= 0 && attacks[d->lastattack].gun==d->gunselect && lastmillis-d->lastaction<attacks[d->lastattack].attackdelay)
         {
             anim = attacks[d->lastattack].hudanim;
