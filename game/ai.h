@@ -310,7 +310,7 @@ namespace ai
             void clean(bool tryit = false);
             void reset(bool tryit = false);
             aistate &addstate(int t, int r = -1, int v = -1);
-            aistate &getstate(int idx = -1);
+            aistate &getstate();
             aistate &switchstate(aistate &b, int t, int r = -1, int v = -1);
 
             float viewdist(int skill) const;

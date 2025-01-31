@@ -63,12 +63,8 @@ namespace ai
         return state.back();
     }
 
-    aistate &waypointai::getstate(int idx)
+    aistate &waypointai::getstate()
     {
-        if(state.size() > idx)
-        {
-            return *std::next(state.begin(), idx);
-        }
         return state.back();
     }
 
