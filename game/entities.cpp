@@ -348,11 +348,11 @@ COMMAND(entattr, "iiN");
 static int findentity(int type, int index = 0, int attr1 = -1, int attr2 = -1)
 {
     const std::vector<extentity *> &ents = entities::getents();
-    if(index > ents.size())
+    if(index > static_cast<int>(ents.size()))
     {
         index = ents.size();
     }
-    else for(uint i = index; i<ents.size(); i++)
+    else for(int i = index; i < static_cast<int>(ents.size()); i++)
     {
         extentity &e = *ents[i];
         if(e.type==type && (attr1<0 || e.attr1==attr1) && (attr2<0 || e.attr2==attr2))
@@ -440,11 +440,11 @@ void findplayerspawn(dynent *d, int forceent, int tag) // place at random spawn
 vec getselpos()
 {
     std::vector<extentity *> &ents = entities::getents();
-    if(entgroup.size() && ents.size() > entgroup[0])
+    if(entgroup.size() && static_cast<int>(ents.size()) > entgroup[0])
     {
         return ents[entgroup[0]]->o;
     }
-    if(ents.size() > enthover)
+    if(static_cast<int>(ents.size()) > enthover)
     {
         return ents[enthover]->o;
     }
@@ -480,7 +480,7 @@ void pasteundoent(int idx, const entity &ue)
         return;
     }
     std::vector<extentity *> &ents = entities::getents();
-    while(ents.size() < idx)
+    while(static_cast<int>(ents.size()) < idx)
     {
         ents.push_back(entities::newentity());
         ents.back()->type = EngineEnt_Empty;
@@ -1137,7 +1137,7 @@ extentity *newentity(bool local, const vec &o, int type, int v1, int v2, int v3,
     }
     else
     {
-        while(ents.size() < idx)
+        while(static_cast<int>(ents.size()) < idx)
         {
             ents.push_back(entities::newentity());
             ents.back()->type = EngineEnt_Empty;
@@ -1184,7 +1184,7 @@ extentity *newentity(bool local, const vec &o, int type, int v1, int v2, int v3,
             }
         }
     }
-    if(ents.size() > idx)
+    if(static_cast<int>(ents.size()) > idx)
     {
         entities::deleteentity(ents[idx]);
         ents[idx] = &e;
@@ -1253,7 +1253,7 @@ void entpaste()
     }
     entcancel();
     float m = static_cast<float>(sel.grid)/static_cast<float>(entcopygrid);
-    for(int i = 0; i < entcopybuf.size(); i++)
+    for(int i = 0; i < static_cast<int>(entcopybuf.size()); i++)
     {
         const entity &c = entcopybuf[i];
         vec o = vec(c.o).mul(m).add(vec(sel.o));
@@ -1302,7 +1302,7 @@ void mpeditent(int i, const vec &o, int type, int attr1, int attr2, int attr3, i
         return;
     }
     std::vector<extentity *> &ents = entities::getents();
-    if(ents.size()<=i)
+    if(static_cast<int>(ents.size()) <= i)
     {
         extentity *e = newentity(local, o, type, attr1, attr2, attr3, attr4, attr5, i);
         if(!e)
@@ -1413,7 +1413,7 @@ namespace entities
 
     void setspawn(int i, bool on)
     {
-        if(ents.size() > i)
+        if(static_cast<int>(ents.size()) > i)
         {
             ents[i]->setspawned(on);
         }
