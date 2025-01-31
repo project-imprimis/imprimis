@@ -631,7 +631,7 @@ namespace ai
                 int entid = obstacles.remap(aiplayer, route[i], epos);
                 if(entid >= 0)
                 {
-                    if(entid != i)
+                    if(static_cast<uint>(entid) != i)
                     {
                         dist = epos.squaredist(pos);
                     }
@@ -928,11 +928,11 @@ namespace ai
         if(!route.empty())
         {
             int n = closenode();
-            if(route.size() > n && checkroute(n))
+            if(static_cast<int>(route.size()) > n && checkroute(n))
             {
                 n = closenode();
             }
-            if(route.size() > n)
+            if(static_cast<int>(route.size()) > n)
             {
                 if(!n)
                 {
@@ -956,12 +956,12 @@ namespace ai
                 }
                 else
                 {
-                    while(route.size() > n+1)
+                    while(static_cast<int>(route.size()) > n+1)
                     {
                         route.pop_back(); // waka-waka-waka-waka
                     }
                     int m = n-1; // next, please!
-                    if(route.size() > m && wpspot(route[m]))
+                    if(static_cast<int>(route.size()) > m && wpspot(route[m]))
                     {
                         return true;
                     }
@@ -1575,7 +1575,7 @@ namespace ai
                                 {
                                     state.pop_back();
                                 }
-                                else if(state.size() > std::distance(c, state.rend()))
+                                else if(static_cast<int>(state.size()) > std::distance(c, state.rend()))
                                 {
                                     state.erase(std::next(c).base());
                                 }
@@ -1637,7 +1637,7 @@ namespace ai
 
     bool waypointai::checkroute(int n)
     {
-        if(route.empty() || !(route.size() > n))
+        if(route.empty() || !(static_cast<int>(route.size()) > n))
         {
             return false;
         }
@@ -1668,7 +1668,7 @@ namespace ai
                         remapping.clear();
                         if(wproute(aiplayer, w, t, remapping, obstacles))
                         { // kill what we don't want and put the remap in
-                            while(route.size() > i)
+                            while(static_cast<int>(route.size()) > i)
                             {
                                 route.pop_back();
                             }
@@ -1692,7 +1692,7 @@ namespace ai
         int last = -1;
         for(int i = static_cast<int>(route.size()); --i >=0;) //note reverse iteration
         {
-            if(route.size() > last)
+            if(static_cast<int>(route.size()) > last)
             {
                 int index = route[i],
                     prev = route[last];

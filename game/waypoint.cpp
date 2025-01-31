@@ -178,7 +178,7 @@ namespace ai
                 left = right = numindices/2;
                 splitleft = -1e16f;
                 splitright = 1e16f;
-                for(int i = 0; i < numindices; ++i)
+                for(size_t i = 0; i < numindices; ++i)
                 {
                     waypoint &w = waypoints[indices[i]];
                     float radius = waypointradius;
@@ -388,7 +388,7 @@ namespace ai
                 }
             }
         }
-        for(uint i = lastwpcache; i < waypoints.size(); i++)
+        for(int i = lastwpcache; i < static_cast<int>(waypoints.size()); i++)
         {
             CHECKCLOSEST(i);
         }
@@ -956,7 +956,7 @@ namespace ai
     void remapwaypoints()
     {
         std::vector<ushort> remap;
-        int total = 0;
+        uint total = 0;
         for(uint i = 0; i < waypoints.size(); i++)
         {
             remap.push_back(waypoints[i].links[1] == 0xFFFF ? 0 : total++);
