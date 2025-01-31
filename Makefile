@@ -1,5 +1,5 @@
 CXXFLAGS ?= -O3 -ffast-math -Wall
-CXXFLAGS += -std=c++17 -march=x86-64 -fsigned-char
+CXXFLAGS += -std=c++20 -march=x86-64 -fsigned-char
 
 # install prefix, configurable by the user
 PREFIX ?= /usr/local
