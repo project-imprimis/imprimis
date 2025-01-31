@@ -1266,7 +1266,7 @@ namespace game
                     continue;
                 }
             }
-            rendermodel(mdl, Anim_Mapmodel | Anim_Loop, pos, yaw, pitch, 0, cull, nullptr, nullptr, 0, 0, fade);
+            rendermodel(mdl, +Anim_Mapmodel | +Anim_Loop, pos, yaw, pitch, 0, cull, nullptr, nullptr, 0, 0, fade);
         }
     }
     void removeweapons(const gameent *d)
