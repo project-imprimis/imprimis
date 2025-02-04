@@ -1150,7 +1150,7 @@ extern undoblock *copyundoents(undoblock *u);
 extern void pasteundoents(undoblock *u);
 extern void pasteundoent(int idx, const entity &ue);
 extern bool hoveringonent(int ent, int orient);
-extern void renderentselection(const vec &o, const vec &ray, bool entmoving);
+extern void renderentselection();
 
 // serverbrowser
 

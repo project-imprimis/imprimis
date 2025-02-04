@@ -820,7 +820,7 @@ static void renderentbox(const vec &eo, vec es)
     gle::attrib(vec(eo.x, es.y, eo.z)); gle::attrib(vec(eo.x, es.y, es.z));
 }
 
-void renderentselection(const vec &o, const vec &ray, bool entmoving)
+void renderentselection()
 {
     if(noentedit() || (entgroup.empty() && enthover < 0))
     {

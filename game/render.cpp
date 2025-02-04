@@ -1012,7 +1012,7 @@ namespace game
 
         setldrnotexture();
 
-        renderentselection(player->o, camdir(), entmoving!=0);
+        renderentselection();
 
         boxoutline = outline!=0;
 
