@@ -780,7 +780,7 @@ namespace game
 
     void mapenlarge()
     {
-        if(rootworld.enlargemap(false))
+        if(rootworld.enlargemap())
         {
             newmap(-1);
         }

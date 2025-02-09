@@ -428,7 +428,7 @@ namespace game
             vec dir(b.vel);
             dir.mul(secs);
             b.o.add(dir);
-            if(!collide(&b, nullptr, dir, 0, true, true))
+            if(!collide(&b, nullptr, dir, 0, true))
             {
                 if(collideinside)
                 {
