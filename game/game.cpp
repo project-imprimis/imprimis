@@ -309,7 +309,7 @@ namespace game
             }
             if(d->state==ClientState_Alive || d->state==ClientState_Editing)
             {
-                crouchplayer(d, 10, false);
+                crouchplayer(d, 10);
                 if(smoothmove && d->smoothmillis>0)
                 {
                     predictplayer(d, true);
@@ -370,7 +370,7 @@ namespace game
                 {
                     cleanragdoll(player1);
                 }
-                crouchplayer(player1, 10, true);
+                crouchplayer(player1, 10);
                 moveplayer(player1, 10, true);
                 swayhudgun(curtime);
             }
@@ -1462,7 +1462,7 @@ bool move(physent *d, vec &dir)
     return !collided;
 }
 
-void crouchplayer(physent *pl, int moveres, bool local)
+void crouchplayer(physent *pl, int moveres)
 {
     if(!curtime)
     {
