@@ -277,7 +277,7 @@ namespace game
         }
     }
 
-    void otherplayers(int curtime)
+    static void otherplayers()
     {
         for(uint i = 0; i < players.size(); i++)
         {
@@ -346,7 +346,7 @@ namespace game
         physicsframe();
         ai::navigate();
         updateweapons(curtime); //updates projectiles & bouncers
-        otherplayers(curtime);
+        otherplayers();
         ai::update();
         moveragdolls();
         gets2c(); //get server to client info
