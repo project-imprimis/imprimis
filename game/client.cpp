@@ -195,7 +195,7 @@ void disconnect(bool async, bool cleanup)
     }
 }
 
-void trydisconnect(bool local)
+static void trydisconnect()
 {
 
     if(connpeer)
@@ -214,7 +214,7 @@ void trydisconnect(bool local)
 ICOMMAND(connect, "sis", (char *name, int *port, char *pw), connectserv(name, *port, pw));
 ICOMMAND(lanconnect, "is", (int *port, char *pw), connectserv(NULL, *port, pw));
 COMMAND(reconnect, "s");
-ICOMMAND(disconnect, "b", (int *local), trydisconnect(*local != 0));
+ICOMMAND(disconnect, "", (), trydisconnect());
 
 void sendclientpacket(ENetPacket *packet, int chan)
 {
