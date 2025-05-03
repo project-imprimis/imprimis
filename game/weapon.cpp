@@ -536,7 +536,7 @@ namespace game
         p.dir = vec(to).sub(from).safenormalize();
         p.o = from;
         p.from = from;
-        p.offset = hudgunorigin(attacks[atk].gun, from, to, owner);
+        p.offset = hudgunorigin(from, to, owner);
         p.offset.sub(from);
         p.speed = speed;
         p.local = local;
@@ -968,12 +968,12 @@ namespace game
             case Attack_RailShot:
             {
                 particle_splash(Part_Spark, 200, 250, to, 0x50CFE5, 0.45f);
-                particle_flare(hudgunorigin(gun, from, to, d), to, 500, Part_RailTrail, 0x50CFE5, 0.5f);
+                particle_flare(hudgunorigin(from, to, d), to, 500, Part_RailTrail, 0x50CFE5, 0.5f);
                 if(d->muzzle.x >= 0)
                 {
                     particle_flare(d->muzzle, d->muzzle, 140, Part_RailMuzzleFlash, 0x50CFE5, 2.75f, d);
                 }
-                adddynlight(hudgunorigin(gun, d->o, to, d), 35, vec(0.25f, 0.75f, 1.0f), 75, 75, DynLight_Flash, 0, vec(0, 0, 0), d); //place a light for the muzzle flash
+                adddynlight(hudgunorigin(d->o, to, d), 35, vec(0.25f, 0.75f, 1.0f), 75, 75, DynLight_Flash, 0, vec(0, 0, 0), d); //place a light for the muzzle flash
                 if(!local)
                 {
                     railhit(from, to);
@@ -983,12 +983,12 @@ namespace game
             case Attack_CarbineShoot:
             {
                 particle_splash(Part_Spark, 200, 250, to, 0x50CFE5, 0.45f);
-                particle_flare(hudgunorigin(gun, from, to, d), to, 500, Part_RailTrail, 0x50CFE5, 0.5f);
+                particle_flare(hudgunorigin(from, to, d), to, 500, Part_RailTrail, 0x50CFE5, 0.5f);
                 if(d->muzzle.x >= 0)
                 {
                     particle_flare(d->muzzle, d->muzzle, 140, Part_RailMuzzleFlash, 0x50CFE5, 2.75f, d);
                 }
-                adddynlight(hudgunorigin(gun, d->o, to, d), 35, vec(0.25f, 0.75f, 1.0f), 75, 75, DynLight_Flash, 0, vec(0, 0, 0), d); //place a light for the muzzle flash
+                adddynlight(hudgunorigin(d->o, to, d), 35, vec(0.25f, 0.75f, 1.0f), 75, 75, DynLight_Flash, 0, vec(0, 0, 0), d); //place a light for the muzzle flash
                 if(!local)
                 {
                     railhit(from, to);
@@ -1000,13 +1000,13 @@ namespace game
                 particle_splash(Part_Spark, 200, 250, to, 0xFFCFE5, 0.45f);
                 for(int i = 0; i < attacks[atk].rays; ++i)
                 {
-                    particle_flare(hudgunorigin(gun, from, to, d), rays[i], 500, Part_RailTrail, 0x50CFE5, 0.5f);
+                    particle_flare(hudgunorigin(from, to, d), rays[i], 500, Part_RailTrail, 0x50CFE5, 0.5f);
                 }
                 if(d->muzzle.x >= 0)
                 {
                     particle_flare(d->muzzle, d->muzzle, 140, Part_RailMuzzleFlash, 0x50CFE5, 2.75f, d);
                 }
-                adddynlight(hudgunorigin(gun, d->o, to, d), 35, vec(0.25f, 0.75f, 1.0f), 75, 75, DynLight_Flash, 0, vec(0, 0, 0), d); //place a light for the muzzle flash
+                adddynlight(hudgunorigin(d->o, to, d), 35, vec(0.25f, 0.75f, 1.0f), 75, 75, DynLight_Flash, 0, vec(0, 0, 0), d); //place a light for the muzzle flash
                 if(!local)
                 {
                     railhit(from, to);

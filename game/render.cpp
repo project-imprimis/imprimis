@@ -760,7 +760,7 @@ namespace game
         drawhudgun();
     }
 
-    vec hudgunorigin(int gun, const vec &from, const vec &to, const gameent *d)
+    vec hudgunorigin(const vec &from, const vec &to, const gameent *d)
     {
         if(d->muzzle.x >= 0)
         {
