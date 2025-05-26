@@ -2902,7 +2902,7 @@ namespace game
         }
         addmsg(NetMsg_RecordDemo, "ri", val);
     }
-    bool _icmd_recorddemo = addcommand("recorddemo", reinterpret_cast<identfun>(+[] (int *val) { recorddemo(*val); }), "i", Id_Command);
+    bool _icmd_recorddemo = addcommand("recorddemo", reinterpret_cast<identfun>(+[] (const int *val) { recorddemo(*val); }), "i", Id_Command);
 
     void cleardemos(int val)
     {
@@ -2912,7 +2912,7 @@ namespace game
         }
         addmsg(NetMsg_ClearDemos, "ri", val);
     }
-    bool _icmd_cleardemos = addcommand("cleardemos", reinterpret_cast<identfun>(+[] (int *val) { cleardemos(*val); }), "i", Id_Command);
+    bool _icmd_cleardemos = addcommand("cleardemos", reinterpret_cast<identfun>(+[] (const int *val) { cleardemos(*val); }), "i", Id_Command);
 
     void getdemo(int i)
     {
@@ -2926,7 +2926,7 @@ namespace game
         }
         addmsg(NetMsg_GetDemo, "ri", i);
     }
-    bool _icmd_getdemo = addcommand("getdemo", reinterpret_cast<identfun>(+[] (int *val) { getdemo(*val); }), "i", Id_Command);
+    bool _icmd_getdemo = addcommand("getdemo", reinterpret_cast<identfun>(+[] (const int *val) { getdemo(*val); }), "i", Id_Command);
 
     void listdemos()
     {
