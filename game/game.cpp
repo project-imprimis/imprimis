@@ -813,7 +813,7 @@ namespace game
         return showmodeinfo && validmode(gamemode) ? gamemodes[gamemode - startgamemode].info : nullptr;
     }
 
-    void physicstrigger(physent *d, bool local, int floorlevel, int waterlevel, int material = 0)
+    void physicstrigger(physent *d, int floorlevel, int waterlevel)
     {
         if(waterlevel>0)
         {
@@ -1598,7 +1598,7 @@ bool moveplayer(gameent *pl, int moveres, bool local, int curtime) //always retu
         }
         if(timeinair > inairsounddelay && !pl->timeinair && !water) // if we land after long time must have been a high jump, make thud sound
         {
-            game::physicstrigger(pl, local, -1, 0);
+            game::physicstrigger(pl, -1, 0);
         }
     }
     if(std::abs(pl->vel.x) < 1 && std::abs(pl->vel.y) < 1 && std::abs(pl->vel.z) < 1)
@@ -1617,11 +1617,11 @@ bool moveplayer(gameent *pl, int moveres, bool local, int curtime) //always retu
     }
     if(!pl->inwater && water)
     {
-        game::physicstrigger(pl, local, 0, -1, material&MatFlag_Volume);
+        game::physicstrigger(pl, 0, -1);
     }
     else if(pl->inwater && !water)
     {
-        game::physicstrigger(pl, local, 0, 1, pl->inwater);
+        game::physicstrigger(pl, 0, 1);
     }
     pl->inwater = water ? material&MatFlag_Volume : Mat_Air;
     //tell players who enter deatmat who are alive to kill themselves
@@ -1658,7 +1658,7 @@ void modifyvelocity(physent *pl, bool local, bool water, bool floating, int curt
                 pl->vel.x /= 8.0f;
                 pl->vel.y /= 8.0f;
             } // dampen velocity change even harder, gives correct water feel
-            game::physicstrigger(pl, local, 1, 0);
+            game::physicstrigger(pl, 1, 0);
         }
     }
     if(!floating && pl->physstate == PhysEntState_Fall)
