@@ -156,11 +156,10 @@ namespace game
  *changes player to an adjacent weapon, forwards if no dir is passed
  * Arguments:
  *  int *dir: direction (backwards if negative, forwards if positive)
- *  int *force: forces change if 1
  * Returns:
  *  void
  */
-    void nextweapon(int dir, bool force = false)
+    static void nextweapon(int dir)
     {
         if(player1->state!=ClientState_Alive)
         {
@@ -177,7 +176,7 @@ namespace game
             }
         }
     }
-    ICOMMAND(nextweapon, "ii", (int *dir, int *force), nextweapon(*dir, *force!=0));
+    ICOMMAND(nextweapon, "i", (int *dir), nextweapon(*dir));
 
     int getweapon(const char *name)
     {
