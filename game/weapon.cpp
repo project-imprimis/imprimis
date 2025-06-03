@@ -945,7 +945,6 @@ namespace game
 
     void shoteffects(int atk, const vec &from, const vec &to, gameent *d, bool local, int id, int prevaction)     // create visual effect from a shot
     {
-        int gun = attacks[atk].gun;
         switch(atk)
         {
             case Attack_PulseShoot:
