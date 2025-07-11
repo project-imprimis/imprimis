@@ -150,7 +150,7 @@ namespace game
         std::sort(spectators.begin(), spectators.end(), playersort);
     }
 
-    void removegroupedplayer(gameent *d)
+    void removegroupedplayer(const gameent *d)
     {
         for(int i = 0; i < 1+maxteams; ++i)
         {
@@ -178,7 +178,7 @@ namespace game
         intret(*team < 0 ? spectators.size() : (*team <= maxteams ? teamplayers[*team].size() : 0));
     }
     COMMAND(numscoreboard, "i");
-    void loopscoreboard(ident *id, int *team, uint *body)
+    void loopscoreboard(ident *id, const int *team, const uint *body)
     {
         if(*team > maxteams)
         {
@@ -214,7 +214,7 @@ namespace game
     }
     COMMAND(scoreboardstatus, "i");
     //scoreboard packet jump
-    void scoreboardpj (int *cn)
+    void scoreboardpj (const int *cn)
     {
         gameent *d = getclient(*cn);
         if(d && d != player1)
@@ -231,7 +231,7 @@ namespace game
     }
     COMMAND(scoreboardpj, "i");
 
-    void scoreboardping(int *cn)
+    void scoreboardping(const int *cn)
     {
         gameent *d = getclient(*cn);
         if(d)
@@ -264,7 +264,7 @@ namespace game
     }
     COMMAND(scoreboardmultiplayer, "");
 
-    void scoreboardhighlight(int *cn)
+    void scoreboardhighlight(const int *cn)
     {
         intret(*cn == player1->clientnum && highlightscore && (multiplayer || demoplayback || players.size() > 1) ? 0x808080 : 0);
     }
@@ -325,7 +325,7 @@ namespace game
     }
     COMMAND(scoreboardtime, "");
 
-    void getteamscore(int *team)
+    void getteamscore(const int *team)
     {
         if(modecheck(gamemode, Mode_Team) && validteam(*team))
         {

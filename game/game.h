@@ -1032,7 +1032,7 @@ namespace game
     extern void getbestteams(std::vector<int> &best);
     extern void clearteaminfo();
     extern void setteaminfo(int team, int frags);
-    extern void removegroupedplayer(gameent *d);
+    extern void removegroupedplayer(const gameent *d);
 
     // render
     struct playermodelinfo
