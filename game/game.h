@@ -222,7 +222,7 @@ enum
     Mode_Bot             = Mode_LocalOnly|Mode_Demo
 };
 
-const struct gamemodeinfo
+const struct gamemodeinfo final
 {
     const char *name, *prettyname;
     int flags;
@@ -610,7 +610,7 @@ const float EXP_SELFPUSH  = 2.5f,
             EXP_DISTSCALE = 0.5f;
 // this defines weapon properties
 //                            1    2       3     4         5        6      7         8            9       10      11      12         13          14    15    16       17      18       19   20     21    22       23
-const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudsound, attackdelay, damage, spread, margin, projspeed, kickamount, time, rays, hitpush, exprad, worldfx, use, water, heat, maxheat, gravity;} attacks[Attack_NumAttacks] =
+const struct attackinfo final { int gun, action, anim, vwepanim, hudanim, sound, hudsound, attackdelay, damage, spread, margin, projspeed, kickamount, time, rays, hitpush, exprad, worldfx, use, water, heat, maxheat, gravity;} attacks[Attack_NumAttacks] =
 //    1            2          3           4               5             6                7               8    9   10  11   12   13  14    15  16    17 18 19 20  21   22   23
 {
     { Gun_Rail,    Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Rail1,    Sound_Rail2,    300,  5,  20, 0,    0, 10, 1200,  1,  200,  0, 0, 0, 1,  60, 100, 0},
@@ -620,7 +620,7 @@ const struct attackinfo { int gun, action, anim, vwepanim, hudanim, sound, hudso
     { Gun_Carbine, Act_Shoot, Anim_Shoot, Anim_VWepShoot, Anim_GunShoot, Sound_Carbine1, Sound_Carbine1,  90,  2, 120, 0,    0,  2,  512,  1,   50,  0, 0, 0, 1,  25, 125, 0},
 };
 
-const struct guninfo { const char *name, *file, *vwep; int attacks[Act_NumActs]; } guns[Gun_NumGuns] =
+const struct guninfo final { const char *name, *file, *vwep; int attacks[Act_NumActs]; } guns[Gun_NumGuns] =
 {
     { "railgun", "railgun", "worldgun/railgun", { -1, Attack_RailShot } },
     { "pulse rifle", "pulserifle", "worldgun/pulserifle", { -1, Attack_PulseShoot } },
@@ -745,7 +745,7 @@ inline const char * teamname(int n)
     return teamnames[validteam(n) ? (n) : 0];
 }
 
-struct gameent : dynent, gamestate
+struct gameent final : dynent, gamestate
 {
     int weight;                         // affects the effectiveness of hitpush
     int clientnum, privilege, lastupdate, plag, ping;
@@ -826,7 +826,7 @@ struct gameent : dynent, gamestate
     }
 };
 
-struct teamscore
+struct teamscore final
 {
     int team, score;
     teamscore() {}
@@ -846,7 +846,7 @@ struct teamscore
     }
 };
 
-struct teaminfo
+struct teaminfo final
 {
     int frags, score;
 
@@ -908,7 +908,7 @@ namespace game
 {
     extern int gamemode;
 
-    struct clientmode
+    struct clientmode final
     {
         virtual ~clientmode() {}
 
@@ -1035,7 +1035,7 @@ namespace game
     extern void removegroupedplayer(const gameent *d);
 
     // render
-    struct playermodelinfo
+    struct playermodelinfo final
     {
         const char *model[1+maxteams], *hudguns[1+maxteams],
                    *icon[1+maxteams];
@@ -1136,7 +1136,7 @@ extern bool unpackundo(const uchar *inbuf, int inlen, int outlen);
 
 extern editinfo *localedit;
 
-struct facearray
+struct facearray final
 {
     int array[8];
 };
