@@ -27,7 +27,7 @@ namespace ai
 
     extern int aidebug;
 
-    class waypoint
+    class waypoint final
     {
         public:
             vec o;
@@ -77,7 +77,7 @@ namespace ai
     extern void findwaypointswithin(const vec &pos, float mindist, float maxdist, std::vector<int> &results);
     extern void inferwaypoints(gameent *d, const vec &o, const vec &v, float mindist = ai::closedist);
 
-    class avoidset
+    class avoidset final
     {
         public:
             struct obstacle
@@ -186,7 +186,7 @@ namespace ai
         AITravel_Max,
     };
 
-    struct interest
+    struct interest final
     {
         int state, node, target, targtype;
         float score;
@@ -194,7 +194,7 @@ namespace ai
         ~interest() {}
     };
 
-    struct aistate
+    struct aistate final
     {
         int type, millis, targtype, target, idle;
         bool override;
@@ -241,7 +241,7 @@ namespace ai
     };
 
     //specific ai type that uses waypoints--
-    class waypointai : public aiinfo
+    class waypointai final : public aiinfo
     {
         public:
             std::vector<int> route;
