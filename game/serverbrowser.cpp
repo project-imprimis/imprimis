@@ -327,7 +327,7 @@ enum
     Resolve_Resolved
 };
 
-struct serverinfo : servinfo, pingattempts
+struct serverinfo final : servinfo, pingattempts
 {
     enum
     {
