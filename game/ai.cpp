@@ -19,7 +19,7 @@ namespace ai
         // guess as to the radius of ai and other critters relying on the avoid set for now
         float guessradius = player1->radius;
         obstacles.clear();
-        for(uint i = 0; i < players.size(); i++)
+        for(size_t i = 0; i < players.size(); i++)
         {
             dynent *d = players[i];
             if(d->state != ClientState_Alive)
@@ -44,14 +44,14 @@ namespace ai
         {
             int total = 0,
                 alive = 0;
-            for(uint i = 0; i < players.size(); i++)
+            for(size_t i = 0; i < players.size(); i++)
             {
                 if(players[i]->ai)
                 {
                     total++;
                 }
             }
-            for(uint i = 0; i < players.size(); i++)
+            for(size_t i = 0; i < players.size(); i++)
             {
                 if(players[i]->state == ClientState_Alive && players[i]->ai)
                 {
