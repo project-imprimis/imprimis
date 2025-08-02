@@ -9,10 +9,10 @@ namespace ai
 
     VAR(aidebug, 0, 0, 6);
 
-    ICOMMAND(addbot, "s", (char *s), addmsg(NetMsg_AddBot, "ri", *s ? std::clamp(parseint(s), 1, 101) : -1));
+    ICOMMAND(addbot, "s", (const char *s), addmsg(NetMsg_AddBot, "ri", *s ? std::clamp(parseint(s), 1, 101) : -1));
     ICOMMAND(delbot, "", (), addmsg(NetMsg_DelBot, "r"));
-    ICOMMAND(botlimit, "i", (int *n), addmsg(NetMsg_BotLimit, "ri", *n));
-    ICOMMAND(botbalance, "i", (int *n), addmsg(NetMsg_BotBalance, "ri", *n));
+    ICOMMAND(botlimit, "i", (const int *n), addmsg(NetMsg_BotLimit, "ri", *n));
+    ICOMMAND(botbalance, "i", (const int *n), addmsg(NetMsg_BotBalance, "ri", *n));
 
     void avoid()
     {
