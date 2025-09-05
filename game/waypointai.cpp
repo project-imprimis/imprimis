@@ -1,7 +1,5 @@
 #include "game.h"
 
-extern int fog;
-
 namespace ai
 {
     using namespace game;
