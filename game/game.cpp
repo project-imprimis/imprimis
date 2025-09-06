@@ -1906,9 +1906,9 @@ ICOMMAND(sprint, "D", (int *down), {
 
 
 VAR(thirdperson, 0, 0, 2);
-FVAR(thirdpersondistance, 0, 30, 50);
-FVAR(thirdpersonup, -25, 0, 25);
-FVAR(thirdpersonside, -25, 0, 25);
+static FVAR(thirdpersondistance, 0, 30, 50);
+static FVAR(thirdpersonup, -25, 0, 25);
+static FVAR(thirdpersonside, -25, 0, 25);
 
 void recomputecamera()
 {
