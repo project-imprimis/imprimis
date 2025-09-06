@@ -1770,7 +1770,7 @@ void physicsframe()          // optimally schedule physics frames inside the gra
     cleardynentcache();
 }
 
-VAR(physinterp, 0, 1, 1);
+static VAR(physinterp, 0, 1, 1);
 
 void interppos(physent *pl)
 {
