@@ -700,7 +700,7 @@ namespace game
         }
     }
 
-    struct hudent : dynent
+    struct hudent final : dynent
     {
         hudent() { type = physent::PhysEnt_Camera; }
     } guninterp;
