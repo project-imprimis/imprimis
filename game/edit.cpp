@@ -1267,7 +1267,7 @@ void mpeditmat(int matid, int filter, selinfo &sel, bool local)
  * Returns:
  *  void
  */
-void editmat(char *name, char *filtername)
+void editmat(const char *name, const char *filtername)
 {
     if(noedit())
     {
