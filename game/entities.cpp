@@ -532,7 +532,7 @@ VAR(showentradius, 0, 1, 1);
 
 //draws a circle around a point with a given radius in the world
 //used for rendering entities' bounding regions
-void renderentring(const extentity &e, float radius, int axis)
+static void renderentring(const extentity &e, float radius, int axis)
 {
     int numsteps = 15; //increase this for higher-res bounding circles
     if(radius <= 0)
@@ -554,7 +554,7 @@ void renderentring(const extentity &e, float radius, int axis)
 
 //draws a renderentring() around three coordinate axes for an ent at a particular
 //location and at a particualar radius (e.g. the light, sound, etc. radius attr)
-void renderentsphere(const extentity &e, float radius)
+static void renderentsphere(const extentity &e, float radius)
 {
     if(radius <= 0)
     {
@@ -566,7 +566,7 @@ void renderentsphere(const extentity &e, float radius)
     }
 }
 
-void renderentattachment(const extentity &e)
+static void renderentattachment(const extentity &e)
 {
     if(!e.attached)
     {
@@ -579,7 +579,7 @@ void renderentattachment(const extentity &e)
     xtraverts += gle::end();
 }
 
-void renderentarrow(const extentity &e, const vec &dir, float radius)
+static void renderentarrow(const extentity &e, const vec &dir, float radius)
 {
     if(radius <= 0)
     {
@@ -611,7 +611,7 @@ void renderentarrow(const extentity &e, const vec &dir, float radius)
 
 //cone for spotlight ents, defined by a spread angle (half of the overall peak angle)
 //and by the radius of its bounding sphere
-void renderentcone(const extentity &e, const vec &dir, float radius, float angle)
+static void renderentcone(const extentity &e, const vec &dir, float radius, float angle)
 {
     int numsteps = 8; //increase this for higher-res bounding cone (beware ray clutter)
     if(radius <= 0)
@@ -641,7 +641,7 @@ void renderentcone(const extentity &e, const vec &dir, float radius, float angle
     xtraverts += gle::end();
 }
 
-void renderentbox(const extentity &e, const vec &center, const vec &radius, int yaw, int pitch, int roll)
+static void renderentbox(const extentity &e, const vec &center, const vec &radius, int yaw, int pitch, int roll)
 {
     matrix4x3 orient;
     orient.identity();
@@ -704,7 +704,7 @@ void renderentbox(const extentity &e, const vec &center, const vec &radius, int 
     xtraverts += gle::end();
 }
 
-void renderentradius(const extentity &e, bool color)
+static void renderentradius(const extentity &e, bool color)
 {
     switch(e.type)
     {
