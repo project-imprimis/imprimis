@@ -90,8 +90,8 @@ void abortconnect()
     clienthost = NULL;
 }
 
-SVARP(connectname, "");
-VARP(connectport, 0, 0, 0xFFFF);
+static SVARP(connectname, "");
+static VARP(connectport, 0, 0, 0xFFFF);
 
 void connectserv(const char *servername, int serverport, const char *serverpassword)
 {
