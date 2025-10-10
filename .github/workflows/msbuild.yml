@@ -31,13 +31,9 @@ jobs:
         branch: main
 
     - name: Install NSIS
-      #uses ci from nsis-dev/ci-examples
-      run: |
-        iwr -useb get.scoop.sh -outfile 'install.ps1'
-        .\install.ps1 -RunAsAdmin
-        scoop update
-        scoop bucket add extras
-        scoop install nsis
+      uses: repolevedavaj/install-nsis@v1.0.1
+      with:
+        nsis-version: '3.11'
 
     - name: Print NSIS version
       run: makensis -VERSION
