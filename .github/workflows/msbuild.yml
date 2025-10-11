@@ -40,10 +40,10 @@ jobs:
         scoop install nsis
 
     - name: Print NSIS version
-      run: C:\Program Files ^(x86^)\NSIS\makensis.exe -VERSION
+      run: "C:\Program Files (x86)\NSIS\makensis.exe" -VERSION
 
     - name: Print NSIS compile flags
-      run: C:\Program Files ^(x86^)\NSIS\makensis.exe -HDRINFO
+      run: "C:\Program Files (x86)\NSIS\makensis.exe" -HDRINFO
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2.0.0
@@ -60,7 +60,7 @@ jobs:
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
 
     - name: Create NSIS Installer
-      run: C:\Program Files ^(x86^)\NSIS\makensis.exe ./vcpp/imprimis.nsi
+      run: "C:\Program Files (x86)\NSIS\makensis.exe" ./vcpp/imprimis.nsi
 
     - name: Upload Imprimis Windows binary artifact
       uses: actions/upload-artifact@v4
