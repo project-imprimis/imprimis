@@ -37,7 +37,7 @@ jobs:
         .\install.ps1 -RunAsAdmin
         scoop update
         scoop bucket add extras
-        scoop install nsis -v
+        scoop install nsis
 
     - name: Print NSIS version
       run: |
