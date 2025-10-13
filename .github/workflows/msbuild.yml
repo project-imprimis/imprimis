@@ -35,8 +35,8 @@ jobs:
       run: |
         iwr -useb get.scoop.sh -outfile 'install.ps1'
         .\install.ps1 -RunAsAdmin
-        scoop update -v
-        scoop bucket add extras -v
+        scoop update
+        scoop bucket add extras
         scoop install nsis -v
 
     - name: Print NSIS version
