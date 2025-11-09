@@ -527,8 +527,8 @@ void entrotate(const int *cw)
     );
 }
 
-VAR(entselsnap, 0, 0, 1);
-VAR(showentradius, 0, 1, 1);
+static VAR(entselsnap, 0, 0, 1);
+static VAR(showentradius, 0, 1, 1);
 
 //draws a circle around a point with a given radius in the world
 //used for rendering entities' bounding regions
