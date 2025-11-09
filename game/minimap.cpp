@@ -134,9 +134,9 @@ namespace game
 
     FVARP(minimapalpha, 0, 1, 1);
 
-    VAR(mmaps, 0, 40, 100);
-    VAR(mmapw, 0, 50, 100);
-    VAR(mmaph, 0, 72, 100);
+    static VAR(mmaps, 0, 40, 100);
+    static VAR(mmapw, 0, 50, 100);
+    static VAR(mmaph, 0, 72, 100);
 
     void drawradar(float x, float y, float s)
     {
