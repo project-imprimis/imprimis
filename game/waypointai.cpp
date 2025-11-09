@@ -1518,10 +1518,6 @@ namespace ai
         }
         for(auto c = state.rbegin(); c != state.rend(); ++c)
         {
-            if(!(&c))
-            {
-                continue;
-            }
             if(cleannext)
             {
                 (*c).millis = lastmillis;
