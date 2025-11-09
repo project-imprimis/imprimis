@@ -498,7 +498,7 @@ void pasteundoents(undoblock *u)
     }
 }
 
-void entflip()
+static void entflip()
 {
     if(noentedit())
     {
@@ -509,7 +509,7 @@ void entflip()
     GROUP_EDIT_UNDO(e.o[d] -= (e.o[d]-mid)*2);
 }
 
-void entrotate(const int *cw)
+static void entrotate(const int *cw)
 {
     if(noentedit())
     {
@@ -966,7 +966,7 @@ ICOMMAND(entmoving, "b", (const int *n),
     intret(entmoving);
 });
 
-void entpush(const int *dir)
+static void entpush(const int *dir)
 {
     if(noentedit())
     {
@@ -985,7 +985,8 @@ void entpush(const int *dir)
 }
 
 VAR(entautoviewdist, 0, 25, 100);
-void entautoview(const int *dir)
+
+static void entautoview(const int *dir)
 {
     if(!haveselent())
     {
