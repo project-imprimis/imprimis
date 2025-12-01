@@ -4,7 +4,7 @@
 #include "game.h"
 #include "sound.h"
 
-void writeinitcfg()
+static void writeinitcfg()
 {
     std::ofstream cfgfile;
     if(homedir[0]) // Verify that the home directory is set
@@ -28,7 +28,7 @@ void writeinitcfg()
 }
 
 // normal exit, saves config
-void quit()
+static void quit()
 {
     writeinitcfg();
     writeservercfg();
@@ -103,7 +103,7 @@ void startupconstants()
     entnames = std::vector<std::string>(std::begin(entnamelist), std::end(entnamelist));
 }
 
-void menuprocess()
+static void menuprocess()
 {
     static int lastmainmenu = -1;
     if(lastmainmenu != mainmenu)
