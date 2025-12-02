@@ -33,8 +33,8 @@ namespace ai
         avoidweapons(obstacles, guessradius);
     }
 
-    VAR(showwaypoints, 0, 0, 1); //display waypoint locations in edit mode
-    VAR(showwaypointsradius, 0, 200, 10000); //maximum distance to display (200 = 25m)
+    static VAR(showwaypoints, 0, 0, 1); //display waypoint locations in edit mode
+    static VAR(showwaypointsradius, 0, 200, 10000); //maximum distance to display (200 = 25m)
 
     const char *stnames[AIState_Max]    = { "wait", "defend", "pursue"},
                *sttypes[AITravel_Max+1] = { "none", "node", "player", "entity" };

@@ -72,7 +72,7 @@ namespace ai
         return n > 0 && n < waypoints.size();
     }
 
-    extern int showwaypoints, dropwaypoints;
+    extern int dropwaypoints;
     extern int closestwaypoint(const vec &pos, float mindist, bool links, gameent *d = NULL);
     extern void findwaypointswithin(const vec &pos, float mindist, float maxdist, std::vector<int> &results);
     extern void inferwaypoints(gameent *d, const vec &o, const vec &v, float mindist = ai::closedist);
