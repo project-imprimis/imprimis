@@ -73,7 +73,7 @@ namespace ai
                     }
                     if(aidebug >= 3)
                     {
-                        waypointai * wpai = dynamic_cast<waypointai *>(d->ai);
+                        const waypointai * wpai = dynamic_cast<waypointai *>(d->ai);
                         DEF_FORMAT_STRING(q, "node: %d route: %d (%d)",
                             d->lastnode,
                             !wpai->route.empty() ? wpai->route[0] : -1,
@@ -109,7 +109,7 @@ namespace ai
                         {
                             pos.z += 2;
                         }
-                        gameent *e = getclient(d->ai->enemy);
+                        const gameent *e = getclient(d->ai->enemy);
                         if(e)
                         {
                             pos.z += 2;
@@ -146,7 +146,7 @@ namespace ai
             }
             for(size_t i = 0; i < len; ++i)
             {
-                waypoint &w = waypoints[showwaypointsradius ? close[i] : i];
+                const waypoint &w = waypoints[showwaypointsradius ? close[i] : i];
                 for(int j = 0; j < maxwaypointlinks; ++j)
                 {
                     int link = w.links[j];
