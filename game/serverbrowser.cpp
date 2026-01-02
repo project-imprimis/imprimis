@@ -212,7 +212,7 @@ bool resolverwait(const char *name, ENetAddress *address)
     return resolved;
 }
 
-static const int connlimit  = 20000;
+static constexpr int connlimit  = 20000;
 
 int connectwithtimeout(ENetSocket sock, const char *hostname, const ENetAddress &address)
 {
