@@ -24,7 +24,7 @@ static const int resolverlimit  = 3000;
 
 //this is a void pointer because it is called by SDL_CreateThread which deals
 //with a void * function
-int resolverloop(void * data)
+static int resolverloop(void * data)
 {
     resolverthread *rt = reinterpret_cast<resolverthread *>(data);
     SDL_LockMutex(resolvermutex);
@@ -61,7 +61,7 @@ int resolverloop(void * data)
     return 0;
 }
 
-void resolverinit()
+static void resolverinit()
 {
     resolvermutex = SDL_CreateMutex();
     querycond = SDL_CreateCond();
@@ -79,7 +79,7 @@ void resolverinit()
     SDL_UnlockMutex(resolvermutex);
 }
 
-void resolverstop(resolverthread &rt)
+static void resolverstop(resolverthread &rt)
 {
     SDL_LockMutex(resolvermutex);
     if(rt.query)
@@ -94,7 +94,7 @@ void resolverstop(resolverthread &rt)
     SDL_UnlockMutex(resolvermutex);
 }
 
-void resolverclear()
+static void resolverclear()
 {
     if(resolverthreads.empty())
     {
@@ -111,7 +111,7 @@ void resolverclear()
     SDL_UnlockMutex(resolvermutex);
 }
 
-void resolverquery(const char *name)
+static void resolverquery(const char *name)
 {
     if(resolverthreads.empty())
     {
@@ -123,7 +123,7 @@ void resolverquery(const char *name)
     SDL_UnlockMutex(resolvermutex);
 }
 
-bool resolvercheck(const char **name, ENetAddress *address)
+static bool resolvercheck(const char **name, ENetAddress *address)
 {
     bool resolved = false;
     SDL_LockMutex(resolvermutex);
@@ -570,7 +570,7 @@ static inline void buildping(ENetBuffer &buf, uchar (&ping)[N], pingattempts &a)
     buf.dataLength = p.length();
 }
 
-void pingservers()
+static void pingservers()
 {
     if(pingsock == ENET_SOCKET_NULL)
     {
@@ -621,7 +621,7 @@ void pingservers()
     lastinfo = totalmillis;
 }
 
-void checkresolver()
+static void checkresolver()
 {
     int resolving = 0;
     for(uint i = 0; i < servers.size(); i++)
@@ -668,7 +668,7 @@ void checkresolver()
 
 static int lastreset = 0;
 
-void checkpings()
+static void checkpings()
 {
     if(pingsock==ENET_SOCKET_NULL)
     {
@@ -742,7 +742,7 @@ void checkpings()
     }
 }
 
-void sortservers()
+static void sortservers()
 {
     std::sort(servers.begin(), servers.end(), serverinfo::compare);
 }
@@ -751,7 +751,7 @@ COMMAND(sortservers, "");
 VARP(autosortservers, 0, 1, 1);
 VARP(autoupdateservers, 0, 1, 1);
 
-void refreshservers()
+static void refreshservers()
 {
     static int lastrefresh = 0;
     if(lastrefresh==totalmillis)
@@ -826,7 +826,7 @@ servinfo *getservinfo(int i)
     return static_cast<int>(servers.size()) > i && servers[i]->valid() ? servers[i].get() : nullptr;
 }
 
-void clearservers(bool full = false)
+static void clearservers(bool full = false)
 {
     resolverclear();
     if(full)
@@ -934,7 +934,7 @@ static void retrieveservers(std::vector<char>& data)
 
 bool updatedservers = false;
 
-void updatefrommaster()
+static void updatefrommaster()
 {
     std::vector<char> data;
     retrieveservers(data);
@@ -951,7 +951,7 @@ void updatefrommaster()
     updatedservers = true;
 }
 
-void initservers()
+static void initservers()
 {
     if(autoupdateservers && !updatedservers)
     {
