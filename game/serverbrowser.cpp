@@ -553,10 +553,10 @@ void addserver(const char *name, int port, const char *password, bool keep)
     s->keep = keep;
 }
 
-VARP(searchlan, 0, 0, 1);
-VARP(servpingrate, 1000, 5000, 60000);
-VARP(servpingdecay, 1000, 15000, 60000);
-VARP(maxservpings, 0, 10, 1000);
+static VARP(searchlan, 0, 0, 1);
+static VARP(servpingrate, 1000, 5000, 60000);
+static VARP(servpingdecay, 1000, 15000, 60000);
+static VARP(maxservpings, 0, 10, 1000);
 
 pingattempts lanpings;
 
