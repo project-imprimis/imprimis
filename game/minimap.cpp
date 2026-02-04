@@ -94,7 +94,7 @@ namespace game
         int alive = 0, dead = 0;
         for(size_t i = 0; i < players.size(); i++)
         {
-            gameent *o = players[i];
+            const gameent *o = players[i];
             if(o != d && o->state == ClientState_Alive && o->team == d->team)
             {
                 if(!alive++)
@@ -113,7 +113,7 @@ namespace game
         }
         for(size_t i = 0; i < players.size(); i++)
         {
-            gameent *o = players[i];
+            const gameent *o = players[i];
             if(o != d && o->state == ClientState_Dead && o->team == d->team)
             {
                 if(!dead++)
