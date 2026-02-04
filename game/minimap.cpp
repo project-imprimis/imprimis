@@ -12,7 +12,7 @@ namespace game
         return std::clamp(max(minimapradius.x, minimapradius.y)/3, static_cast<float>(minimapminscale), static_cast<float>(minimapmaxscale));
     }
 
-    void drawminimap(gameent *d, float x, float y, float s)
+    void drawminimap(const gameent *d, float x, float y, float s)
     {
 
         vec cameraoffset = vec(0,0,0).rotate_around_z(M_PI*game::player1->yaw/180);
@@ -41,7 +41,7 @@ namespace game
         settexture("media/interface/radar/radar.png", 3);
     }
 
-    void drawteammate(gameent *d, float x, float y, float s, gameent *o, float scale, float blipsize = 1)
+    void drawteammate(const gameent *d, float x, float y, float s, const gameent *o, float scale, float blipsize = 1)
     {
         vec dir = d->o;
         dir.sub(o->o).div(scale);
@@ -69,7 +69,7 @@ namespace game
         settexture(blipname, 3);
     }
 
-    void drawplayerblip(gameent *d, float x, float y, float s, float blipsize)
+    void drawplayerblip(const gameent *d, float x, float y, float s, float blipsize)
     {
         if(d->state != ClientState_Alive && d->state != ClientState_Dead)
         {
@@ -84,7 +84,7 @@ namespace game
         gle::end();
     }
 
-    void drawteammates(gameent *d, float x, float y, float s)
+    void drawteammates(const gameent *d, float x, float y, float s)
     {
         if(!minimapshowteammates)
         {
@@ -150,7 +150,7 @@ namespace game
         gle::end();
     }
 
-    void drawhud(gameent *d, int x, int y, int s)
+    void drawhud(const gameent *d, int x, int y, int s)
     {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         gle::colorf(1, 1, 1, minimapalpha);

@@ -975,9 +975,9 @@ namespace game
     extern void vartrigger(ident *id);
 
     //minimap
-    extern void drawminimap(gameent *d, float x, float y, float s);
-    extern void drawteammates(gameent *d, float x, float y, float s);
-    extern void drawplayerblip(gameent *d, float x, float y, float s, float blipsize = 1);
+    extern void drawminimap(const gameent *d, float x, float y, float s);
+    extern void drawteammates(const gameent *d, float x, float y, float s);
+    extern void drawplayerblip(const gameent *d, float x, float y, float s, float blipsize = 1);
     extern void setradartex();
     extern void updateminimap();
 
