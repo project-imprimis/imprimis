@@ -403,7 +403,7 @@ namespace game
         checkfollow();
     }
 
-    VARP(spawnwait, 0, 0, 1000);
+    static VARP(spawnwait, 0, 0, 1000);
 
     void respawn()
     {
@@ -421,7 +421,7 @@ namespace game
     COMMAND(respawn, "");
 
     // inputs
-    VARP(attackspawn, 0, 1, 1);
+    static VARP(attackspawn, 0, 1, 1);
 
     void doaction(int act)
     {
@@ -439,7 +439,7 @@ namespace game
 
     ICOMMAND(shoot, "D", (int *down), doaction(*down ? Act_Shoot : Act_Idle));
 
-    VARP(jumpspawn, 0, 1, 1);
+    static VARP(jumpspawn, 0, 1, 1);
 
     bool canjump()
     {
@@ -549,7 +549,7 @@ namespace game
         }
     }
 
-    VARP(teamcolorfrags, 0, 1, 1);
+    static VARP(teamcolorfrags, 0, 1, 1);
 
     void killed(gameent *d, const gameent *actor)
     {
