@@ -64,9 +64,9 @@ void updateenginevalues()
     multiplayer = curpeer;
     //pass players list
     std::vector<dynent *> dyns;
-    for(uint i = 0; i < game::players.size(); ++i)
+    for(gameent *i : game::players)
     {
-        dyns.push_back(game::players[i]);
+        dyns.push_back(i);
     }
     dynents = dyns;
 }
