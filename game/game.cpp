@@ -108,7 +108,7 @@ namespace game
         }
         stopfollowing();
     }
-    ICOMMAND(nextfollow, "i", (int *dir), nextfollow(*dir < 0 ? -1 : 1));
+    ICOMMAND(nextfollow, "i", (const int *dir), nextfollow(*dir < 0 ? -1 : 1));
 
     void checkfollow()
     {
@@ -437,7 +437,7 @@ namespace game
         game::player1->spawnprotect = false;
     }
 
-    ICOMMAND(shoot, "D", (int *down), doaction(*down ? Act_Shoot : Act_Idle));
+    ICOMMAND(shoot, "D", (const int *down), doaction(*down ? Act_Shoot : Act_Idle));
 
     static VARP(jumpspawn, 0, 1, 1);
 
@@ -1008,8 +1008,8 @@ namespace game
         return (n>=MasterMode_Start && size_t(n-MasterMode_Start)<sizeof(mastermodeicons)/sizeof(mastermodeicons[0])) ? mastermodeicons[n-MasterMode_Start] : unknown;
     }
 
-    ICOMMAND(servinfomode, "i", (int *i), GETSERVINFOATTR(*i, 0, mode, intret(mode)));
-    ICOMMAND(servinfomodename, "i", (int *i),
+    ICOMMAND(servinfomode, "i", (const int *i), GETSERVINFOATTR(*i, 0, mode, intret(mode)));
+    ICOMMAND(servinfomodename, "i", (const int *i),
         GETSERVINFOATTR(*i, 0, mode,
         {
             const char *name = server::modeprettyname(mode, nullptr);
@@ -1018,8 +1018,8 @@ namespace game
                 result(name);
             }
         }));
-    ICOMMAND(servinfomastermode, "i", (int *i), GETSERVINFOATTR(*i, 2, mm, intret(mm)));
-    ICOMMAND(servinfomastermodename, "i", (int *i),
+    ICOMMAND(servinfomastermode, "i", (const int *i), GETSERVINFOATTR(*i, 2, mm, intret(mm)));
+    ICOMMAND(servinfomastermodename, "i", (const int *i),
         GETSERVINFOATTR(*i, 2, mm,
         {
             const char *name = server::mastermodename(mm, nullptr);
@@ -1028,7 +1028,7 @@ namespace game
                 stringret(newconcatstring(mastermodecolor(mm, ""), name));
             }
         }));
-    ICOMMAND(servinfotime, "ii", (int *i, int *raw),
+    ICOMMAND(servinfotime, "ii", (const int *i, const int *raw),
         GETSERVINFOATTR(*i, 1, secs,
         {
             secs = std::clamp(secs, 0, 59*60+59);
@@ -1894,9 +1894,9 @@ DIR(right,    strafe, -1, k_right, k_left, true);
 #undef DIR
 
 //special movement actions
-ICOMMAND(jump,   "D", (int *down), { if(!*down || game::canjump()) player->jumping = *down!=0; });
-ICOMMAND(crouch, "D", (int *down), { if(!*down) player->crouching = abs(player->crouching); else if(game::cancrouch()) player->crouching = -1; });
-ICOMMAND(sprint, "D", (int *down), {
+ICOMMAND(jump,   "D", (const int *down), { if(!*down || game::canjump()) player->jumping = *down!=0; });
+ICOMMAND(crouch, "D", (const int *down), { if(!*down) player->crouching = abs(player->crouching); else if(game::cancrouch()) player->crouching = -1; });
+ICOMMAND(sprint, "D", (const int *down), {
     if(game::cansprint() && *down)
     {
         game::player1->sprinting = -1;
