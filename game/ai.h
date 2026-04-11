@@ -80,7 +80,7 @@ namespace ai
     class avoidset final
     {
         public:
-            struct obstacle
+            struct obstacle final
             {
                 const void *owner;
                 int numwaypoints;
