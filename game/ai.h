@@ -82,11 +82,11 @@ namespace ai
         public:
             struct obstacle
             {
-                void *owner;
+                const void *owner;
                 int numwaypoints;
                 float above;
 
-                obstacle(void *owner, float above = -1) : owner(owner), numwaypoints(0), above(above) {}
+                obstacle(const void *owner, float above = -1) : owner(owner), numwaypoints(0), above(above) {}
             };
             std::vector<obstacle> obstacles;
             std::vector<int> waypoints;
@@ -146,12 +146,12 @@ namespace ai
             int remap(gameent *d, int n, vec &pos, bool retry = false);
 
         private:
-            void add(void *owner, float above)
+            void add(const void *owner, float above)
             {
                 obstacles.push_back(obstacle(owner, above));
             }
 
-            void add(void *owner, float above, int wp)
+            void add(const void *owner, float above, int wp)
             {
                 if(obstacles.empty() || owner != obstacles.back().owner)
                 {
