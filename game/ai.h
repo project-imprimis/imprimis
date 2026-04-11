@@ -130,7 +130,7 @@ namespace ai
                     } \
                 }
 
-            bool find(int n, gameent *d) const
+            bool find(int n, const gameent *d) const
             {
                 LOOP_AVOID(*this, d,
                 {
