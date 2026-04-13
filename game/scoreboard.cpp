@@ -197,7 +197,7 @@ namespace game
 
     void scoreboardstatus(int *cn)
     {
-        gameent *d = getclient(*cn);
+        const gameent *d = getclient(*cn);
         if(d)
         {
             int status = d->state!=ClientState_Dead ? 0xFFFFFF : 0x606060;
@@ -216,7 +216,7 @@ namespace game
     //scoreboard packet jump
     void scoreboardpj (const int *cn)
     {
-        gameent *d = getclient(*cn);
+        const gameent *d = getclient(*cn);
         if(d && d != player1)
         {
             if(d->state==ClientState_Lagged)
@@ -233,7 +233,7 @@ namespace game
 
     void scoreboardping(const int *cn)
     {
-        gameent *d = getclient(*cn);
+        const gameent *d = getclient(*cn);
         if(d)
         {
             if(!showpj && d->state==ClientState_Lagged)
