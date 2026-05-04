@@ -352,7 +352,7 @@ static int findentity(int type, int index = 0, int attr1 = -1, int attr2 = -1)
     {
         index = ents.size();
     }
-    else for(int i = index; i < static_cast<int>(ents.size()); i++)
+    else for(size_t i = index; i < ents.size(); i++)
     {
         extentity &e = *ents[i];
         if(e.type==type && (attr1<0 || e.attr1==attr1) && (attr2<0 || e.attr2==attr2))
@@ -440,7 +440,7 @@ void findplayerspawn(dynent *d, int forceent, int tag) // place at random spawn
 vec getselpos()
 {
     std::vector<extentity *> &ents = entities::getents();
-    if(entgroup.size() && static_cast<int>(ents.size()) > entgroup[0])
+    if(entgroup.size() && ents.size() > entgroup[0])
     {
         return ents[entgroup[0]]->o;
     }
@@ -1254,7 +1254,7 @@ void entpaste()
     }
     entcancel();
     float m = static_cast<float>(sel.grid)/static_cast<float>(entcopygrid);
-    for(int i = 0; i < static_cast<int>(entcopybuf.size()); i++)
+    for(size_t i = 0; i < entcopybuf.size(); i++)
     {
         const entity &c = entcopybuf[i];
         vec o = vec(c.o).mul(m).add(vec(sel.o));
