@@ -1129,7 +1129,6 @@ extern void mpremip(bool local);
 extern bool mpeditvslot(int delta, int allfaces, selinfo &sel, ucharbuf &buf);
 extern void mpcalclight(bool local);
 
-extern uint getfacecorner(uint face, int num);
 extern int shouldpacktex(int index);
 extern bool unpackundo(const uchar *inbuf, int inlen, int outlen);
 

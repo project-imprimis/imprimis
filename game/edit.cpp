@@ -1310,7 +1310,7 @@ void editmat(const char *name, const char *filtername)
 COMMAND(editmat, "ss");
 
 //returns the numth face of the face uint passed (cube.faces[n] typically)
-uint getfacecorner(uint face, int num)
+static uint getfacecorner(uint face, int num)
 {
     int offset = num*4; //4 bits per nibble
     int mask = 0xF << offset;
