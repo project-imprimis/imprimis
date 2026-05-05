@@ -1104,7 +1104,7 @@ namespace ai
             clearwpcache();
         }
     }
-    ICOMMAND(loadwaypoints, "s", (char *mname), loadwaypoints(true, mname));
+    ICOMMAND(loadwaypoints, "s", (const char *mname), loadwaypoints(true, mname));
 
     //writes the waypoints on the map to a file named <mapname>.wpt by default, can also write to a custom file name
     void savewaypoints(bool force, const char *mname)
@@ -1150,7 +1150,7 @@ namespace ai
         conoutf("saved %lu waypoints to %s", waypoints.size()-1, wptname);
     }
 
-    ICOMMAND(savewaypoints, "s", (char *mname), savewaypoints(true, mname));
+    ICOMMAND(savewaypoints, "s", (const char *mname), savewaypoints(true, mname));
 
     //deletes waypoints within bounds of selection (w.o.* >= 0.x etc. are bounds checks)
     void delselwaypoints()
@@ -1215,5 +1215,5 @@ namespace ai
         }
         clearwpcache();
     }
-    ICOMMAND(movewaypoints, "iii", (int *dx, int *dy, int *dz), movewaypoints(vec(*dx, *dy, *dz)));
+    ICOMMAND(movewaypoints, "iii", (const int *dx, const int *dy, const int *dz), movewaypoints(vec(*dx, *dy, *dz)));
 }
