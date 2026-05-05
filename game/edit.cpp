@@ -8,7 +8,7 @@ bool hmapsel = false;
 selinfo repsel;
 int texpaneltimer = 0;
 
-struct vslotref
+struct vslotref final
 {
     vslotref(int &index) { editingvslots.push_back(&index); }
     ~vslotref() { editingvslots.pop_back(); }
@@ -20,7 +20,7 @@ void mapsize()
 }
 COMMAND(mapsize, "");
 
-static const struct
+static const struct final
 {
     const char *name;
     int filter;
