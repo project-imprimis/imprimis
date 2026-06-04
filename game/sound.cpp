@@ -7,7 +7,7 @@ SoundEngine soundmain;
 //static bindings for methods
 //cubescript bindings can't bind to method pointers, so here they are bound to free functions
 
-void startmusic(char* name, char* cmd)
+void startmusic(const char* name, const char* cmd)
 {
     soundmain.startmusic(name, cmd);
 }
@@ -15,29 +15,29 @@ void startmusic(char* name, char* cmd)
 void playsound(const int* const i)
 {
     soundmain.playsound(*i);
-} 
+}
 
 void resetsound()
 {
     soundmain.resetsound();
 }
 
-void registersound(char *name, int *vol)
+void registersound(const char *name, const int *vol)
 {
     soundmain.registersound(name, vol);
 }
 
-void mapsound(char *name, int *vol, int *maxuses)
+void mapsound(const char *name, const int *vol, const int *maxuses)
 {
     soundmain.mapsound(name, vol, maxuses);
 }
 
-void altsound(char *name, int *vol)
+void altsound(const char *name, const int *vol)
 {
     soundmain.altsound(name, vol);
 }
 
-void altmapsound(char *name, int *vol)
+void altmapsound(const char *name, const int *vol)
 {
     soundmain.altmapsound(name, vol);
 }
