@@ -211,8 +211,8 @@ static void trydisconnect()
     else conoutf("%s", trydisconnectnoconnect);
 }
 
-ICOMMAND(connect, "sis", (char *name, int *port, char *pw), connectserv(name, *port, pw));
-ICOMMAND(lanconnect, "is", (int *port, char *pw), connectserv(NULL, *port, pw));
+ICOMMAND(connect, "sis", (const char *name, const int *port, const char *pw), connectserv(name, *port, pw));
+ICOMMAND(lanconnect, "is", (const int *port, const char *pw), connectserv(NULL, *port, pw));
 COMMAND(reconnect, "s");
 ICOMMAND(disconnect, "", (), trydisconnect());
 
