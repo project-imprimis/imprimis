@@ -7,59 +7,82 @@ SoundEngine soundmain;
 //static bindings for methods
 //cubescript bindings can't bind to method pointers, so here they are bound to free functions
 
-void startmusic(const char* name, const char* cmd)
+namespace
 {
-    soundmain.startmusic(name, cmd);
-}
+    void startmusic(const char* name, const char* cmd)
+    {
+        soundmain.startmusic(name, cmd);
+    }
 
-void playsound(const int* const i)
-{
-    soundmain.playsound(*i);
-}
+    void playsound(const int* const i)
+    {
+        soundmain.playsound(*i);
+    }
 
-void resetsound()
-{
-    soundmain.resetsound();
-}
+    void resetsound()
+    {
+        soundmain.resetsound();
+    }
 
-void registersound(const char *name, const int *vol)
-{
-    soundmain.registersound(name, vol);
-}
+    void registersound(const char *name, const int *vol)
+    {
+        soundmain.registersound(name, vol);
+    }
 
-void mapsound(const char *name, const int *vol, const int *maxuses)
-{
-    soundmain.mapsound(name, vol, maxuses);
-}
+    void mapsound(const char *name, const int *vol, const int *maxuses)
+    {
+        soundmain.mapsound(name, vol, maxuses);
+    }
 
-void altsound(const char *name, const int *vol)
-{
-    soundmain.altsound(name, vol);
-}
+    void altsound(const char *name, const int *vol)
+    {
+        soundmain.altsound(name, vol);
+    }
 
-void altmapsound(const char *name, const int *vol)
-{
-    soundmain.altmapsound(name, vol);
-}
+    void altmapsound(const char *name, const int *vol)
+    {
+        soundmain.altmapsound(name, vol);
+    }
 
-void numsounds()
-{
-    soundmain.numsounds();
-}
+    void numsounds()
+    {
+        soundmain.numsounds();
+    }
 
-void nummapsounds()
-{
-    soundmain.nummapsounds();
-}
+    void nummapsounds()
+    {
+        soundmain.nummapsounds();
+    }
 
-void soundreset()
-{
-    soundmain.soundreset();
-}
+    void soundreset()
+    {
+        soundmain.soundreset();
+    }
 
-void mapsoundreset()
-{
-    soundmain.mapsoundreset();
+    void mapsoundreset()
+    {
+        soundmain.mapsoundreset();
+    }
+
+    VARFP(soundvol, 0, 255, 255,
+        soundmain.setsoundvol(&soundvol);
+    );
+
+    VARFP(musicvol, 0, 255, 255,
+        soundmain.setmusicvol(&soundvol);
+    );
+
+    VARF(sound, 0, 1, 1,
+        soundmain.setsound(&sound);
+    );
+
+    VARF(soundchans, 1, 32, 128,
+        soundmain.setsoundchans(&soundchans);
+    );
+
+    VARF(stereo, 0, 1, 1,
+        soundmain.setstereo(&stereo);
+    );
 }
 
 void initsoundcmds()
@@ -76,23 +99,3 @@ void initsoundcmds()
     addcommand("soundreset", reinterpret_cast<identfun>(soundreset), "", Id_Command);
     addcommand("mapsoundreset", reinterpret_cast<identfun>(mapsoundreset), "", Id_Command);
 }
-
-VARFP(soundvol, 0, 255, 255,
-    soundmain.setsoundvol(&soundvol);
-);
-
-VARFP(musicvol, 0, 255, 255,
-    soundmain.setmusicvol(&soundvol);
-);
-
-VARF(sound, 0, 1, 1,
-    soundmain.setsound(&sound);
-);
-
-VARF(soundchans, 1, 32, 128,
-    soundmain.setsoundchans(&soundchans);
-);
-
-VARF(stereo, 0, 1, 1,
-    soundmain.setstereo(&stereo);
-);
