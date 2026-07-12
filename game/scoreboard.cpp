@@ -173,7 +173,7 @@ namespace game
     }
 //scoreboard commands
     COMMAND(refreshscoreboard, "");
-    void numscoreboard(int *team)
+    void numscoreboard(const int *team)
     {
         intret(*team < 0 ? spectators.size() : (*team <= maxteams ? teamplayers[*team].size() : 0));
     }
@@ -195,7 +195,7 @@ namespace game
     }
     COMMAND(loopscoreboard, "rie");
 
-    void scoreboardstatus(int *cn)
+    void scoreboardstatus(const int *cn)
     {
         const gameent *d = getclient(*cn);
         if(d)
