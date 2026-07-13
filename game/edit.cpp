@@ -542,7 +542,7 @@ bool mpeditvslot(int delta, int allfaces, selinfo &sel, ucharbuf &buf)
 VAR(allfaces, 0, 0, 1);
 VAR(usevdelta, 1, 0, 0);
 
-void vdelta(uint *body)
+void vdelta(const uint *body)
 {
     if(noedit())
     {
@@ -554,7 +554,7 @@ void vdelta(uint *body)
 }
 COMMAND(vdelta, "e");
 
-void vrotate(int *n)
+void vrotate(const int *n)
 {
     if(noedit())
     {
@@ -567,7 +567,7 @@ void vrotate(int *n)
 }
 COMMAND(vrotate, "i");
 
-void vangle(float *a)
+void vangle(const float *a)
 {
     if(noedit())
     {
@@ -580,7 +580,7 @@ void vangle(float *a)
 }
 COMMAND(vangle, "f");
 
-void voffset(int *x, int *y)
+void voffset(const int *x, const int *y)
 {
     if(noedit())
     {
@@ -593,7 +593,7 @@ void voffset(int *x, int *y)
 }
 COMMAND(voffset, "ii");
 
-void vscroll(float *s, float *t)
+void vscroll(const float *s, const float *t)
 {
     if(noedit())
     {
@@ -606,7 +606,7 @@ void vscroll(float *s, float *t)
 }
 COMMAND(vscroll, "ff");
 
-void vscale(float *scale)
+void vscale(const float *scale)
 {
     if(noedit())
     {
@@ -619,7 +619,7 @@ void vscale(float *scale)
 }
 COMMAND(vscale, "f");
 
-void valpha(float *front, float *back)
+void valpha(const float *front, const float *back)
 {
     if(noedit())
     {
@@ -633,7 +633,7 @@ void valpha(float *front, float *back)
 }
 COMMAND(valpha, "ff");
 
-void vcolor(float *r, float *g, float *b)
+void vcolor(const float *r, const float *g, const float *b)
 {
     if(noedit())
     {
@@ -646,7 +646,7 @@ void vcolor(float *r, float *g, float *b)
 }
 COMMAND(vcolor, "fff");
 
-void vrefract(float *k, float *r, float *g, float *b)
+void vrefract(const float *k, const float *r, const float *g, const float *b)
 {
     if(noedit())
     {
@@ -679,7 +679,7 @@ void vreset()
 }
 COMMAND(vreset, "");
 
-void vshaderparam(const char *name, float *x, float *y, float *z, float *w)
+void vshaderparam(const char *name, const float *x, const float *y, const float *z, const float *w)
 {
     if(noedit())
     {
