@@ -407,7 +407,7 @@ void mpeditface(int dir, int mode, selinfo &sel, bool local)
 }
 
 
-void edithmap(int dir, int mode)
+static void edithmap(int dir, int mode)
 {
     if((nompedit && multiplayer) || !hmapsel)
     {
@@ -417,7 +417,7 @@ void edithmap(int dir, int mode)
     heightmaprun(dir, mode);
 }
 
-void editface(int *dir, int *mode)
+static void editface(int *dir, int *mode)
 {
     if(noedit(moving!=0))
     {
@@ -451,7 +451,7 @@ void mpdelcube(selinfo &sel, bool local)
     LOOP_SEL_XYZ(c.discardchildren(true); setcubefaces(c, faceempty));
 }
 
-void delcube()
+static void delcube()
 {
     if(noedit(true))
     {
