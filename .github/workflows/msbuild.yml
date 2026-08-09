@@ -22,7 +22,7 @@ jobs:
         submodules: true
 
     - name: Download libprimis.lib artifact
-      uses: dawidd6/action-download-artifact@v3.1.2
+      uses: dawidd6/action-download-artifact@v3.1.4
       with:
         workflow: msbuild.yml
         name: libprimis-windows
