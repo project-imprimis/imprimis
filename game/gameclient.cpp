@@ -1257,11 +1257,11 @@ namespace game
         putint(q, NetMsg_Pos);
         putuint(q, d->clientnum);
         // 3 bits phys state, 1 bit life sequence, 2 bits move, 2 bits strafe
-        uchar physstate = d->physstate | ((d->lifesequence&1)<<3) | ((d->move&3)<<4) | ((d->strafe&3)<<6);
+        const uchar physstate = d->physstate | ((d->lifesequence&1)<<3) | ((d->move&3)<<4) | ((d->strafe&3)<<6);
         q.put(physstate);
         ivec o = ivec(vec(d->o.x, d->o.y, d->o.z-d->eyeheight).mul(DMF));
-        uint vel  = min(static_cast<int>(d->vel.magnitude()*DVELF), 0xFFFF),
-             fall = min(static_cast<int>(d->falling.magnitude()*DVELF), 0xFFFF);
+        const uint vel  = min(static_cast<int>(d->vel.magnitude()*DVELF), 0xFFFF),
+                   fall = min(static_cast<int>(d->falling.magnitude()*DVELF), 0xFFFF);
         // 3 bits position, 1 bit velocity, 3 bits falling, 1 bit material, 1 bit crouching
         uint flags = 0;
         if(o.x < 0 || o.x > 0xFFFF)
@@ -1310,7 +1310,7 @@ namespace game
                 q.put((o[k]>>16)&0xFF);
             }
         }
-        uint dir = (d->yaw < 0 ? 360 + static_cast<int>(d->yaw)%360 : static_cast<int>(d->yaw)%360) + std::clamp(static_cast<int>(d->pitch+90), 0, 180)*360;
+        const uint dir = (d->yaw < 0 ? 360 + static_cast<int>(d->yaw)%360 : static_cast<int>(d->yaw)%360) + std::clamp(static_cast<int>(d->pitch+90), 0, 180)*360;
         q.put(dir&0xFF);
         q.put((dir>>8)&0xFF);
         q.put(std::clamp(static_cast<int>(d->roll+90), 0, 180));
@@ -1321,7 +1321,7 @@ namespace game
         }
         float velyaw, velpitch;
         vectoryawpitch(d->vel, velyaw, velpitch);
-        uint veldir = (velyaw < 0 ? 360 + static_cast<int>(velyaw)%360 : static_cast<int>(velyaw)%360) + std::clamp(static_cast<int>(velpitch+90), 0, 180)*360;
+        const uint veldir = (velyaw < 0 ? 360 + static_cast<int>(velyaw)%360 : static_cast<int>(velyaw)%360) + std::clamp(static_cast<int>(velpitch+90), 0, 180)*360;
         q.put(veldir&0xFF);
         q.put((veldir>>8)&0xFF);
         if(fall > 0)
@@ -1335,7 +1335,7 @@ namespace game
             {
                 float fallyaw, fallpitch;
                 vectoryawpitch(d->falling, fallyaw, fallpitch);
-                uint falldir = (fallyaw < 0 ? 360 + static_cast<int>(fallyaw)%360 : static_cast<int>(fallyaw)%360) + std::clamp(static_cast<int>(fallpitch+90), 0, 180)*360;
+                const uint falldir = (fallyaw < 0 ? 360 + static_cast<int>(fallyaw)%360 : static_cast<int>(fallyaw)%360) + std::clamp(static_cast<int>(fallpitch+90), 0, 180)*360;
                 q.put(falldir&0xFF);
                 q.put((falldir>>8)&0xFF);
             }
