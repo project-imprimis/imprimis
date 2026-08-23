@@ -358,49 +358,10 @@ namespace game
     bool _icmd_getclientcolor = addcommand("getclientcolor", reinterpret_cast<identfun>(+[] (int *cn) { intret(getclientcolor(*cn)); }), "i", Id_Command);
 
     bool _icmd_getclientfrags = addcommand("getclientfrags", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->frags); } }; }), "i", Id_Command);
-
-
-
-
-
-
-      ;
-
     bool _icmd_getclientscore = addcommand("getclientscore", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->score); } }; }), "i", Id_Command);
-
-
-
-
-
-
-      ;
-
     bool _icmd_getclientdeaths = addcommand("getclientdeaths", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->deaths); } }; }), "i", Id_Command);
-
-
-
-
-
-
-      ;
-
     bool _icmd_getclienthealth = addcommand("getclienthealth", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->health); } }; }), "i", Id_Command);
-
-
-
-
-
-
-      ;
-
     bool _icmd_getclientcombatclass = addcommand("getclientcombatclass", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->combatclass); } }; }), "i", Id_Command);
-
-
-
-
-
-
-      ;
 
     bool ismaster(int cn)
     {
@@ -432,24 +393,8 @@ namespace game
         return d && d->state==ClientState_Spectator;
     }
     bool _icmd_isspectator = addcommand("isspectator", reinterpret_cast<identfun>(+[] (int *cn) { intret(isspectator(*cn) ? 1 : 0); }), "i", Id_Command);
-
     bool _icmd_islagged = addcommand("islagged", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->state==ClientState_Lagged ? 1 : 0); } }; }), "i", Id_Command);
-
-
-
-
-
-
-      ;
-
     bool _icmd_isdead = addcommand("isdead", reinterpret_cast<identfun>(+[] (int *cn) { { gameent *d = getclient(*cn); if(d) { intret(d->state==ClientState_Dead ? 1 : 0); } }; }), "i", Id_Command);
-
-
-
-
-
-
-      ;
 
     bool isai(int cn, int type)
     {
