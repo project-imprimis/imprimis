@@ -19,8 +19,8 @@ std::vector<resolverresult> resolverresults;
 SDL_mutex *resolvermutex;
 SDL_cond *querycond, *resultcond;
 
-static const int numresolverthreads  = 2;
-static const int resolverlimit  = 3000;
+static constexpr int numresolverthreads  = 2;
+static constexpr int resolverlimit  = 3000;
 
 //this is a void pointer because it is called by SDL_CreateThread which deals
 //with a void * function
